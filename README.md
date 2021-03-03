@@ -6,3 +6,5 @@
 
 ## Диаграмма вариантов использования
 
+![Диаграмма вариантов использования](https://github.com/andreyscherbin/WebProject/blob/main/images/UseCase.PNG)
+
