@@ -8,3 +8,5 @@
 
 ![Диаграмма вариантов использования](https://github.com/andreyscherbin/WebProject/blob/main/images/UseCase.PNG)
 
+Ключевые понятия, используемые в диаграмме вариантов использования, отражены в [глоссарии](https://github.com/andreyscherbin/WebProject/blob/main/images/Glossarium.md). 
+
