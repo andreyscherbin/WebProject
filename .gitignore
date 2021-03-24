@@ -1,6 +1,13 @@
 # Compiled class file
 *.class
 
+FinalProject/target/
+FinalProject/test-output/
+FinalProject/FinalProject/
+FinalProject/testng.xml
+FinalProject/.classpath
+FinalProject/.project
+FinalProject/.settings/
 # Log file
 *.log
 
