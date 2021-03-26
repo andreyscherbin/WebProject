@@ -1,7 +1,7 @@
 package com.epam.forum.model.entity;
 
-public class Message { // fix me add Abstract Class
-	private long message_id;
+public class Message extends Entity { // fix me add Abstract Class
+	private Long message_id;
 	private String text;
 
 	public Message(long id, String string) {

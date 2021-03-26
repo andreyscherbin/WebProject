@@ -7,20 +7,17 @@ import com.epam.forum.command.impl.LogOutCommand;
 import com.epam.forum.command.impl.SortByIdCommand;
 import com.epam.forum.command.impl.ViewByIdCommand;
 import com.epam.forum.command.impl.ViewCommand;
-import com.epam.forum.model.service.LogInService;
-import com.epam.forum.model.service.SortByParameterService;
-import com.epam.forum.model.service.ViewByIdService;
-import com.epam.forum.model.service.ViewService;
+import com.epam.forum.model.service.impl.UserServiceImpl;
 
 public class CommandProvider {
 	private static CommandProvider instance = null;
 	EnumMap<CommandName, Command> commands = new EnumMap<>(CommandName.class);
 
 	private CommandProvider() {
-		commands.put(CommandName.LOGIN, new LogInCommand(new LogInService()));
-		commands.put(CommandName.VIEW, new ViewCommand(new ViewService()));
-		commands.put(CommandName.VIEW_BY_ID, new ViewByIdCommand(new ViewByIdService()));
-		commands.put(CommandName.SORT_BY_ID, new SortByIdCommand(new SortByParameterService())); // fix me
+		commands.put(CommandName.LOGIN, new LogInCommand(UserServiceImpl.getInstance()));
+		commands.put(CommandName.VIEW, new ViewCommand(UserServiceImpl.getInstance()));
+		commands.put(CommandName.VIEW_BY_ID, new ViewByIdCommand(UserServiceImpl.getInstance()));
+		commands.put(CommandName.SORT_BY_ID, new SortByIdCommand(UserServiceImpl.getInstance())); // fix me
 		commands.put(CommandName.LOGOUT, new LogOutCommand());
 	}
 
