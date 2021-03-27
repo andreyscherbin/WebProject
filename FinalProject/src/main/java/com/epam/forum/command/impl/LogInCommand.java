@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
+import com.epam.forum.command.PagePath;
 import com.epam.forum.model.service.UserService;
-import com.epam.forum.resource.ConfigurationManager;
 import com.epam.forum.resource.MessageManager;
 
 public class LogInCommand implements Command {
@@ -27,10 +27,10 @@ public class LogInCommand implements Command {
 		String pass = request.getParameter(PARAM_NAME_PASSWORD);
 		if (userService.checkLogin(login, pass)) {
 			request.setAttribute(ATRIBUTE_NAME_USER, login);
-			page = ConfigurationManager.getProperty("path.page.main");
+			page = PagePath.MAIN;
 		} else {
 			request.setAttribute(ATRIBUTE_NAME_ERROR_LOGIN, MessageManager.getProperty("message.errorlogin"));
-			page = ConfigurationManager.getProperty("path.page.login");
+			page = PagePath.LOGIN;
 		}
 		return page;
 	}

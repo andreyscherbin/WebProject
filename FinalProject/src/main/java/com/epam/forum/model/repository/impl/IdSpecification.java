@@ -1,6 +1,6 @@
 package com.epam.forum.model.repository.impl;
 
-import com.epam.forum.model.entity.Message;
+import com.epam.forum.model.entity.User;
 import com.epam.forum.model.repository.Specification;
 
 public class IdSpecification implements Specification {
@@ -12,8 +12,8 @@ public class IdSpecification implements Specification {
 	}
 
 	@Override
-	public boolean specify(Message message) {
-		boolean result = message.getId() == id;
+	public boolean specify(User user) {
+		boolean result = user.getUserId() == id;
 		return result;
 	}
 }

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.CommandProvider;
-import com.epam.forum.resource.ConfigurationManager;
+import com.epam.forum.command.PagePath;
 import com.epam.forum.resource.MessageManager;
 
 @WebServlet(urlPatterns = "/controller")
@@ -19,6 +19,7 @@ public class Controller extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_COMMAND = "command";
+	private static final String ATTRIBUTE_NAME_NULLPAGE = "null_page";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -35,16 +36,17 @@ public class Controller extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String page = null;
-		CommandProvider requestHelper = CommandProvider.getInstance();
-		String action = request.getParameter(PARAM_NAME_COMMAND);
-		Command command = requestHelper.getCommand(action);
-		page = command.execute(request);		
-		if (page != null) { //fix me
+		CommandProvider commandProvider = CommandProvider.getInstance();
+		String commandName = request.getParameter(PARAM_NAME_COMMAND);
+		Command command;
+		command = commandProvider.getCommand(commandName);
+		page = command.execute(request);
+		if (page != null) { // fix me
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-			dispatcher.forward(request, response);
-		} else { // этой ситуации никогда не произойдет, потому что нельзя возвращать нулл
-			page = ConfigurationManager.getProperty("path.page.index");
-			request.getSession().setAttribute("nullPage", MessageManager.getProperty("message.nullpage"));
+			dispatcher.forward(request, response);				
+		} else { //fix me
+			page = PagePath.INDEX;
+			request.getSession().setAttribute(ATTRIBUTE_NAME_NULLPAGE, MessageManager.getProperty("message.nullpage"));
 			response.sendRedirect(request.getContextPath() + page);
 		}
 	}

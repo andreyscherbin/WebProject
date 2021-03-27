@@ -5,11 +5,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.epam.forum.exception.DaoException;
 import com.epam.forum.model.entity.Entity;
 
-public interface BaseDao<K, T extends Entity> {
-	
+public interface BaseDao<K, T extends Entity> {	
+	public static Logger logger = LogManager.getLogger();
+			
 	List<T> findAll() throws DaoException;
 	T findEntityById(K id) throws DaoException;
 	boolean delete(T t) throws DaoException;
@@ -23,7 +27,7 @@ public interface BaseDao<K, T extends Entity> {
 				statement.close();
 			}
 		} catch (SQLException e) {
-// log
+			logger.error("statement close error {}", e);
 		}
 	}
 
@@ -33,7 +37,7 @@ public interface BaseDao<K, T extends Entity> {
 				connection.close(); // or connection return code to the pool
 			}
 		} catch (SQLException e) {
-// log
+			logger.error("statement close error {}", e);
 		}
 	}
 }

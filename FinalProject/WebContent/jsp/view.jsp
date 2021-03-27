@@ -6,20 +6,20 @@
 </head>
 <body>
 	<table>
-		<c:forEach var="elem" items="${list}" varStatus="status">
+		<c:forEach var="user" items="${users}" varStatus="status">
 			<tr>
-				<td><c:out value="${ elem }" /></td>
-				<td><c:out value="${ elem.userId }" /></td>
-				<td><c:out value="${ elem.userName }" /></td>
-				<td><c:out value="${ elem.password }" /></td>
-				<td><c:out value="${ elem.email }" /></td>
+				<td><c:out value="${ user }" /></td>
+				<td><c:out value="${ user.userId }" /></td>
+				<td><c:out value="${ user.userName }" /></td>
+				<td><c:out value="${ user.password }" /></td>
+				<td><c:out value="${ user.email }" /></td>
 				<td><c:out value="${ status.count }" /></td>			   
 			</tr>
 		</c:forEach>
 	</table>
 	
 	<br />		 
-		        ${emptyList}
+		        ${empty_users}
 	<br />
 </body>
 </html>

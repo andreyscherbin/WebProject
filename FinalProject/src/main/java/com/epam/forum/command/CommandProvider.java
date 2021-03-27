@@ -1,32 +1,47 @@
 package com.epam.forum.command;
 
 import java.util.EnumMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.impl.EmptyCommand;
 import com.epam.forum.command.impl.LogInCommand;
 import com.epam.forum.command.impl.LogOutCommand;
-import com.epam.forum.command.impl.SortByIdCommand;
-import com.epam.forum.command.impl.ViewByIdCommand;
-import com.epam.forum.command.impl.ViewCommand;
+import com.epam.forum.command.impl.SortUserByIdCommand;
+import com.epam.forum.command.impl.ViewUserByIdCommand;
+import com.epam.forum.command.impl.ViewUserByUserNameCommand;
+import com.epam.forum.command.impl.ViewUserCommand;
+import com.epam.forum.model.service.UserService;
 import com.epam.forum.model.service.impl.UserServiceImpl;
 
 public class CommandProvider {
+	private static Logger logger = LogManager.getLogger();
 	private static CommandProvider instance = null;
 	EnumMap<CommandName, Command> commands = new EnumMap<>(CommandName.class);
 
 	private CommandProvider() {
-		commands.put(CommandName.LOGIN, new LogInCommand(UserServiceImpl.getInstance()));
-		commands.put(CommandName.VIEW, new ViewCommand(UserServiceImpl.getInstance()));
-		commands.put(CommandName.VIEW_BY_ID, new ViewByIdCommand(UserServiceImpl.getInstance()));
-		commands.put(CommandName.SORT_BY_ID, new SortByIdCommand(UserServiceImpl.getInstance())); // fix me
+		UserService userService = UserServiceImpl.getInstance();
+		commands.put(CommandName.LOGIN, new LogInCommand(userService));
+		commands.put(CommandName.VIEW_USER, new ViewUserCommand(userService));
+		commands.put(CommandName.VIEW_USER_BY_ID, new ViewUserByIdCommand(userService));
+		commands.put(CommandName.SORT_USER_BY_ID, new SortUserByIdCommand(userService));
+		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.LOGOUT, new LogOutCommand());
 	}
 
 	public Command getCommand(String commandName) {
-		CommandName enumCommandName = CommandName.valueOf(commandName.toUpperCase());
-		Command command = commands.get(enumCommandName);
-		if (command == null) {
+		Command command;
+		CommandName enumCommandName;
+		if (commandName == null) {
 			command = new EmptyCommand();
+			return command;
 		}
+		try {
+			enumCommandName = CommandName.valueOf(commandName.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			logger.error("no such command {}", commandName);
+			throw new EnumConstantNotPresentException(CommandName.class, commandName);
+		}
+		command = commands.get(enumCommandName);
 		return command;
 	}
 

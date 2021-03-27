@@ -1,4 +1,4 @@
-package com.epam.forum.resource;
+package com.epam.forum.pool;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class ConnectionCreator {
 	private static final String DATABASE_URL;
 	static {
 		try {
-			properties.load(new FileReader("C:\\Users\\Андрей\\eclipse-workspace\\FinalProject\\src\\main\\resources\\database.properties")); //fix me 
+			properties.load(new FileReader("C:\\Users\\Андрей\\eclipse-workspace\\FinalProject\\src\\main\\resources\\database.properties")); //fix me			
 			String driverName = (String) properties.get("db.driver");
 			Class.forName(driverName);
 		} catch (ClassNotFoundException | IOException e) {

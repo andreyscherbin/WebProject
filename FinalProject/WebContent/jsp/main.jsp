@@ -9,22 +9,29 @@
 	<hr />
 	${user}, hello!
 	<hr />
-	<a href="controller?command=logout">Logout</a>
+	<a href="controller?command=logout">Logout</a>	
 	
-	<form name="ViewForm" method="POST" action="controller">
-		<input type="hidden" name="command" value="view" />		
-		<input type="submit" value="View" />		
-	</form>	
-	
-	<form name="ViewByIdForm" method="POST" action="controller">
-		<input type="hidden" name="command" value="view_by_id" />
+	<form name="ViewUserByIdForm" method="POST" action="controller">
+		<input type="hidden" name="command" value="view_user_by_id" />
 		<input type="text" name="id" value="" />  		
-		<input type="submit" value="ViewById" />${wrongInput}	
+		<input type="submit" value="ViewUserById" />${wrongInput}	
 	</form>	
 	
-	<form name="SortByIdForm" method="POST" action="controller">
-		<input type="hidden" name="command" value="sort_by_id" />		
-		<input type="submit" value="SortById" />
-	</form>		
+	<form name="SortUserByIdForm" method="POST" action="controller">
+		<input type="hidden" name="command" value="sort_user_by_id" />		
+		<input type="submit" value="SortUserById" />
+	</form>	
+	
+	<form name="ViewUserForm" method="POST" action="controller">
+		<input type="hidden" name="command" value="view_user" />		
+		<input type="submit" value="ViewUser" />
+	</form>	
+	
+	<form name="ViewUserByUserNameForm" method="POST" action="controller">
+		<input type="hidden" name="command" value="view_user_by_username" />	
+		<input type="text" name="user_name" value="" /> 	
+		<input type="submit" value="ViewUserByUserName" />
+	</form>	
+		
 </body>
 </html>

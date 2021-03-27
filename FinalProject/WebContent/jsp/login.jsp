@@ -12,11 +12,17 @@
 		<br />Password:<br />
 		<input type="password" name="password" value="" />
 		 <br />		 
-		        ${errorLogin}
+		        ${error_login}
 		 <br /> 
-		        ${wrongAction}
+		        ${wrong_action}
 		 <br /> 
-		        ${nullPage}
+		        ${null_page}
+		 <br />
+		 <br /> 
+		        ${empty_command}
+		 <br />
+		 <br /> 
+		        ${wrong_command}
 		 <br />
 		<input type="submit" value="Log in" />
 	</form>	
