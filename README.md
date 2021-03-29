@@ -6,11 +6,11 @@
 
 ## Модель базы данных
 
-![Модель базы данных](https://github.com/andreyscherbin/WebProject/blob/main/images/model_version1.PNG)
+![Модель базы данных](https://github.com/andreyscherbin/WebProject/blob/master/images/model_version1.PNG)
 
 ## Диаграмма вариантов использования
 
-![Диаграмма вариантов использования](https://github.com/andreyscherbin/WebProject/blob/main/images/UseCase.PNG)
+![Диаграмма вариантов использования](https://github.com/andreyscherbin/WebProject/blob/master/images/UseCase.PNG)
 
 Ключевые понятия, используемые в диаграмме вариантов использования, отражены в [глоссарии](https://github.com/andreyscherbin/WebProject/blob/main/images/Glossarium.md). 
 
