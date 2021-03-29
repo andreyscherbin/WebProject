@@ -5,14 +5,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
+import com.epam.forum.command.Router;
 
 public class LogOutCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
-	
+
 	@Override
-	public String execute(HttpServletRequest request) {
-		String page = PagePath.INDEX;
+	public Router execute(HttpServletRequest request) {
+		Router router = new Router();
+		router.setPage(PagePath.INDEX);
 		request.getSession().invalidate();
-		return page;
+		return router;
 	}
 }

@@ -21,5 +21,8 @@
 	<br />		 
 		        ${empty_users}
 	<br />
+	<br />		 
+		        ${empty_user}
+	<br />
 </body>
 </html>

@@ -1,7 +1,5 @@
 package com.epam.forum.model.repository;
 
-import com.epam.forum.model.entity.User;
+import com.epam.forum.model.entity.Entity;
 
-public interface Specification {
-	boolean specify(User user);
-}
+public interface Specification<T extends Entity> {}

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.CommandProvider;
-import com.epam.forum.command.PagePath;
+import com.epam.forum.command.Router;
 import com.epam.forum.resource.MessageManager;
 
 @WebServlet(urlPatterns = "/controller")
@@ -35,17 +35,17 @@ public class Controller extends HttpServlet {
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String page = null;
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		String commandName = request.getParameter(PARAM_NAME_COMMAND);
 		Command command;
 		command = commandProvider.getCommand(commandName);
-		page = command.execute(request);
-		if (page != null) { // fix me
+		Router router = command.execute(request);
+		Boolean result = router.isRedirect();
+		String page = router.getPage();
+		if (Boolean.FALSE.equals(result)) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-			dispatcher.forward(request, response);				
-		} else { //fix me
-			page = PagePath.INDEX;
+			dispatcher.forward(request, response);
+		} else {
 			request.getSession().setAttribute(ATTRIBUTE_NAME_NULLPAGE, MessageManager.getProperty("message.nullpage"));
 			response.sendRedirect(request.getContextPath() + page);
 		}

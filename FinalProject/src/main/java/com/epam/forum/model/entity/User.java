@@ -3,19 +3,19 @@ package com.epam.forum.model.entity;
 import java.time.LocalDateTime;
 
 public class User extends Entity {
-	
-	private static final long serialVersionUID = 2L;	
-	
-	private Long userId;	
+
+	private static final long serialVersionUID = 2L;
+
+	private Long userId;
 	private String userName;
 	private String password;
 	private String email;
 	private LocalDateTime registerDate;
-    private LocalDateTime lastLoginDate;
-    private boolean isEmailVerifed;
-    private boolean isActive;
-    private Role role;   
-    
+	private LocalDateTime lastLoginDate;
+	private boolean isEmailVerifed;
+	private boolean isActive;
+	private Role role;
+
 	public User(Long userId, String userName, String password, String email, LocalDateTime registerDate,
 			LocalDateTime lastLoginDate, boolean isEmailVerifed, boolean isActive, Role role) {
 		super();
@@ -29,61 +29,83 @@ public class User extends Entity {
 		this.isActive = isActive;
 		this.role = role;
 	}
-	
-	public User() {		
+
+	public User() {
+	}
+
+	public User(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
 	}
 
 	public Long getUserId() {
 		return userId;
 	}
+
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
 	public String getUserName() {
 		return userName;
 	}
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public LocalDateTime getRegisterDate() {
 		return registerDate;
 	}
+
 	public void setRegisterDate(LocalDateTime registerDate) {
 		this.registerDate = registerDate;
 	}
+
 	public LocalDateTime getLastLoginDate() {
 		return lastLoginDate;
 	}
+
 	public void setLastLoginDate(LocalDateTime lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
 	}
+
 	public boolean isEmailVerifed() {
 		return isEmailVerifed;
 	}
+
 	public void setEmailVerifed(boolean isEmailVerifed) {
 		this.isEmailVerifed = isEmailVerifed;
 	}
+
 	public boolean isActive() {
 		return isActive;
 	}
+
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
 	public Role getRole() {
 		return role;
 	}
+
 	public void setRole(Role role) {
 		this.role = role;
 	}
@@ -175,5 +197,5 @@ public class User extends Entity {
 		builder.append(role);
 		builder.append("]");
 		return builder.toString();
-	}	
+	}
 }

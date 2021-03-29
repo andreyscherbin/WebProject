@@ -3,17 +3,15 @@ package com.epam.forum.model.repository.impl;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.repository.Specification;
 
-public class IdSpecification implements Specification {
+public class IdSpecification implements Specification<User> {
 
-	private long id;
+	private Long id;
 
-	public IdSpecification(long id) {
+	public IdSpecification(Long id) {
 		this.id = id;
 	}
 
-	@Override
-	public boolean specify(User user) {
-		boolean result = user.getUserId() == id;
-		return result;
+	public Long getId() {
+		return id;
 	}
 }
