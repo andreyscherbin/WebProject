@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
-import com.epam.forum.comparator.UserComparator;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.User;
+import com.epam.forum.model.entity.comparator.UserComparator;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.resource.MessageManager;
 
@@ -17,7 +17,7 @@ public class SortUserByIdCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATRIBUTE_NAME_EMPTY_USERS = "empty_users";
-	UserService userService;
+	private UserService userService;
 
 	public SortUserByIdCommand(UserService userService) {
 		this.userService = userService;

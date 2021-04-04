@@ -20,7 +20,7 @@ public class ViewUserByIdCommand implements Command {
 	private static final String PARAM_NAME_ID = "id";
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATRIBUTE_NAME_EMPTY_USER = "empty_user";
-	UserService userService;
+	private UserService userService;
 
 	public ViewUserByIdCommand(UserService userService) {
 		this.userService = userService;
@@ -38,7 +38,7 @@ public class ViewUserByIdCommand implements Command {
 		long id = Integer.parseInt(idString);
 		Optional<User> user = Optional.empty();
 		try {
-			user = userService.getUserById(id);
+			user = userService.findUserById(id);
 			if (!user.isEmpty()) {
 				List<User> users = new ArrayList<>();
 				users.add(user.get());

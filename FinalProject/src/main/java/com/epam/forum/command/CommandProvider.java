@@ -16,7 +16,7 @@ import com.epam.forum.model.service.impl.UserServiceImpl;
 public class CommandProvider {
 	private static Logger logger = LogManager.getLogger();
 	private static CommandProvider instance = null;
-	EnumMap<CommandName, Command> commands = new EnumMap<>(CommandName.class);
+	private EnumMap<CommandName, Command> commands = new EnumMap<>(CommandName.class);
 
 	private CommandProvider() {
 		UserService userService = UserServiceImpl.getInstance();

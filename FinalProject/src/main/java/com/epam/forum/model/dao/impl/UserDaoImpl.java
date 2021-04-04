@@ -46,7 +46,7 @@ public class UserDaoImpl implements UserDao {
 		} catch (SQLException e) {
 			throw new DaoException(e);
 		} finally {
-			close(statement);
+			close(statement); // fix me, order
 			close(connection);
 			close(resultSet);
 		}
@@ -54,7 +54,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> findUserByUserName(String namePattern) throws DaoException {
+	public List<User> findUsersByUserName(String namePattern) throws DaoException {
 		List<User> users = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -69,7 +69,7 @@ public class UserDaoImpl implements UserDao {
 				user.setUserId(resultSet.getLong(UserTable.USER_ID));
 				user.setPassword(resultSet.getString(UserTable.PASSWORD));
 				user.setEmail(resultSet.getString(UserTable.EMAIL));
-				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me				
+				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me
 				user.setUserName(resultSet.getString(UserTable.USERNAME));
 				users.add(user);
 			}
@@ -100,7 +100,7 @@ public class UserDaoImpl implements UserDao {
 				user.setUserId(resultSet.getLong(UserTable.USER_ID));
 				user.setPassword(resultSet.getString(UserTable.PASSWORD));
 				user.setEmail(resultSet.getString(UserTable.EMAIL));
-				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me				
+				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me
 				user.setUserName(resultSet.getString(UserTable.USERNAME));
 				users.add(user);
 			}

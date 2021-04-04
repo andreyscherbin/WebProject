@@ -8,8 +8,8 @@ import com.epam.forum.model.entity.User;
 
 public interface UserService {
 	List<User> sort(Comparator<User> comparator) throws ServiceException;
-	Optional<User> getUserById(Long id) throws ServiceException;
-	List<User> getUsers() throws ServiceException;
-	List<User> getUsersByUserName(String userName) throws ServiceException;
-	List<User> authentication(String userName, String password) throws ServiceException;
+	Optional<User> findUserById(Long id) throws ServiceException;
+	List<User> findAllUsers() throws ServiceException;
+	List<User> findUsersByUserName(String userName) throws ServiceException;
+	List<User> authenticate(String userName, String password) throws ServiceException;
 }

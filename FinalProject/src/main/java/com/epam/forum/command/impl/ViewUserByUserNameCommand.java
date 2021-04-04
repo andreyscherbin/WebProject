@@ -18,7 +18,7 @@ public class ViewUserByUserNameCommand implements Command {
 	private static final String PARAM_NAME_USERNAME = "user_name";
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATRIBUTE_NAME_EMPTY_USERS = "empty_users";
-	UserService userService;
+	private UserService userService;
 
 	public ViewUserByUserNameCommand(UserService userService) {
 		this.userService = userService;
@@ -30,7 +30,7 @@ public class ViewUserByUserNameCommand implements Command {
 		String userName = request.getParameter(PARAM_NAME_USERNAME);
 		List<User> users;
 		try {
-			users = userService.getUsersByUserName(userName);
+			users = userService.findUsersByUserName(userName);
 			if (!users.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
 				router.setPage(PagePath.VIEW);

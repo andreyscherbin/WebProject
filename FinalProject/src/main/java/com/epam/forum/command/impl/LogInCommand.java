@@ -31,7 +31,7 @@ public class LogInCommand implements Command {
 		String userName = request.getParameter(PARAM_NAME_LOGIN);
 		String pass = request.getParameter(PARAM_NAME_PASSWORD);
 		try {
-			List<User> users = userService.authentication(userName, pass);
+			List<User> users = userService.authenticate(userName, pass);
 			if (!users.isEmpty()) {				
 				request.setAttribute(ATRIBUTE_NAME_USER, userName);
 				router.setPage(PagePath.MAIN);

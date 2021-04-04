@@ -16,7 +16,7 @@ public class ViewUserCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATRIBUTE_NAME_EMPTY_USERS = "empty_users";
-	UserService userService;
+	private UserService userService;
 
 	public ViewUserCommand(UserService userService) {
 		this.userService = userService;
@@ -27,7 +27,7 @@ public class ViewUserCommand implements Command {
 		Router router = new Router();
 		List<User> users;
 		try {
-			users = userService.getUsers();
+			users = userService.findAllUsers();
 			if (!users.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
 				router.setPage(PagePath.VIEW);

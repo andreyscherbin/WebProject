@@ -1,4 +1,4 @@
-package com.epam.forum.comparator;
+package com.epam.forum.model.entity.comparator;
 
 import java.util.Comparator;
 import com.epam.forum.model.entity.User;
