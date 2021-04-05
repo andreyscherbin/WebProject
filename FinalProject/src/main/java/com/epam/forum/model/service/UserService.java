@@ -11,5 +11,5 @@ public interface UserService {
 	Optional<User> findUserById(Long id) throws ServiceException;
 	List<User> findAllUsers() throws ServiceException;
 	List<User> findUsersByUserName(String userName) throws ServiceException;
-	List<User> authenticate(String userName, String password) throws ServiceException;
+	List<User> authenticate(String userName, String password) throws ServiceException;	
 }

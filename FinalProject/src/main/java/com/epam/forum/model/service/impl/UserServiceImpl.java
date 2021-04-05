@@ -6,23 +6,28 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.epam.forum.exception.DaoException;
+import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
-import com.epam.forum.model.dao.UserDao;
-import com.epam.forum.model.dao.impl.UserDaoImpl;
+import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.User;
+import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.service.UserService;
-import com.epam.forum.security.PasswordEncoder;
+import com.epam.forum.repository.Repository;
+import com.epam.forum.repository.SearchCriteria;
+import com.epam.forum.repository.Specification;
+import com.epam.forum.repository.impl.IdSpecification;
+import com.epam.forum.repository.impl.UserNameSpecification;
+import com.epam.forum.repository.impl.UserRepositoryImpl;
 import com.epam.forum.validator.DigitLatinValidator;
 import com.epam.forum.validator.PasswordValidator;
 
 public class UserServiceImpl implements UserService {
 	private static Logger logger = LogManager.getLogger();
 	private static final UserService instance = new UserServiceImpl();
-	private UserDao userDao;
+	private Repository<Long, User> userRepository;
 
 	private UserServiceImpl() {
-		userDao = new UserDaoImpl();
+		userRepository = new UserRepositoryImpl();
 	}
 
 	public static UserService getInstance() {
@@ -33,9 +38,9 @@ public class UserServiceImpl implements UserService {
 	public List<User> sort(Comparator<User> comparator) throws ServiceException {
 		List<User> users = null;
 		try {
-			users = userDao.findAll();
+			users = userRepository.findAll();
 			users.sort(comparator);
-		} catch (DaoException e) {
+		} catch (RepositoryException e) {
 			throw new ServiceException("findAll users exception", e);
 		}
 		return users;
@@ -44,9 +49,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findUserById(Long id) throws ServiceException {
 		Optional<User> user;
+		List<User> users;
 		try {
-			user = userDao.findEntityById(id);
-		} catch (DaoException e) {
+			IdSpecification spec1 = new IdSpecification(new SearchCriteria(UserTable.USER_ID, Operation.EQUAL, id));
+			users = userRepository.query(spec1);
+			if (!users.isEmpty()) {
+				user = Optional.of(users.get(0));
+			} else {
+				user = Optional.empty();
+			}
+		} catch (RepositoryException e) {
 			throw new ServiceException("find user exception with id: " + id, e);
 		}
 		return user;
@@ -56,8 +68,8 @@ public class UserServiceImpl implements UserService {
 	public List<User> findAllUsers() throws ServiceException {
 		List<User> users = null;
 		try {
-			users = userDao.findAll();
-		} catch (DaoException e) {
+			users = userRepository.findAll();
+		} catch (RepositoryException e) {
 			throw new ServiceException("findAll users exception", e);
 		}
 		return users;
@@ -71,8 +83,10 @@ public class UserServiceImpl implements UserService {
 			return users;
 		}
 		try {
-			users = userDao.findUsersByUserName(userName);
-		} catch (DaoException e) {
+			UserNameSpecification spec1 = new UserNameSpecification(
+					new SearchCriteria(UserTable.USERNAME, Operation.EQUAL, userName));
+			users = userRepository.query(spec1);
+		} catch (RepositoryException e) {
 			throw new ServiceException("find user exception with username: " + userName, e);
 		}
 		return users;
@@ -87,8 +101,10 @@ public class UserServiceImpl implements UserService {
 			return users;
 		}
 		try {
-			users = userDao.findUsersByUserName(userName);
-		} catch (DaoException e) { // situation #2
+			UserNameSpecification spec1 = new UserNameSpecification(
+					new SearchCriteria(UserTable.USERNAME, Operation.EQUAL, userName));
+			users = userRepository.query(spec1);
+		} catch (RepositoryException e) { // situation #2
 			throw new ServiceException("query exception with username: " + userName, e);
 		}
 		if (!users.isEmpty()) { // situation #3

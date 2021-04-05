@@ -1,6 +1,6 @@
 package com.epam.forum.model.entity;
 
-public class UserTable {
+public final class UserTable {
 	public static final String USER_ID  = "user_id";
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
