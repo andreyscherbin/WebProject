@@ -1,4 +1,4 @@
-package com.epam.forum.repository;
+package com.epam.forum.model.repository;
 
 import java.util.List;
 

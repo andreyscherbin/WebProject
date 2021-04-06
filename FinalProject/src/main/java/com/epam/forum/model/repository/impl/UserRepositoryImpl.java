@@ -1,4 +1,4 @@
-package com.epam.forum.repository.impl;
+package com.epam.forum.model.repository.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,10 +13,10 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
+import com.epam.forum.model.repository.Repository;
+import com.epam.forum.model.repository.SearchCriteria;
+import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
-import com.epam.forum.repository.Repository;
-import com.epam.forum.repository.SearchCriteria;
-import com.epam.forum.repository.Specification;
 
 public class UserRepositoryImpl implements Repository<Long, User> {
 
@@ -87,7 +87,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 		} finally {
 			close(resultSet);
 			close(statement);
-			pool.releaseConnection(connection);
+			close(connection);
 		}
 		return users;
 	}
@@ -124,7 +124,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 		} finally {
 			close(resultSet);
 			close(statement);
-			pool.releaseConnection(connection);
+			close(connection);
 		}
 		return users;
 	}

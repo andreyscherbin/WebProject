@@ -1,4 +1,4 @@
-package com.epam.forum.repository;
+package com.epam.forum.model.repository;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ public interface Repository<K, T extends Entity> {
 			logger.error("statement close error {}", e);
 		}
 	}
-	
+
 	default void close(ResultSet resultSet) {
 		try {
 			if (resultSet != null) {
@@ -48,6 +48,16 @@ public interface Repository<K, T extends Entity> {
 			}
 		} catch (SQLException e) {
 			logger.error("resultSet close error {}", e);
+		}
+	}
+
+	default void close(Connection connection) {
+		try {
+			if (connection != null) {
+				connection.close();
+			}
+		} catch (SQLException e) {
+			logger.error("connection close error {}", e);
 		}
 	}
 }

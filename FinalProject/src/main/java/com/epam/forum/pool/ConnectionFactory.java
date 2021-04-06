@@ -10,7 +10,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ConnectionCreator {
+class ConnectionFactory {
 	private static Logger logger = LogManager.getLogger();
 	private static final Properties properties = new Properties();
 	private static final String DATABASE_URL;
@@ -19,7 +19,7 @@ public class ConnectionCreator {
 	private static final String RESOURCE = "database.properties";
 	static {
 		String driverName = null;
-		try (InputStream inputStream = ConnectionCreator.class.getClassLoader().getResourceAsStream(RESOURCE)) {
+		try (InputStream inputStream = ConnectionFactory.class.getClassLoader().getResourceAsStream(RESOURCE)) {
 			properties.load(inputStream);
 			driverName = (String) properties.get(DB_DRIVER);
 			Class.forName(driverName);
@@ -33,10 +33,10 @@ public class ConnectionCreator {
 		DATABASE_URL = (String) properties.get(DB_URL);
 	}
 
-	private ConnectionCreator() {
+	private ConnectionFactory() {
 	}
 
-	public static Connection createConnection() throws SQLException {
+	static Connection createConnection() throws SQLException {
 		return DriverManager.getConnection(DATABASE_URL, properties);
 	}
 }

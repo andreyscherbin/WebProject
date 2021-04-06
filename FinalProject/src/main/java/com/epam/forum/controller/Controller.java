@@ -12,10 +12,17 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.Router;
+import com.epam.forum.pool.ConnectionPool;
 import com.epam.forum.resource.MessageManager;
 
 @WebServlet(urlPatterns = "/controller")
 public class Controller extends HttpServlet {
+
+	@Override
+	public void destroy() {
+		ConnectionPool.getInstance().shutdown();		
+		super.destroy();
+	}
 
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_COMMAND = "command";

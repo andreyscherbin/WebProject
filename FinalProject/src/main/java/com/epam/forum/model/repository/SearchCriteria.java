@@ -1,4 +1,4 @@
-package com.epam.forum.repository;
+package com.epam.forum.model.repository;
 
 public class SearchCriteria {
 	private String key;
