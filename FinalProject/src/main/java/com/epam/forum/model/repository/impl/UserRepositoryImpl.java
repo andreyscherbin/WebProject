@@ -58,7 +58,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 		try {
 			pool = ConnectionPool.getInstance();
 			connection = pool.getConnection();
-			statement = connection.prepareStatement(specification.getQuery());
+			statement = connection.prepareStatement(specification.toSqlQuery());
 			int i = 1;
 			for (SearchCriteria criterion : criterias) {
 				String key = criterion.getKey();
@@ -128,5 +128,4 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 		}
 		return users;
 	}
-
 }

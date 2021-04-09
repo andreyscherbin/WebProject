@@ -1,6 +1,8 @@
 package com.epam.forum.command.impl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
@@ -13,9 +15,9 @@ public class EmptyCommand implements Command {
 	private static final String ATTRIBUTE_NAME_EMPTY_COMMAND = "empty_command";
 
 	@Override
-	public Router execute(HttpServletRequest request) {
+	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setPage(PagePath.LOGIN);
+		router.setPage(PagePath.MAIN);
 		request.setAttribute(ATTRIBUTE_NAME_EMPTY_COMMAND, MessageManager.getProperty("message.emptycommand"));
 		return router;
 	}

@@ -2,6 +2,8 @@ package com.epam.forum.command.impl;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
@@ -23,7 +25,7 @@ public class ViewUserCommand implements Command {
 	}
 
 	@Override
-	public Router execute(HttpServletRequest request) {
+	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		List<User> users;
 		try {

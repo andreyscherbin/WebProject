@@ -6,5 +6,6 @@ public enum CommandName {
 	VIEW_USER_BY_ID,
 	SORT_USER_BY_ID,
 	VIEW_USER_BY_USERNAME,
-	LOGOUT	
+	LOGOUT,
+	VIEW_TOPIC	
 }

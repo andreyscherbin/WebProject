@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
@@ -27,7 +29,7 @@ public class ViewUserByIdCommand implements Command {
 	}
 
 	@Override
-	public Router execute(HttpServletRequest request) {
+	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String idString = request.getParameter(PARAM_NAME_ID);
 		if (!DigitValidator.isDigit(idString)) {
