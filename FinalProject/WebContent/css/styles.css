@@ -1,22 +1,21 @@
-@charset "UTF-8";
 body {
-	background-color: coral;
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
 }
 
-h1 {
-	color: orange;
-	text-align: center;
+footer {
+	flex: 1 0 auto;
 }
 
-p {
-	font-family: "Times New Roman";
-	font-size: 20px;
+nav {
+	font-weight: 300;
 }
 
-input:invalid {
-	border: 2px dashed red;
+body>.container {
+	padding-top: 50px;
+	min-height: 75vh;
 }
-
-input:valid {
-	border: 2px solid black;
+.bold {
+	font-weight: bold;
 }

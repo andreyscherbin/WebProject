@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css" />
 </head>
 <body>
-	<form name="loginForm" method="POST" action="controller">
+	<form name="loginForm" method="POST" action="${pageContext.request.contextPath}/controller">
 		<input type="hidden" name="command" value="login" />
 		Username: <input type="text" name="username" required pattern="[A-Za-z0-9]+" maxlength="10"
 		title="Must contain only digits and upperscase or lowercase letter, with max length 10" />
@@ -22,13 +22,7 @@
 		        ${error_authentication}	
 		<hr/>        		
 		<input type="submit" value="Log in" />
-		<hr/>
-		<label for="lang">Select Language</label>
-	<select id="lang" name="lang">
-    	<option value="en_US">English</option>
-    	<option value="be_BE">Belarusian</option>
-    	<option value="de_DE">German</option>
-	</select>
+		<hr/>		
 	</form>		
 </body>
 </html>

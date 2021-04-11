@@ -1,9 +1,6 @@
 package com.epam.forum.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +13,6 @@ import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.Router;
 import com.epam.forum.pool.ConnectionPool;
 import com.epam.forum.resource.MessageManager;
-import com.google.gson.Gson;
 
 public class ControllerServlet extends HttpServlet {
 
@@ -34,7 +30,7 @@ public class ControllerServlet extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_COMMAND = "command";
-	private static final String ATTRIBUTE_NAME_NULLPAGE = "default_page";
+	private static final String ATTRIBUTE_NAME_DEFAULTPAGE = "default_page";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -49,24 +45,20 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {		
+			throws ServletException, IOException {
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		String commandName = request.getParameter(PARAM_NAME_COMMAND);
 		Command command = commandProvider.getCommand(commandName);
 		Router router = command.execute(request, response);
 		Boolean isRedirect = router.isRedirect();
-		Boolean isWriteResponse = router.isWriteResponse();
 		String page = router.getPage();
-		if (Boolean.TRUE == isWriteResponse) {  // FIX ME
-			
-		} else {
+		if (Boolean.FALSE == isRedirect) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-			dispatcher.forward(request, response);/*
-													 * } else if (Boolean.TRUE == isRedirect) {
-													 * request.getSession().setAttribute(ATTRIBUTE_NAME_NULLPAGE,
-													 * MessageManager.getProperty("message.defaultpage"));
-													 * response.sendRedirect(request.getContextPath() + page); }
-													 */
+			dispatcher.forward(request, response);
+		} else {
+			request.getSession().setAttribute(ATTRIBUTE_NAME_DEFAULTPAGE,
+					MessageManager.getProperty("message.defaultpage"));
+			response.sendRedirect(request.getContextPath() + page);
 		}
 	}
 }

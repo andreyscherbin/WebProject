@@ -4,6 +4,6 @@
 <title>Index</title>
 </head>
 <body>
-	<jsp:forward page="/jsp/main.jsp" />     
+	<jsp:forward page="/controller?command=view_section" />     
 </body>
 </html>

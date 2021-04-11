@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Topic extends Entity {
 	private static final long serialVersionUID = 3L;
 
-	private Long topicId;
+	private Long id;
 	private String header;
 	private String content;
 	private boolean isPinned;
@@ -14,10 +14,10 @@ public class Topic extends Entity {
 	private Section section;
 	private User user;
 
-	public Topic(Long topicId, String header, String content, boolean isPinned, boolean isClosed,
+	public Topic(Long id, String header, String content, boolean isPinned, boolean isClosed,
 			LocalDateTime creationDate, Section section, User user) {
 		super();
-		this.topicId = topicId;
+		this.id = id;
 		this.header = header;
 		this.content = content;
 		this.isPinned = isPinned;
@@ -30,12 +30,12 @@ public class Topic extends Entity {
 	public Topic() {
 	}
 
-	public Long getTopicId() {
-		return topicId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTopicId(Long topicId) {
-		this.topicId = topicId;
+	public void setId(Long topicId) {
+		this.id = topicId;
 	}
 
 	public String getHeader() {
@@ -104,7 +104,7 @@ public class Topic extends Entity {
 		result = prime * result + (isClosed ? 1231 : 1237);
 		result = prime * result + (isPinned ? 1231 : 1237);
 		result = prime * result + ((section == null) ? 0 : section.hashCode());
-		result = prime * result + ((topicId == null) ? 0 : topicId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
@@ -142,10 +142,10 @@ public class Topic extends Entity {
 				return false;
 		} else if (!section.equals(other.section))
 			return false;
-		if (topicId == null) {
-			if (other.topicId != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!topicId.equals(other.topicId))
+		} else if (!id.equals(other.id))
 			return false;
 		if (user == null) {
 			if (other.user != null)
@@ -158,8 +158,8 @@ public class Topic extends Entity {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Topic [topicId=");
-		builder.append(topicId);
+		builder.append("Topic [id=");
+		builder.append(id);
 		builder.append(", header=");
 		builder.append(header);
 		builder.append(", content=");

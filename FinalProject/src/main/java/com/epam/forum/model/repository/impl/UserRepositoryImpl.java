@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import com.epam.forum.exception.RepositoryException;
+import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
-import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriteria;
 import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
+
+import static com.epam.forum.model.entity.UserTable.*;
 
 public class UserRepositoryImpl implements Repository<Long, User> {
 
@@ -63,11 +64,11 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			for (SearchCriteria criterion : criterias) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
-				if (key.equals(UserTable.USERNAME)) {
+				if (key.equals(USERNAME)) {
 					statement.setString(i, (String) value);
-				} else if (criterion.getKey().equals(UserTable.USER_ID)) {
+				} else if (criterion.getKey().equals(USER_ID)) {
 					statement.setLong(i, (Long) value);
-				} else if (criterion.getKey().equals(UserTable.EMAIL)) {
+				} else if (criterion.getKey().equals(EMAIL)) {
 					statement.setString(i, (String) value);
 				}
 				i++;
@@ -75,11 +76,13 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				User user = new User();
-				user.setUserId(resultSet.getLong(UserTable.USER_ID));
-				user.setPassword(resultSet.getString(UserTable.PASSWORD));
-				user.setEmail(resultSet.getString(UserTable.EMAIL));
+				user.setId(resultSet.getLong(USER_ID));
+				user.setPassword(resultSet.getString(PASSWORD));
+				user.setEmail(resultSet.getString(EMAIL));
 				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me
-				user.setUserName(resultSet.getString(UserTable.USERNAME));
+				user.setUserName(resultSet.getString(USERNAME));				
+				Role role = Role.valueOf(resultSet.getString(ROLE));
+				user.setRole(role);
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -112,11 +115,13 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);
 			while (resultSet.next()) {
 				User user = new User();
-				user.setUserId(resultSet.getLong(UserTable.USER_ID));
-				user.setPassword(resultSet.getString(UserTable.PASSWORD));
-				user.setEmail(resultSet.getString(UserTable.EMAIL));
+				user.setId(resultSet.getLong(USER_ID));
+				user.setPassword(resultSet.getString(PASSWORD));
+				user.setEmail(resultSet.getString(EMAIL));
 				// user.setRegisterDate(resultSet.getTimestamp("register_date")); // fix me
-				user.setUserName(resultSet.getString(UserTable.USERNAME));
+				user.setUserName(resultSet.getString(USERNAME));
+				Role role = Role.valueOf(resultSet.getString(ROLE));
+				user.setRole(role);
 				users.add(user);
 			}
 		} catch (SQLException e) {

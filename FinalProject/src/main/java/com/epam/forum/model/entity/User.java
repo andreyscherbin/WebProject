@@ -6,7 +6,7 @@ public class User extends Entity {
 
 	private static final long serialVersionUID = 2L;
 
-	private Long userId;
+	private Long id;
 	private String userName;
 	private String password;
 	private String email;
@@ -16,10 +16,10 @@ public class User extends Entity {
 	private boolean isActive;
 	private Role role;
 
-	public User(Long userId, String userName, String password, String email, LocalDateTime registerDate,
+	public User(Long id, String userName, String password, String email, LocalDateTime registerDate,
 			LocalDateTime lastLoginDate, boolean isEmailVerifed, boolean isActive, Role role) {
 		super();
-		this.userId = userId;
+		this.id = id;
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
@@ -37,13 +37,13 @@ public class User extends Entity {
 		this.userName = userName;
 		this.password = password;
 	}
-
-	public Long getUserId() {
-		return userId;
+	
+	public Long getId() {
+		return id;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUserName() {
@@ -121,7 +121,7 @@ public class User extends Entity {
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((registerDate == null) ? 0 : registerDate.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
@@ -161,10 +161,10 @@ public class User extends Entity {
 			return false;
 		if (role != other.role)
 			return false;
-		if (userId == null) {
-			if (other.userId != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!userId.equals(other.userId))
+		} else if (!id.equals(other.id))
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -177,8 +177,8 @@ public class User extends Entity {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [userId=");
-		builder.append(userId);
+		builder.append("User [id=");
+		builder.append(id);
 		builder.append(", userName=");
 		builder.append(userName);
 		builder.append(", password=");

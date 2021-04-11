@@ -9,7 +9,7 @@
 		<c:forEach var="user" items="${users}" varStatus="status">
 			<tr>
 				<td><c:out value="${ user }" /></td>
-				<td><c:out value="${ user.userId }" /></td>
+				<td><c:out value="${ user.id }" /></td>
 				<td><c:out value="${ user.userName }" /></td>
 				<td><c:out value="${ user.password }" /></td>
 				<td><c:out value="${ user.email }" /></td>

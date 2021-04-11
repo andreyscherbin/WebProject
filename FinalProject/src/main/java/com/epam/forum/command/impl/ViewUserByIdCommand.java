@@ -34,7 +34,7 @@ public class ViewUserByIdCommand implements Command {
 		String idString = request.getParameter(PARAM_NAME_ID);
 		if (!DigitValidator.isDigit(idString)) {
 			request.setAttribute("wrongInput", MessageManager.getProperty("message.wronginput"));
-			router.setPage(PagePath.MAIN);
+			router.setPage(PagePath.HOME);
 			return router;
 		}
 		long id = Integer.parseInt(idString);

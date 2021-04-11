@@ -11,6 +11,7 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 import com.epam.forum.exception.ServiceException;
+import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.resource.MessageManager;
@@ -18,8 +19,8 @@ import com.epam.forum.resource.MessageManager;
 public class LogInCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_LOGIN = "username";
-	private static final String PARAM_NAME_PASSWORD = "password";	
-	private static final String ATRIBUTE_NAME_USER = "user";
+	private static final String PARAM_NAME_PASSWORD = "password";
+	private static final String ATRIBUTE_NAME_ROLE = "role";
 	private static final String ATRIBUTE_NAME_ERROR_AUTHENTICATION = "error_authentication";
 	private UserService userService;
 
@@ -31,14 +32,17 @@ public class LogInCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String userName = request.getParameter(PARAM_NAME_LOGIN);
-		String pass = request.getParameter(PARAM_NAME_PASSWORD);		
+		String pass = request.getParameter(PARAM_NAME_PASSWORD);
 		try {
 			List<User> users = userService.authenticate(userName, pass);
-			if (!users.isEmpty()) {				
-				request.setAttribute(ATRIBUTE_NAME_USER, userName);
-				router.setPage(PagePath.MAIN);
+			if (!users.isEmpty()) {
+				User user = users.get(0);
+				Role role = user.getRole();				
+				request.getSession().setAttribute(ATRIBUTE_NAME_ROLE, role);
+				router.setPage(PagePath.INDEX);
 			} else {
-				request.setAttribute(ATRIBUTE_NAME_ERROR_AUTHENTICATION, MessageManager.getProperty("message.error_authentication"));
+				request.setAttribute(ATRIBUTE_NAME_ERROR_AUTHENTICATION,
+						MessageManager.getProperty("message.error_authentication"));
 				router.setPage(PagePath.LOGIN);
 			}
 		} catch (ServiceException e) {
