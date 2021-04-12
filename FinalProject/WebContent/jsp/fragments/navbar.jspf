@@ -31,7 +31,7 @@
 			th:replace="fragments/create_user_modal_form :: create_user_modal_form"></div>
 	</nav> -->
 	<nav class="navbar navbar-expand-lg navbar-ligh tbg-light">
-		<a class="navbar-brand" href="${pageContext.request.contextPath}">Forum</a>
+		<a class="navbar-brand" href="${pageContext.request.contextPath}/jsp/home.jsp">Forum</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -43,30 +43,31 @@
 			<ul class="navbar-nav mr-auto">
 				<c:if test="${sessionScope.role == null}">
 					<li class="nav-item active"><a class="nav-link"
-						href="jsp/login.jsp">Sign In<span class="sr-only">(current)</span></a></li>
+						href="${pageContext.request.contextPath}/jsp/login.jsp">Sign In<span class="sr-only">(current)</span></a></li>
 				</c:if>
 				<c:if test="${sessionScope.role == null}">
 					<li class="nav-item"><a class="nav-link" href="#">Sign Up</a></li>
 				</c:if>
 				<c:if test="${sessionScope.role != null}">
-					<li class="nav-item"><a class="nav-link" href="controller?command=logout">Log Out</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/controller?command=logout">Log Out</a></li>
 				</c:if>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="http://example.com"
 					id="dropdown09" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false"><span class="flag-icon flag-icon-us">
-					</span> English</a>
+					</span>Language</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown09">
-						<a class="dropdown-item" href="controller?command=language&lang=de_DE"><span
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=language&lang=de_DE"><span
 							class="flag-icon flag-icon-fr"> </span> Germany</a> <a
-							class="dropdown-item" href="controller?command=language&lang=en_US"><span
+							class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=language&lang=en_US"><span
 							class="flag-icon flag-icon-it"> </span> English</a> <a
-							class="dropdown-item" href="controller?command=language&lang=be_BE"><span
+							class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=language&lang=be_BE"><span
 							class="flag-icon flag-icon-ru"> </span> Belarusian</a>
 					</div></li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0">
-				<input class="form-control mr-sm-2" type="search"
+			<form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath}/controller">
+			    <input type="hidden" name="command" value="view_topic_by_header" /> 			     
+				<input class="form-control mr-sm-2" type="search" name="header"
 					placeholder="Search" aria-label="Search">
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 			</form>

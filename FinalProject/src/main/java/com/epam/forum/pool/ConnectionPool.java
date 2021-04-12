@@ -13,6 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+
 public class ConnectionPool {
 
 	private static Logger logger = LogManager.getLogger();
@@ -105,10 +107,11 @@ public class ConnectionPool {
 	private void deregisterDrivers() {
 		DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
 			try {
-				DriverManager.deregisterDriver(driver);
+				DriverManager.deregisterDriver(driver);				
 			} catch (SQLException e) {
 				logger.error("error deregisterDriver with driver: {} with exception {}", driver, e);
 			}
 		});
+		AbandonedConnectionCleanupThread.checkedShutdown();
 	}
 }

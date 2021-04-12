@@ -9,5 +9,6 @@ public enum CommandName {
 	LOGOUT,
 	VIEW_TOPIC,
 	VIEW_SECTION,
-	LANGUAGE
+	LANGUAGE,
+	VIEW_TOPIC_BY_HEADER
 }

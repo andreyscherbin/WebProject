@@ -18,7 +18,8 @@ public class LanguageCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setPage(PagePath.INDEX);
+		router.setPage(PagePath.HOME);
+		router.setRedirect();
 		String lang = request.getParameter(PARAM_NAME_LANGUAGE);
 		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, lang);				
 		return router;

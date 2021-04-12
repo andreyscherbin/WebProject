@@ -18,6 +18,7 @@ public class EmptyCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		router.setPage(PagePath.HOME);
+		router.setRedirect();
 		request.setAttribute(ATTRIBUTE_NAME_EMPTY_COMMAND, MessageManager.getProperty("message.emptycommand"));
 		return router;
 	}

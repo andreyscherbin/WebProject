@@ -11,6 +11,6 @@
 	<br/>
 	 Status code: ${pageContext.errorData.statusCode}
 	<br/>
-	 Exception: ${pageContext.errorData.throwable.cause}
+	 Exception: ${pageContext.errorData.throwable}
 </body>
 </html>

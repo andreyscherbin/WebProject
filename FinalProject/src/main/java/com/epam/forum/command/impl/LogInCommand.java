@@ -39,7 +39,8 @@ public class LogInCommand implements Command {
 				User user = users.get(0);
 				Role role = user.getRole();				
 				request.getSession().setAttribute(ATRIBUTE_NAME_ROLE, role);
-				router.setPage(PagePath.INDEX);
+				router.setPage(PagePath.HOME);
+				router.setRedirect();
 			} else {
 				request.setAttribute(ATRIBUTE_NAME_ERROR_AUTHENTICATION,
 						MessageManager.getProperty("message.error_authentication"));

@@ -9,6 +9,7 @@ import com.epam.forum.command.impl.LogInCommand;
 import com.epam.forum.command.impl.LogOutCommand;
 import com.epam.forum.command.impl.SortUserByIdCommand;
 import com.epam.forum.command.impl.ViewSectionCommand;
+import com.epam.forum.command.impl.ViewTopicByHeaderCommand;
 import com.epam.forum.command.impl.ViewTopicCommand;
 import com.epam.forum.command.impl.ViewUserByIdCommand;
 import com.epam.forum.command.impl.ViewUserByUserNameCommand;
@@ -35,6 +36,7 @@ public class CommandProvider {
 		commands.put(CommandName.SORT_USER_BY_ID, new SortUserByIdCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.VIEW_TOPIC, new ViewTopicCommand(topicService));
+		commands.put(CommandName.VIEW_TOPIC_BY_HEADER, new ViewTopicByHeaderCommand(topicService));
 		commands.put(CommandName.VIEW_SECTION, new ViewSectionCommand(sectionService));
 		commands.put(CommandName.LOGOUT, new LogOutCommand());
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());

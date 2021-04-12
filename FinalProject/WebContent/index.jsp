@@ -1,9 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page session="true"%>
 <html>
 <head>
 <title>Index</title>
 </head>
 <body>
-	<jsp:forward page="/controller?command=view_section" />     
+	<c:set var="lang" value="en_US" scope="session" />
+	<c:redirect url="/jsp/home.jsp"/>
 </body>
 </html>

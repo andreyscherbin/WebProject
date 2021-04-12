@@ -12,7 +12,6 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.Router;
 import com.epam.forum.pool.ConnectionPool;
-import com.epam.forum.resource.MessageManager;
 
 public class ControllerServlet extends HttpServlet {
 
@@ -23,14 +22,13 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	@Override
-	public void destroy() {
-		ConnectionPool.getInstance().shutdown();
+	public void destroy() {		
+		ConnectionPool.getInstance().shutdown();		
 		super.destroy();
 	}
 
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_COMMAND = "command";
-	private static final String ATTRIBUTE_NAME_DEFAULTPAGE = "default_page";
+	private static final String PARAM_NAME_COMMAND = "command";	
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -55,9 +53,7 @@ public class ControllerServlet extends HttpServlet {
 		if (Boolean.FALSE == isRedirect) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
 			dispatcher.forward(request, response);
-		} else {
-			request.getSession().setAttribute(ATTRIBUTE_NAME_DEFAULTPAGE,
-					MessageManager.getProperty("message.defaultpage"));
+		} else {			
 			response.sendRedirect(request.getContextPath() + page);
 		}
 	}

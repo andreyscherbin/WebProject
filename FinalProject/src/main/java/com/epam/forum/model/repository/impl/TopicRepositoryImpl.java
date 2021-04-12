@@ -1,6 +1,7 @@
 package com.epam.forum.model.repository.impl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,10 +12,12 @@ import java.util.Optional;
 
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Topic;
-import com.epam.forum.model.entity.TopicTable;
 import com.epam.forum.model.repository.Repository;
+import com.epam.forum.model.repository.SearchCriteria;
 import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
+
+import static com.epam.forum.model.entity.TopicTable.*;
 
 public class TopicRepositoryImpl implements Repository<Long, Topic> {
 
@@ -47,8 +50,43 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 
 	@Override
 	public List<Topic> query(Specification<Topic> specification) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		List<SearchCriteria> criterias = specification.getSearchCriterias();
+		List<Topic> topics = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(specification.toSqlQuery());
+			int i = 1;
+			for (SearchCriteria criterion : criterias) {
+				String key = criterion.getKey();
+				Object value = criterion.getValue();
+				if (key.equals(HEADER)) {
+					statement.setString(i, (String) value);
+				} else if (key.equals(TOPIC_ID)) {
+					statement.setLong(i, (Long) value);
+				}
+				i++;
+			}
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				Topic topic = new Topic();
+				topic.setId(resultSet.getLong(TOPIC_ID));
+				topic.setHeader(resultSet.getString(HEADER));
+				// add others columns
+				topics.add(topic);
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
+		return topics;
 	}
 
 	@Override
@@ -71,8 +109,8 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			resultSet = statement.executeQuery(SQL_SELECT_ALL_TOPICS);
 			while (resultSet.next()) {
 				Topic topic = new Topic();
-				topic.setId(resultSet.getLong(TopicTable.TOPIC_ID));
-				topic.setHeader(resultSet.getString(TopicTable.HEADER));
+				topic.setId(resultSet.getLong(TOPIC_ID));
+				topic.setHeader(resultSet.getString(HEADER));
 				// add others columns
 				topics.add(topic);
 			}

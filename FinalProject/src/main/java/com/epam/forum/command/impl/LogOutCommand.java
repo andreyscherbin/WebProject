@@ -11,12 +11,16 @@ import com.epam.forum.command.Router;
 
 public class LogOutCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
+	private static final String ATRIBUTE_NAME_LANGUAGE = "lang";
+	private static final String ATRIBUTE_VALUE_LANGUAGE = "en_US";
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setPage(PagePath.INDEX);
-		request.getSession().invalidate();		
+		router.setRedirect();
+		router.setPage(PagePath.HOME);
+		request.getSession().invalidate();
+		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, ATRIBUTE_VALUE_LANGUAGE);
 		return router;
 	}
 }
