@@ -6,7 +6,7 @@
 <title>Index</title>
 </head>
 <body>
-	<c:set var="lang" value="en_US" scope="session" />
-	<c:redirect url="/jsp/home.jsp"/>
+	<c:set var="lang" value="en_US" scope="session" />	
+	<jsp:forward page="/jsp/home.jsp" /> 
 </body>
 </html>

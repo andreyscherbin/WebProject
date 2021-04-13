@@ -11,12 +11,12 @@ import com.epam.forum.command.Router;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.service.SectionService;
-import com.epam.forum.resource.MessageManager;
 
 public class ViewSectionCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_SECTIONS = "sections";
-	private static final String ATRIBUTE_NAME_EMPTY_SECTIONS = "empty_sections";
+	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.sections";
 	private SectionService sectionService;
 
 	public ViewSectionCommand(SectionService sectionService) {
@@ -33,7 +33,7 @@ public class ViewSectionCommand implements Command {
 				request.setAttribute(ATRIBUTE_NAME_SECTIONS, sections);
 				router.setPage(PagePath.HOME);
 			} else {
-				request.setAttribute(ATRIBUTE_NAME_EMPTY_SECTIONS, MessageManager.getProperty("message.emptysections"));
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
 				router.setPage(PagePath.HOME);
 			}
 		} catch (ServiceException e) {

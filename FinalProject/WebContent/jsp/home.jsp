@@ -2,20 +2,16 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
 <html>
 <head>
-<%-- <jsp:include page="fragments/head.jspf"></jsp:include> --%>
-<!--what's the difference?-->
 <%@ include file="fragments/head.jspf"%>
 </head>
-<body>
-
-	<%-- <jsp:include page="fragments/navbar.jspf"></jsp:include> --%>
-	<!--   what is the difference? -->
+<body>	
 	<%@ include file="fragments/navbar.jspf"%>
 
 	<div class="container">
@@ -52,11 +48,11 @@
 									<li>
 										<div>
 											<a
-												href="section/${section.id}">${section.header}
+												href="section/${section.id}">${fn:escapeXml(section.header)}
 											</a>
 										</div>
 										<div>
-											<p>${section.description}</p>
+											<p>${fn:escapeXml(section.description)}</p>
 										</div>
 									</li>
 								</c:forEach>

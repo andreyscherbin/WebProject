@@ -12,16 +12,14 @@ import com.epam.forum.command.Router;
 
 public class LanguageCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_LANGUAGE = "lang";
-	private static final String ATRIBUTE_NAME_LANGUAGE = "lang";	
+	private static final String LANGUAGE = "lang";	
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setPage(PagePath.HOME);
-		router.setRedirect();
-		String lang = request.getParameter(PARAM_NAME_LANGUAGE);
-		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, lang);				
+		router.setPage(PagePath.HOME);		
+		String lang = request.getParameter(LANGUAGE);
+		request.getSession().setAttribute(LANGUAGE, lang);				
 		return router;
 	}
 }

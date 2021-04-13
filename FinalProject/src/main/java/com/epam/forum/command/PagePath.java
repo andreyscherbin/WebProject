@@ -9,8 +9,6 @@ public final class PagePath {
 	public static final String VIEW = "/jsp/view.jsp";
 	public static final String ERROR = "/jsp/error/error.jsp";	
 	
-	public static final String HOME_SECTIONS = "/controller?command=view_section";
-	
 	private PagePath() {
 	}
 }

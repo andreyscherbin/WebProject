@@ -4,24 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.epam.forum.command.PagePath;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.TopicTable;
-import com.epam.forum.model.entity.User;
-import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriteria;
 import com.epam.forum.model.repository.impl.HeaderSpecification;
 import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
-import com.epam.forum.model.repository.impl.UserNameSpecification;
 import com.epam.forum.model.service.TopicService;
-import com.epam.forum.resource.MessageManager;
-import com.epam.forum.validator.DigitLatinValidator;
-import com.epam.forum.validator.LatinCyrillicValidator;
+import com.epam.forum.validator.LatinCyrillicDigitValidator;
 
 public class TopicServiceImpl implements TopicService {
 	private static Logger logger = LogManager.getLogger();
@@ -50,7 +43,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<Topic> findTopicsByHeader(String pattern) throws ServiceException {
 		List<Topic> topics = new ArrayList<>();
-		if (!LatinCyrillicValidator.isLatinCyrillic(pattern)) {
+		if (!LatinCyrillicDigitValidator.isLatinCyrillic(pattern)) {
 			logger.info("not valid pattern");
 			return topics;
 		}

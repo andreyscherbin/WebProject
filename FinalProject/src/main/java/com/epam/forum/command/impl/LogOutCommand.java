@@ -17,7 +17,6 @@ public class LogOutCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setRedirect();
 		router.setPage(PagePath.HOME);
 		request.getSession().invalidate();
 		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, ATRIBUTE_VALUE_LANGUAGE);

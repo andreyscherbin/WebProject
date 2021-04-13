@@ -10,13 +10,12 @@
 		<servlet-class>com.epam.forum.controller.ControllerServlet</servlet-class>
 		<load-on-startup>20</load-on-startup>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>ControllerServlet</servlet-name>
-		<url-pattern>/controller</url-pattern>
-	</servlet-mapping>
-	
 	<error-page>
 		<error-code>500</error-code>
+		<location>/jsp/error/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
 		<location>/jsp/error/error.jsp</location>
 	</error-page>
 	<error-page>
