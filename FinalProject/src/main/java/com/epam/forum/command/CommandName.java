@@ -2,6 +2,7 @@ package com.epam.forum.command;
 
 public enum CommandName {
 	LOGIN,
+	REGISTRATION,
 	VIEW_USER,
 	VIEW_USER_BY_ID,
 	SORT_USER_BY_ID,
@@ -10,5 +11,5 @@ public enum CommandName {
 	VIEW_TOPIC,
 	VIEW_SECTION,
 	LANGUAGE,
-	VIEW_TOPIC_BY_HEADER
+	VIEW_TOPIC_BY_HEADER	
 }

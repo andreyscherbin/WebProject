@@ -17,6 +17,8 @@ import com.epam.forum.pool.ConnectionPool;
 @WebServlet(name = "/ControllerServlet", urlPatterns = { "/controller" })
 public class ControllerServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 87620L;
+	
 	@Override
 	public void init() throws ServletException {
 		ConnectionPool.getInstance();

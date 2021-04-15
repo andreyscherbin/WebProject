@@ -7,6 +7,7 @@ import com.epam.forum.command.impl.EmptyCommand;
 import com.epam.forum.command.impl.LanguageCommand;
 import com.epam.forum.command.impl.LogInCommand;
 import com.epam.forum.command.impl.LogOutCommand;
+import com.epam.forum.command.impl.RegistrationCommand;
 import com.epam.forum.command.impl.SortUserByIdCommand;
 import com.epam.forum.command.impl.ViewSectionCommand;
 import com.epam.forum.command.impl.ViewTopicByHeaderCommand;
@@ -31,6 +32,7 @@ public class CommandProvider {
 		TopicService topicService = TopicServiceImpl.getInstance();
 		SectionService sectionService = SectionServiceImpl.getInstance();
 		commands.put(CommandName.LOGIN, new LogInCommand(userService));
+		commands.put(CommandName.REGISTRATION, new RegistrationCommand(userService));
 		commands.put(CommandName.VIEW_USER, new ViewUserCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_ID, new ViewUserByIdCommand(userService));
 		commands.put(CommandName.SORT_USER_BY_ID, new SortUserByIdCommand(userService));

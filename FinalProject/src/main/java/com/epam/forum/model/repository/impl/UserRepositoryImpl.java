@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriteria;
+import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
 
@@ -23,34 +24,64 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	private static final String SQL_SELECT_ALL_USERS = "SELECT user_id, username, password, email, register_date, last_login_date, "
 			+ "is_email_verifed, is_active, role FROM users";
+	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
+			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
 
 	@Override
 	public Optional<User> find(Long id) throws RepositoryException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void create(User entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+	public void create(User user) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_INSERT_USER, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, user.getUserName());
+			statement.setString(2, user.getPassword());
+			statement.setString(3, user.getEmail());
+			statement.setTimestamp(4, Timestamp.valueOf(user.getRegisterDate()));
+			statement.setBoolean(5, user.isEmailVerifed());
+			statement.setBoolean(6, user.isActive());
+			statement.setString(7, user.getRole().name());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("Creating user failed, no rows affected.");
+			}
+			try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					user.setId(generatedKeys.getLong(1));
+				} else {
+					throw new RepositoryException("Creating user failed, no ID obtained.");
+				}
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override
 	public void update(User entity) throws RepositoryException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void delete(User entity) throws RepositoryException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public List<User> query(Specification<User> specification) throws RepositoryException {
-		List<SearchCriteria> criterias = specification.getSearchCriterias();
+		List<SearchCriterion> criterias = specification.getSearchCriterions();
 		List<User> users = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -61,7 +92,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			connection = pool.getConnection();
 			statement = connection.prepareStatement(specification.toSqlQuery());
 			int i = 1;
-			for (SearchCriteria criterion : criterias) {
+			for (SearchCriterion criterion : criterias) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
 				if (key.equals(USERNAME)) {
@@ -77,10 +108,13 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			while (resultSet.next()) {
 				User user = new User();
 				user.setId(resultSet.getLong(USER_ID));
+				user.setUserName(resultSet.getString(USERNAME));
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
-				// user.setRegisterDate(resultSet.getTimestamp("register_date")); //fix me
-				user.setUserName(resultSet.getString(USERNAME));				
+				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				user.setLastLoginDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
+				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));
 				user.setRole(role);
 				users.add(user);
@@ -97,7 +131,6 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	@Override
 	public List<User> sort(Comparator<User> comparator) throws RepositoryException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -116,10 +149,13 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			while (resultSet.next()) {
 				User user = new User();
 				user.setId(resultSet.getLong(USER_ID));
+				user.setUserName(resultSet.getString(USERNAME));
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
-				// user.setRegisterDate(resultSet.getTimestamp("register_date")); // fix me
-				user.setUserName(resultSet.getString(USERNAME));
+				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				user.setLastLoginDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
+				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));
 				user.setRole(role);
 				users.add(user);

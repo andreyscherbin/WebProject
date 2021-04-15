@@ -13,7 +13,7 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriteria;
+import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
 
@@ -50,7 +50,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 
 	@Override
 	public List<Topic> query(Specification<Topic> specification) throws RepositoryException {
-		List<SearchCriteria> criterias = specification.getSearchCriterias();
+		List<SearchCriterion> criterias = specification.getSearchCriterions();
 		List<Topic> topics = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -61,7 +61,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			connection = pool.getConnection();
 			statement = connection.prepareStatement(specification.toSqlQuery());
 			int i = 1;
-			for (SearchCriteria criterion : criterias) {
+			for (SearchCriterion criterion : criterias) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
 				if (key.equals(HEADER)) {

@@ -50,7 +50,7 @@
 					</a></li>
 				</c:if>
 				<c:if test="${sessionScope.role == null}">
-					<li class="nav-item"><a class="nav-link" href="#">Sign Up</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/jsp/registration.jsp">Sign Up</a></li>
 				</c:if>
 				<c:if test="${sessionScope.role != null}">
 					<li class="nav-item"><a class="nav-link"

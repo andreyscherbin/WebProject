@@ -1,5 +1,6 @@
 package com.epam.forum.model.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -9,16 +10,19 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Operation;
+import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriteria;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.SearchCriterion;
+import com.epam.forum.model.repository.impl.EmailSpecification;
 import com.epam.forum.model.repository.impl.IdSpecification;
 import com.epam.forum.model.repository.impl.UserNameSpecification;
 import com.epam.forum.model.repository.impl.UserRepositoryImpl;
 import com.epam.forum.model.service.UserService;
+import com.epam.forum.security.PasswordEncoder;
 import com.epam.forum.validator.DigitLatinValidator;
+import com.epam.forum.validator.EmailValidator;
 import com.epam.forum.validator.PasswordValidator;
 
 public class UserServiceImpl implements UserService {
@@ -51,7 +55,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> user;
 		List<User> users;
 		try {
-			IdSpecification spec1 = new IdSpecification(new SearchCriteria(UserTable.USER_ID, Operation.EQUAL, id));
+			IdSpecification spec1 = new IdSpecification(new SearchCriterion(UserTable.USER_ID, Operation.EQUAL, id));
 			users = userRepository.query(spec1);
 			if (!users.isEmpty()) {
 				user = Optional.of(users.get(0));
@@ -84,7 +88,7 @@ public class UserServiceImpl implements UserService {
 		}
 		try {
 			UserNameSpecification spec1 = new UserNameSpecification(
-					new SearchCriteria(UserTable.USERNAME, Operation.EQUAL, userName));
+					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
 			users = userRepository.query(spec1);
 		} catch (RepositoryException e) {
 			throw new ServiceException("find user exception with username: " + userName, e);
@@ -93,35 +97,83 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> authenticate(String userName, String password) throws ServiceException {
+	public Optional<User> authenticate(String userName, String password) throws ServiceException {
 		List<User> users = new ArrayList<>();
-		if (!DigitLatinValidator.isDigitLatin(userName) || !PasswordValidator.isPasswordValid(password)) { // situation
-																											// #1
+		Optional<User> user = Optional.empty();
+		if (!DigitLatinValidator.isDigitLatin(userName) || !PasswordValidator.isPasswordValid(password)) {
 			logger.info("not valid username or password");
-			return users;
+			return user;
 		}
 		try {
 			UserNameSpecification spec1 = new UserNameSpecification(
-					new SearchCriteria(UserTable.USERNAME, Operation.EQUAL, userName));
+					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
 			users = userRepository.query(spec1);
-		} catch (RepositoryException e) { // situation #2
+		} catch (RepositoryException e) {
 			throw new ServiceException("query exception with username: " + userName, e);
 		}
-		if (!users.isEmpty()) { // situation #3
-			User findUser = users.get(0);
-			String findUserPassword = findUser.getPassword();
-			// password = PasswordEncoder.encodeString(password); need do registration, then
-			// check password encoder and decoder
-			if (findUserPassword.equals(password)) { // situation #4
+		if (!users.isEmpty()) {
+			user = Optional.of(users.get(0));
+			String findUserPassword = user.get().getPassword();
+			password = PasswordEncoder.encodeString(password);
+			if (findUserPassword.equals(password)) {
 				logger.info("success authentication: {}", userName);
-			} else { // situation #5
+			} else {
 				logger.info("failed authentication: {}", userName);
-				users.clear();
+				user = Optional.empty();
 			}
-		} else { // situation #6
+		} else {
 			logger.info("no such user: {}", userName);
 			logger.info("failed authentication: {}", userName);
 		}
-		return users;
+
+		return user;
+	}
+
+	@Override
+	public Optional<User> registrate(String userName, String password, String email) throws ServiceException {
+		List<User> users = new ArrayList<>();
+		Optional<User> user = Optional.empty();
+		if (!DigitLatinValidator.isDigitLatin(userName) || !PasswordValidator.isPasswordValid(password)
+				|| !EmailValidator.isEmailValid(email)) {
+			logger.info("not valid username or password or email");
+			return user;
+		}
+		try {
+			UserNameSpecification spec1 = new UserNameSpecification(
+					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
+			EmailSpecification spec2 = new EmailSpecification(
+					new SearchCriterion(UserTable.EMAIL, Operation.EQUAL, email));
+			users = userRepository.query(spec1.or(spec2));
+		} catch (RepositoryException e) {
+			throw new ServiceException("query exception with username: " + userName + " and email : " + email, e);
+		}
+		if (users.isEmpty()) {
+			User registeredUser = new User();
+			registeredUser.setUserName(userName);
+			registeredUser.setPassword(PasswordEncoder.encodeString(password));
+			registeredUser.setEmail(email);
+			registeredUser.setRegisterDate(LocalDateTime.now());
+			registeredUser.setEmailVerifed(false);
+			registeredUser.setActive(false);
+			registeredUser.setRole(Role.GUEST);
+			try {
+				userRepository.create(registeredUser);
+			} catch (RepositoryException e) {
+				throw new ServiceException("create user exception with user: " + registeredUser);
+			}
+			user = Optional.of(registeredUser);
+			logger.info("success registration: {} {}", userName, email);
+		} else {
+			logger.info("user with such username: {} or email: {} already exists: {}", userName, email);
+			logger.info("failed registration: {}", userName);
+			/*
+			 * for (User alreadyExistingUser : users) { if
+			 * (alreadyExistingUser.getEmail().equals(email) ||
+			 * alreadyExistingUser.getUserName().equals(userName)) { user =
+			 * Optional.of(alreadyExistingUser); } }
+			 */
+			// fix this, придумать что возвращать в случае совпадения почты или имени
+		}
+		return user;
 	}
 }
