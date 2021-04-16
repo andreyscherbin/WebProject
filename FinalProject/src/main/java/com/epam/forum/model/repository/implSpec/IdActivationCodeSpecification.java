@@ -1,20 +1,20 @@
-package com.epam.forum.model.repository.impl;
+package com.epam.forum.model.repository.implSpec;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epam.forum.model.entity.User;
+import com.epam.forum.model.entity.ActivationCode;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 
-public class IdSpecification implements Specification<User> {
+public class IdActivationCodeSpecification implements Specification<ActivationCode> {
 
-	private static final String SQL_SELECT_USERS_BY_ID = "SELECT user_id, username, password, email, register_date, last_login_date, "
-			+ "is_email_verifed, is_active, role FROM users WHERE ";
+	private static final String SQL_SELECT_ACTIVATION_CODE_BY_ID = "SELECT activationcodes.activationcode_id, activationcodes.creation_date, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
+			+ "users.is_email_verifed, users.is_active, users.role FROM activationcodes JOIN users ON activationcodes.user_id = users.user_id WHERE ";
 
 	private List<SearchCriterion> criterions;
 
-	public IdSpecification(SearchCriterion searchCriteria) {
+	public IdActivationCodeSpecification(SearchCriterion searchCriteria) {
 		criterions = new ArrayList<>();
 		criterions.add(searchCriteria);
 	}
@@ -22,7 +22,7 @@ public class IdSpecification implements Specification<User> {
 	@Override
 	public String toSqlQuery() {
 		StringBuilder newQuery = new StringBuilder();
-		newQuery.append(SQL_SELECT_USERS_BY_ID);
+		newQuery.append(SQL_SELECT_ACTIVATION_CODE_BY_ID);
 		for (SearchCriterion criteria : criterions) {
 			String key = criteria.getKey();
 			String operation = criteria.getOperation();

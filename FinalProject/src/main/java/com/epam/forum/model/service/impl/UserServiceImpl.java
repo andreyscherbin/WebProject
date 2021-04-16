@@ -15,10 +15,10 @@ import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.impl.EmailSpecification;
-import com.epam.forum.model.repository.impl.IdSpecification;
-import com.epam.forum.model.repository.impl.UserNameSpecification;
-import com.epam.forum.model.repository.impl.UserRepositoryImpl;
+import com.epam.forum.model.repository.implRep.UserRepositoryImpl;
+import com.epam.forum.model.repository.implSpec.EmailUserSpecification;
+import com.epam.forum.model.repository.implSpec.IdUserSpecification;
+import com.epam.forum.model.repository.implSpec.UserNameSpecification;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.security.PasswordEncoder;
 import com.epam.forum.validator.DigitLatinValidator;
@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
 		Optional<User> user;
 		List<User> users;
 		try {
-			IdSpecification spec1 = new IdSpecification(new SearchCriterion(UserTable.USER_ID, Operation.EQUAL, id));
+			IdUserSpecification spec1 = new IdUserSpecification(
+					new SearchCriterion(UserTable.USER_ID, Operation.EQUAL, id));
 			users = userRepository.query(spec1);
 			if (!users.isEmpty()) {
 				user = Optional.of(users.get(0));
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			UserNameSpecification spec1 = new UserNameSpecification(
 					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
-			EmailSpecification spec2 = new EmailSpecification(
+			EmailUserSpecification spec2 = new EmailUserSpecification(
 					new SearchCriterion(UserTable.EMAIL, Operation.EQUAL, email));
 			users = userRepository.query(spec1.or(spec2));
 		} catch (RepositoryException e) {
@@ -175,5 +176,14 @@ public class UserServiceImpl implements UserService {
 			// fix this, придумать что возвращать в случае совпадения почты или имени
 		}
 		return user;
+	}
+
+	@Override
+	public void save(User user) throws ServiceException {
+		try {
+			userRepository.update(user);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update user exception", e);
+		}
 	}
 }

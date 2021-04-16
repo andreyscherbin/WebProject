@@ -7,7 +7,7 @@ import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.impl.SectionRepositoryImpl;
+import com.epam.forum.model.repository.implRep.SectionRepositoryImpl;
 import com.epam.forum.model.service.SectionService;
 
 public class SectionServiceImpl implements SectionService {

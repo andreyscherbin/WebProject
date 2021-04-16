@@ -27,8 +27,8 @@ class ConnectionFactory {
 			logger.fatal("can't registrate driver {}, exception {}", driverName, e);
 			throw new RuntimeException("fatal: can't registrate driver: " + driverName, e);
 		} catch (IOException e) {
-			logger.fatal("can't load properties", e);
-			throw new RuntimeException("can't load properties: ", e);
+			logger.fatal("can't load database properties", e);
+			throw new RuntimeException("can't load database properties: ", e);
 		}
 		DATABASE_URL = (String) properties.get(DB_URL);
 	}

@@ -15,6 +15,7 @@
 	<%@ include file="fragments/navbar.jspf"%>
 
 	<div class="container">
+	<%@ include file="fragments/messages.jspf"%>
 		<!-- SECTIONS -->
 
 		<div class="row">

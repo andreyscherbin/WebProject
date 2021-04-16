@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.impl;
+package com.epam.forum.model.repository.implSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,13 @@ import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 
-public class HeaderSpecification implements Specification<Topic> {
+public class HeaderTopicSpecification implements Specification<Topic> {
 	private static final String SQL_SELECT_TOPICS_BY_HEADER = "SELECT topic_id, header, content, is_pinned, is_closed, creation_date, section_id, user_id "
 			+ "FROM topics WHERE ";
 
 	private List<SearchCriterion> criterions;
 
-	public HeaderSpecification(SearchCriterion searchCriteria) {
+	public HeaderTopicSpecification(SearchCriterion searchCriteria) {
 		criterions = new ArrayList<>();
 		criterions.add(searchCriteria);
 	}

@@ -10,6 +10,7 @@ import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.User;
+import com.epam.forum.model.service.ActivationSenderService;
 import com.epam.forum.model.service.UserService;
 
 public class RegistrationCommand implements Command {
@@ -25,9 +26,11 @@ public class RegistrationCommand implements Command {
 	 */
 	private static final String ATTRIBUTE_VALUE_REGISTRATION = "message.error.registration";
 	private UserService userService;
+	private ActivationSenderService activationSenderService;
 
-	public RegistrationCommand(UserService userService) {
+	public RegistrationCommand(UserService userService, ActivationSenderService activationSenderService) {
 		this.userService = userService;
+		this.activationSenderService = activationSenderService;
 	}
 
 	@Override
@@ -41,6 +44,8 @@ public class RegistrationCommand implements Command {
 			if (!registeredUser.isEmpty()) {
 				router.setPage(PagePath.HOME);
 				router.setRedirect();
+				User user = registeredUser.get();
+				activationSenderService.sendActivationCode(user);
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_REGISTRATION);
 				router.setPage(PagePath.REGISTRATION);

@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.impl;
+package com.epam.forum.model.repository.implRep;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +13,7 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
+import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
@@ -26,6 +27,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			+ "is_email_verifed, is_active, role FROM users";
 	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
 			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
+	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , role = ? WHERE user_id = ?";
 
 	@Override
 	public Optional<User> find(Long id) throws RepositoryException {
@@ -70,8 +72,29 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 	}
 
 	@Override
-	public void update(User entity) throws RepositoryException {
-
+	public void update(User user) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_UPDATE_USER);
+			statement.setBoolean(1, user.isActive());
+			statement.setString(2, user.getRole().name());
+			statement.setLong(3, user.getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("updated user failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override
@@ -81,7 +104,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	@Override
 	public List<User> query(Specification<User> specification) throws RepositoryException {
-		List<SearchCriterion> criterias = specification.getSearchCriterions();
+		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<User> users = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -92,7 +115,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			connection = pool.getConnection();
 			statement = connection.prepareStatement(specification.toSqlQuery());
 			int i = 1;
-			for (SearchCriterion criterion : criterias) {
+			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
 				if (key.equals(USERNAME)) {
@@ -112,7 +135,10 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
 				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
-				user.setLastLoginDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				Timestamp lastLoginDate = resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE);
+				if (lastLoginDate != null) {
+					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
+				}
 				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
 				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));
@@ -153,7 +179,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
 				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
-				user.setLastLoginDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+				user.setLastLoginDate(resultSet.getTimestamp(LAST_LOGIN_DATE).toLocalDateTime());
 				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
 				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));

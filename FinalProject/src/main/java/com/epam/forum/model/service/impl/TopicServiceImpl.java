@@ -11,8 +11,8 @@ import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.TopicTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.impl.HeaderSpecification;
-import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
+import com.epam.forum.model.repository.implRep.TopicRepositoryImpl;
+import com.epam.forum.model.repository.implSpec.HeaderTopicSpecification;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.validator.LatinCyrillicDigitValidator;
 
@@ -48,7 +48,7 @@ public class TopicServiceImpl implements TopicService {
 			return topics;
 		}
 		try {
-			HeaderSpecification headerSpecification = new HeaderSpecification(new SearchCriterion(TopicTable.HEADER,
+			HeaderTopicSpecification headerSpecification = new HeaderTopicSpecification(new SearchCriterion(TopicTable.HEADER,
 					Operation.LIKE, Operation.ANY_SEQUENCE + pattern + Operation.ANY_SEQUENCE));
 			topics = topicRepository.query(headerSpecification);
 		} catch (RepositoryException e) {

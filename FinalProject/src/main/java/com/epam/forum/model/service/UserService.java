@@ -13,4 +13,5 @@ public interface UserService {
 	List<User> findUsersByUserName(String userName) throws ServiceException;
 	Optional<User> authenticate(String userName, String password) throws ServiceException;	
 	Optional<User> registrate(String userName, String password, String email) throws ServiceException;
+	void save(User user) throws ServiceException;
 }

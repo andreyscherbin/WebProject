@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.impl;
+package com.epam.forum.model.repository.implRep;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,7 +50,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 
 	@Override
 	public List<Topic> query(Specification<Topic> specification) throws RepositoryException {
-		List<SearchCriterion> criterias = specification.getSearchCriterions();
+		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Topic> topics = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -61,7 +61,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			connection = pool.getConnection();
 			statement = connection.prepareStatement(specification.toSqlQuery());
 			int i = 1;
-			for (SearchCriterion criterion : criterias) {
+			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
 				if (key.equals(HEADER)) {
