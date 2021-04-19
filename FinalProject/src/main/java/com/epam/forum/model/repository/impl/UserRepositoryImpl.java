@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.implRep;
+package com.epam.forum.model.repository.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

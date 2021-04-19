@@ -15,10 +15,10 @@ import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.implRep.UserRepositoryImpl;
-import com.epam.forum.model.repository.implSpec.EmailUserSpecification;
-import com.epam.forum.model.repository.implSpec.IdUserSpecification;
-import com.epam.forum.model.repository.implSpec.UserNameSpecification;
+import com.epam.forum.model.repository.impl.EmailUserSpecification;
+import com.epam.forum.model.repository.impl.IdUserSpecification;
+import com.epam.forum.model.repository.impl.UserNameSpecification;
+import com.epam.forum.model.repository.impl.UserRepositoryImpl;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.security.PasswordEncoder;
 import com.epam.forum.validator.DigitLatinValidator;
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findUsersByUserName(String userName) throws ServiceException {
 		List<User> users = new ArrayList<>();
-		if (!DigitLatinValidator.isDigitLatin(userName)) {
+		if (!DigitLatinValidator.isValid(userName)) {
 			logger.info("not valid username");
 			return users;
 		}
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> authenticate(String userName, String password) throws ServiceException {
 		List<User> users = new ArrayList<>();
 		Optional<User> user = Optional.empty();
-		if (!DigitLatinValidator.isDigitLatin(userName) || !PasswordValidator.isPasswordValid(password)) {
+		if (!DigitLatinValidator.isValid(userName) || !PasswordValidator.isValid(password)) {
 			logger.info("not valid username or password");
 			return user;
 		}
@@ -134,8 +134,8 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> registrate(String userName, String password, String email) throws ServiceException {
 		List<User> users = new ArrayList<>();
 		Optional<User> user = Optional.empty();
-		if (!DigitLatinValidator.isDigitLatin(userName) || !PasswordValidator.isPasswordValid(password)
-				|| !EmailValidator.isEmailValid(email)) {
+		if (!DigitLatinValidator.isValid(userName) || !PasswordValidator.isValid(password)
+				|| !EmailValidator.isValid(email)) {
 			logger.info("not valid username or password or email");
 			return user;
 		}

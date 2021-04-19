@@ -37,7 +37,7 @@ public class ActivationCommand implements Command {
 		String activationCodeId = request.getParameter(PARAM_NAME_CODE);
 		Optional<ActivationCode> activationCode;
 		try {
-			activationCode = findActivationCode(activationCodeId);
+			activationCode = activationSenderService.findActivationCodeById(activationCodeId);
 			if (!activationCode.isEmpty()) {
 				ActivationCode code = activationCode.get();
 				if (!isActivationRequestInvalid(code, username)) {
@@ -57,11 +57,6 @@ public class ActivationCommand implements Command {
 			router.setRedirect();
 		}
 		return router;
-	}
-
-	private Optional<ActivationCode> findActivationCode(String id) throws ServiceException {
-		Optional<ActivationCode> activationCode = activationSenderService.findActivationCodeById(id);
-		return activationCode;
 	}
 
 	private boolean isActivationRequestInvalid(ActivationCode activationCode, String username) {

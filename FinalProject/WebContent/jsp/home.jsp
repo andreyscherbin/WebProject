@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
@@ -11,11 +11,11 @@
 <head>
 <%@ include file="fragments/head.jspf"%>
 </head>
-<body>	
+<body>
 	<%@ include file="fragments/navbar.jspf"%>
 
 	<div class="container">
-	<%@ include file="fragments/messages.jspf"%>
+		<%@ include file="fragments/messages.jspf"%>
 		<!-- SECTIONS -->
 
 		<div class="row">
@@ -31,11 +31,9 @@
 									</h4>
 								</div>
 								<div class="col s6">
-									<%-- <a sec:authorize="hasAnyAuthority('ADMIN', 'HEAD_ADMIN')"
-									th:href="@{/section/new}" th:text="#{new.section}"
-									class="right waves-effect waves-light btn"></a> --%>
 									<c:if test="${sessionScope.role == 'ADMIN'}">
-									 <a href="section/new"> <fmt:message key="new.section" /> </a>
+										<a href="section/new"> <fmt:message key="new.section" />
+										</a>
 									</c:if>
 								</div>
 							</div>
@@ -49,7 +47,7 @@
 									<li>
 										<div>
 											<a
-												href="section/${section.id}">${fn:escapeXml(section.header)}
+												href="${pageContext.request.contextPath}/controller?command=view_topic_by_section&section=${section.id}">${fn:escapeXml(section.header)}
 											</a>
 										</div>
 										<div>

@@ -1,51 +1,66 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ page session="true"%>
+
+<fmt:setLocale value="${sessionScope.lang}" />
+<fmt:setBundle basename="pagecontent" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Section</title>
-<%-- <jsp:include page="fragments/head.jspf"></jsp:include> --%>
-<!--what's the difference?-->
 <%@ include file="fragments/head.jspf"%>
 </head>
 <body>
 
-    <%-- <jsp:include page="fragments/navbar.jspf"></jsp:include> --%>
-	<!--   what is the difference? -->
 	<%@ include file="fragments/navbar.jspf"%>
 
-    <div class="container">
+	<div class="container">
 
-        <div th:replace="fragments/messages :: messages"></div>
+		<%@ include file="fragments/messages.jspf"%>
 
-        <div class="row">
-            <div class="col s12">
-                <div class="row">
-                    <div class="col s12">
-                        <h3 th:text="#{page.section.topics.in.section} + ' ' + ${section.name}">Topics in section</h3>
-                        <p th:text="${section.description}"></p>
-                        <a sec:authorize="hasAnyAuthority('ADMIN', 'HEAD_ADMIN')" th:href="@{/section/delete/} + ${section.id}"
-                            th:text="#{page.section.delete.section}" class="waves-effect waves-light btn"></a>
-                        <a th:href="@{/topic/new}" th:text="#{page.section.new.topic}" class="right waves-effect waves-light btn"></a>
-                    </div>
-                </div>
-                <div class="divider"></div>
-                <div class="row" th:each="topic : ${topics}">
-                    <div class="col s12">
-                        <div class="section">
-                            <a th:href="@{/topic/} + ${topic.id}" th:text="${topic.user.username} + ': ' + ${topic.title}"></a>
-                            <span class="right" th:text="${topic.creationDate} ? ${#calendars.format(topic.creationDate, 'dd MMMM yyyy HH:mm')}"></span> <span class="truncate"
-                                th:text="${topic.content}"></span>
-                        </div>
-                        <div class="divider"></div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer th:replace="fragments/footer :: footer"></footer>
+		<div class="row">
+			<div class="col s12">
+				<div class="row">
+					<div class="col s12">
+						<h3>
+							<fmt:message key="page.section.topics.in.section" />
+							${fn:escapeXml(section.header)}
+						</h3>
+						<p>${fn:escapeXml(section.description)}</p>
+						<c:if test="${sessionScope.role == 'ADMIN'}">
+							<a href="section/delete/${sections.id}"> <fmt:message
+									key="page.section.delete.section" />
+							</a>
+						</c:if>
+						<a href="topic/new/"> <fmt:message
+								key="page.section.new.topic" />
+						</a>
+					</div>
+				</div>
+				<div class="divider"></div>
+				<c:forEach var="topic" items="${topics}">
+					<div class="col s12">
+						<div class="section">
+							<a
+								href="${pageContext.request.contextPath}/controller?command=view_topic_by_id&topic_id=${topic.id}">${fn:escapeXml(topic.user.userName)}
+								: ${fn:escapeXml(topic.header)} </a> <span> <fmt:parseDate
+									value="${ topic.creationDate }" pattern="yyyy-MM-dd'T'HH:mm"
+									var="parsedDateTime" type="both" /> <fmt:formatDate
+									pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />
+							</span> <span>${fn:escapeXml(topic.content)} </span>
+						</div>
+						<div>
+							<p>${fn:escapeXml(section.description)}</p>
+						</div>
+						<div class="divider"></div>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

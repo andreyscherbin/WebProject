@@ -31,7 +31,7 @@
 					<div class="row">
 						<div class="col s12">
 							<div class="section">
-								<a href="topic/${topic.id}">${fn:escapeXml(topic.user.username)}
+								<a href="topic/${topic.id}">${fn:escapeXml(topic.user.userName)}
 									${fn:escapeXml(topic.header)}</a>
 								<%-- <span class="right" th:text="${topic.creationDate} ? ${#calendars.format(topic.creationDate, 'dd MMMM yyyy HH:mm')}"></span> <span class="truncate"
                                 th:text="${topic.content}"></span> --%>

@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.implSpec;
+package com.epam.forum.model.repository.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +21,12 @@ public class IdActivationCodeSpecification implements Specification<ActivationCo
 
 	@Override
 	public String toSqlQuery() {
-		StringBuilder newQuery = new StringBuilder();
-		newQuery.append(SQL_SELECT_ACTIVATION_CODE_BY_ID);
+		StringBuilder query = new StringBuilder();
+		query.append(SQL_SELECT_ACTIVATION_CODE_BY_ID);
 		for (SearchCriterion criteria : criterions) {
-			String key = criteria.getKey();
-			String operation = criteria.getOperation();
-			newQuery.append(key);
-			newQuery.append(operation);
-			newQuery.append("?");
+			query.append(criteria);
 		}
-		return newQuery.toString();
+		return query.toString();
 	}
 
 	@Override

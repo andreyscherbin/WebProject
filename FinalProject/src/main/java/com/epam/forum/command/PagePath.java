@@ -8,7 +8,8 @@ public final class PagePath {
 	public static final String SEARCH = "/jsp/search.jsp";
 	public static final String SECTION = "/jsp/section.jsp";
 	public static final String VIEW = "/jsp/view.jsp";
-	public static final String ERROR = "/jsp/error/error.jsp";	
+	public static final String ERROR = "/jsp/error/error.jsp";
+	public static final String TOPIC = "/jsp/topic.jsp";
 	
 	private PagePath() {
 	}

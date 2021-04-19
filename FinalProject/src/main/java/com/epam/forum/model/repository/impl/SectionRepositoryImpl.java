@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.implRep;
+package com.epam.forum.model.repository.impl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,38 +22,32 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 
 	@Override
 	public Optional<Section> find(Long id) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void create(Section entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void update(Section entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(Section entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<Section> query(Specification<Section> specification) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<Section> sort(Comparator<Section> comparator) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

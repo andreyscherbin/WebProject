@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.epam.forum.command.impl.ActivationCommand;
+import com.epam.forum.command.impl.CreatePostCommand;
+import com.epam.forum.command.impl.DeletePostByIdCommand;
 import com.epam.forum.command.impl.EmptyCommand;
 import com.epam.forum.command.impl.LanguageCommand;
 import com.epam.forum.command.impl.LogInCommand;
@@ -13,15 +15,19 @@ import com.epam.forum.command.impl.RegistrationCommand;
 import com.epam.forum.command.impl.SortUserByIdCommand;
 import com.epam.forum.command.impl.ViewSectionCommand;
 import com.epam.forum.command.impl.ViewTopicByHeaderCommand;
+import com.epam.forum.command.impl.ViewTopicByIdCommand;
+import com.epam.forum.command.impl.ViewTopicBySectionCommand;
 import com.epam.forum.command.impl.ViewTopicCommand;
 import com.epam.forum.command.impl.ViewUserByIdCommand;
 import com.epam.forum.command.impl.ViewUserByUserNameCommand;
 import com.epam.forum.command.impl.ViewUserCommand;
 import com.epam.forum.model.service.ActivationSenderService;
+import com.epam.forum.model.service.PostService;
 import com.epam.forum.model.service.SectionService;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.model.service.impl.ActivationSenderServiceImpl;
+import com.epam.forum.model.service.impl.PostServiceImpl;
 import com.epam.forum.model.service.impl.SectionServiceImpl;
 import com.epam.forum.model.service.impl.TopicServiceImpl;
 import com.epam.forum.model.service.impl.UserServiceImpl;
@@ -35,7 +41,9 @@ public class CommandProvider {
 		UserService userService = UserServiceImpl.getInstance();
 		TopicService topicService = TopicServiceImpl.getInstance();
 		SectionService sectionService = SectionServiceImpl.getInstance();
+		PostService postService = PostServiceImpl.getInstance();
 		ActivationSenderService activationSenderService = ActivationSenderServiceImpl.getInstance();
+
 		commands.put(CommandName.LOGIN, new LogInCommand(userService));
 		commands.put(CommandName.REGISTRATION, new RegistrationCommand(userService, activationSenderService));
 		commands.put(CommandName.ACTIVATION, new ActivationCommand(userService, activationSenderService));
@@ -45,7 +53,11 @@ public class CommandProvider {
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.VIEW_TOPIC, new ViewTopicCommand(topicService));
 		commands.put(CommandName.VIEW_TOPIC_BY_HEADER, new ViewTopicByHeaderCommand(topicService));
+		commands.put(CommandName.VIEW_TOPIC_BY_SECTION, new ViewTopicBySectionCommand(topicService));
+		commands.put(CommandName.VIEW_TOPIC_BY_ID, new ViewTopicByIdCommand(topicService, postService));
 		commands.put(CommandName.VIEW_SECTION, new ViewSectionCommand(sectionService));
+		commands.put(CommandName.CREATE_POST, new CreatePostCommand(userService, topicService, postService));
+		commands.put(CommandName.DELETE_POST_BY_ID, new DeletePostByIdCommand(postService));
 		commands.put(CommandName.LOGOUT, new LogOutCommand());
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());
 	}

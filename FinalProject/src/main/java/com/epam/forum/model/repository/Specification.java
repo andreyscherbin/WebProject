@@ -15,7 +15,7 @@ public interface Specification<T extends Entity> {
 		this.getSearchCriterions().addAll(criterias);
 		return this;
 	}
-
+	
 	default Specification<T> or(Specification<T> other) {
 		List<SearchCriterion> criterias = other.getSearchCriterions();
 		this.getSearchCriterions().get(0).setOr();

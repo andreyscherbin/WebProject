@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository.implRep;
+package com.epam.forum.model.repository.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,8 +27,7 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 
 	@Override
 	public Optional<ActivationCode> find(String id) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -59,8 +58,7 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 
 	@Override
 	public void update(ActivationCode entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -142,13 +140,11 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 
 	@Override
 	public List<ActivationCode> sort(Comparator<ActivationCode> comparator) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<ActivationCode> findAll() throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }
