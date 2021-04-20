@@ -12,17 +12,19 @@ import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.service.PostService;
 import com.epam.forum.validator.DigitValidator;
+import com.epam.forum.validator.PostValidator;
 
-public class DeletePostByIdCommand implements Command {
+public class EditPostCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_POST_ID = "post_id";
+	private static final String PARAM_NAME_CONTENT = "content";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_POST = "message.empty.post";
 
 	private PostService postService;
 
-	public DeletePostByIdCommand(PostService postService) {
+	public EditPostCommand(PostService postService) {
 		this.postService = postService;
 	}
 
@@ -30,7 +32,8 @@ public class DeletePostByIdCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String id = request.getParameter(PARAM_NAME_POST_ID);
-		if (!DigitValidator.isValid(id)) {
+		String content = request.getParameter(PARAM_NAME_CONTENT);
+		if (!DigitValidator.isValid(id) && !PostValidator.isValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;
@@ -40,7 +43,8 @@ public class DeletePostByIdCommand implements Command {
 		try {
 			post = postService.findPostById(postId);
 			if (!post.isEmpty()) {
-				postService.delete(post.get());
+				post.get().setContent(content);
+				postService.edit(post.get());
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_POST);
 			}

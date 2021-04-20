@@ -14,4 +14,5 @@ public interface UserService {
 	Optional<User> authenticate(String userName, String password) throws ServiceException;	
 	Optional<User> registrate(String userName, String password, String email) throws ServiceException;
 	void save(User user) throws ServiceException;
+	void updateLastLoginDate(User user) throws ServiceException;
 }

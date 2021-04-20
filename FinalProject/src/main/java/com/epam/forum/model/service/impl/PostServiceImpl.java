@@ -94,4 +94,13 @@ public class PostServiceImpl implements PostService {
 		}
 		return post;
 	}
+
+	@Override
+	public void edit(Post post) throws ServiceException {		
+		try {
+			postRepository.update(post);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update post exception with post: " + post, e);
+		}
+	}
 }

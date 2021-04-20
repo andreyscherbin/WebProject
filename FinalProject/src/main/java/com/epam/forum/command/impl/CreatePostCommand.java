@@ -27,7 +27,6 @@ public class CreatePostCommand implements Command {
 	private static final String PARAM_NAME_CONTENT = "content";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_NAME_TOPIC_ID = "topic_id";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_EMPTY_USERS = "message.empty.users";
 	private UserService userService;
@@ -47,7 +46,7 @@ public class CreatePostCommand implements Command {
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		if (!DigitValidator.isValid(id) || !LatinCyrillicDigitValidator.isValid(content)) {
-			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);			
 			router.setPage(PagePath.TOPIC);
 			return router;
 		}
@@ -64,8 +63,7 @@ public class CreatePostCommand implements Command {
 				post.setContent(content);
 				post.setUser(user);
 				post.setTopic(topic.get());
-				postService.create(post);
-				request.setAttribute(ATTRIBUTE_NAME_TOPIC_ID, id);
+				postService.create(post);				
 				router.setPage(PagePath.TOPIC);
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_USERS);

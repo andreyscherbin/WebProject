@@ -27,7 +27,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			+ "is_email_verifed, is_active, role FROM users";
 	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
 			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , role = ? WHERE user_id = ?";
+	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , role = ? , last_login_date = ? WHERE user_id = ?";
 
 	@Override
 	public Optional<User> find(Long id) throws RepositoryException {
@@ -83,7 +83,8 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			statement = connection.prepareStatement(SQL_UPDATE_USER);
 			statement.setBoolean(1, user.isActive());
 			statement.setString(2, user.getRole().name());
-			statement.setLong(3, user.getId());
+			statement.setTimestamp(3, Timestamp.valueOf(user.getLastLoginDate()));
+			statement.setLong(4, user.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				throw new RepositoryException("updated user failed, no rows affected.");

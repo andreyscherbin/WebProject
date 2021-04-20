@@ -11,4 +11,5 @@ public interface PostService {
 	Optional<Post> findPostById(Long id) throws ServiceException;
 	void create(Post post) throws ServiceException;
 	void delete(Post post) throws ServiceException;
+	void edit(Post post) throws ServiceException;
 }

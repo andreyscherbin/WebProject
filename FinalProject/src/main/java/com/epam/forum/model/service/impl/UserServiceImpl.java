@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 			try {
 				userRepository.create(registeredUser);
 			} catch (RepositoryException e) {
-				throw new ServiceException("create user exception with user: " + registeredUser);
+				throw new ServiceException("create user exception with user: " + registeredUser, e);
 			}
 			user = Optional.of(registeredUser);
 			logger.info("success registration: {} {}", userName, email);
@@ -183,7 +183,17 @@ public class UserServiceImpl implements UserService {
 		try {
 			userRepository.update(user);
 		} catch (RepositoryException e) {
-			throw new ServiceException("update user exception", e);
+			throw new ServiceException("update user exception with user: " + user, e);
+		}
+	}
+
+	@Override
+	public void updateLastLoginDate(User user) throws ServiceException {
+		user.setLastLoginDate(LocalDateTime.now());
+		try {
+			userRepository.update(user);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update user exception with user: " + user, e);
 		}
 	}
 }

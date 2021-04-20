@@ -26,11 +26,12 @@ import com.epam.forum.pool.ConnectionPool;
 
 public class PostRepositoryImpl implements Repository<Long, Post> {
 
-	private static final String SQL_SELECT_ALL_POSTS = "SELECT posts.post_id, posts.content, topics.topic_id, topics.header, topics.content, topics.is_pinned, topics.is_closed, topics.creation_date, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
+	private static final String SQL_SELECT_ALL_POSTS = "SELECT posts.post_id, posts.content, posts.creation_date, topics.topic_id, topics.header, topics.content, topics.is_pinned, topics.is_closed, topics.creation_date, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
 			+ "users.is_email_verifed, users.is_active, users.role "
 			+ "FROM posts JOIN topics ON posts.topic_id = topics.topic_id JOIN users ON posts.user_id = users.user_id ";
 	private static final String SQL_INSERT_POST = "INSERT INTO posts (content, creation_date, topic_id, user_id) VALUES(?,?,?,?)";
 	private static final String SQL_DELETE_POST = "DELETE FROM posts WHERE post_id = ?";
+	private static final String SQL_UPDATE_POST = "UPDATE posts SET content = ? WHERE post_id = ?";
 
 	@Override
 	public Optional<Post> find(Long id) throws RepositoryException {
@@ -66,7 +67,27 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 
 	@Override
 	public void update(Post post) throws RepositoryException {
-		throw new UnsupportedOperationException();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_UPDATE_POST);
+			statement.setString(1, post.getContent());
+			statement.setLong(2, post.getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("updated post failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override
@@ -125,6 +146,7 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 				User user = new User();
 				post.setId(resultSet.getLong(PostTable.POST_ID));
 				post.setContent(resultSet.getString(PostTable.CONTENT));
+				post.setCreationDate(resultSet.getTimestamp(PostTable.CREATION_DATE).toLocalDateTime());
 				topic.setId(resultSet.getLong(TopicTable.TOPIC_ID));
 				topic.setHeader(resultSet.getString(TopicTable.HEADER));
 				topic.setContent(resultSet.getString(TopicTable.CONTENT));
@@ -181,6 +203,7 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 				User user = new User();
 				post.setId(resultSet.getLong(PostTable.POST_ID));
 				post.setContent(resultSet.getString(PostTable.CONTENT));
+				post.setCreationDate(resultSet.getTimestamp(PostTable.CREATION_DATE).toLocalDateTime());
 				topic.setId(resultSet.getLong(TopicTable.TOPIC_ID));
 				topic.setHeader(resultSet.getString(TopicTable.HEADER));
 				topic.setContent(resultSet.getString(TopicTable.CONTENT));

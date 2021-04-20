@@ -16,5 +16,6 @@ public enum CommandName {
 	VIEW_TOPIC_BY_ID,
 	CREATE_POST,
 	DELETE_POST_BY_ID,
+	EDIT_POST_BY_ID,
 	ACTIVATION
 }

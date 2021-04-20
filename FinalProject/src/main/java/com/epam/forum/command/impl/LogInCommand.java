@@ -21,7 +21,7 @@ public class LogInCommand implements Command {
 	private static final String ATRIBUTE_NAME_ROLE = "role";
 	private static final String ATRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_VALUE_KEY = "message.error.authentication";
+	private static final String ATTRIBUTE_VALUE_ERROR_AUTHENTICATION = "message.error.authentication";
 	private UserService userService;
 
 	public LogInCommand(UserService userService) {
@@ -36,6 +36,7 @@ public class LogInCommand implements Command {
 		try {
 			Optional<User> authenticatedUser = userService.authenticate(userName, password);
 			if (!authenticatedUser.isEmpty()) {
+				userService.updateLastLoginDate(authenticatedUser.get());
 				HttpSession session = request.getSession();
 				User user = authenticatedUser.get();
 				Role role = user.getRole();
@@ -44,7 +45,7 @@ public class LogInCommand implements Command {
 				router.setPage(PagePath.HOME);
 				router.setRedirect();
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_ERROR_AUTHENTICATION);
 				router.setPage(PagePath.LOGIN);
 			}
 		} catch (ServiceException e) {

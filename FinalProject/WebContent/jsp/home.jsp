@@ -14,7 +14,7 @@
 <body>
 	<%@ include file="fragments/navbar.jspf"%>
 
-	<div class="container">
+	<div class="container-fluid mt-100"<%-- style="background-image: url('${pageContext.request.contextPath}/image/anon.jpg'); height: 100vh;" --%>>
 		<%@ include file="fragments/messages.jspf"%>
 		<!-- SECTIONS -->
 

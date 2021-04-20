@@ -8,7 +8,7 @@ import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 
 public class TopicPostSpecification implements Specification<Post> {
-	private static final String SQL_SELECT_POSTS_BY_TOPIC = "SELECT posts.post_id, posts.content, topics.topic_id, topics.header, topics.content, topics.is_pinned, topics.is_closed, topics.creation_date, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
+	private static final String SQL_SELECT_POSTS_BY_TOPIC = "SELECT posts.post_id, posts.content, posts.creation_date, topics.topic_id, topics.header, topics.content, topics.is_pinned, topics.is_closed, topics.creation_date, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
 			+ "users.is_email_verifed, users.is_active, users.role "
 			+ "FROM posts JOIN topics ON posts.topic_id = topics.topic_id JOIN users ON posts.user_id = users.user_id WHERE ";
 
