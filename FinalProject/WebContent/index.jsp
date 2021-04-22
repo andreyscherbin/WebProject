@@ -7,6 +7,6 @@
 </head>
 <body>
 	<c:set var="lang" value="en_US" scope="session" />	
-	<jsp:forward page="/jsp/home.jsp" /> 
+	<jsp:forward page="/WEB-INF/jsp/home.jsp" /> 
 </body>
 </html>

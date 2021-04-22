@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.Topic;
@@ -61,9 +62,12 @@ public class ViewTopicByIdCommand implements Command {
 				router.setPage(PagePath.SECTION);
 			}
 		} catch (ServiceException e) {
-			logger.error("service exception {}", e);
-			router.setPage(PagePath.ERROR);
-			router.setRedirect();
+			logger.error("service exception ", e);
+			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			router.setPage(PagePath.ERROR);	
 		}
 		return router;
 	}

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.Topic;
@@ -19,6 +20,7 @@ import com.epam.forum.model.service.TopicService;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.validator.DigitValidator;
 import com.epam.forum.validator.LatinCyrillicDigitValidator;
+import com.epam.forum.validator.PostValidator;
 
 public class CreatePostCommand implements Command {
 
@@ -45,7 +47,7 @@ public class CreatePostCommand implements Command {
 		String id = request.getParameter(PARAM_NAME_TOPIC_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (!DigitValidator.isValid(id) || !LatinCyrillicDigitValidator.isValid(content)) {
+		if (!DigitValidator.isValid(id) || !PostValidator.isValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);			
 			router.setPage(PagePath.TOPIC);
 			return router;
@@ -70,9 +72,12 @@ public class CreatePostCommand implements Command {
 				router.setPage(PagePath.TOPIC);
 			}
 		} catch (ServiceException e) {
-			logger.error("service exception {}", e);
-			router.setPage(PagePath.ERROR);
-			router.setRedirect();
+			logger.error("service exception ", e);
+			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			router.setPage(PagePath.ERROR);	
 		}
 		return router;
 	}

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.service.ActivationSenderService;
@@ -41,19 +42,22 @@ public class RegistrationCommand implements Command {
 		String password = request.getParameter(PARAM_NAME_PASSWORD);
 		try {
 			Optional<User> registeredUser = userService.registrate(userName, password, email);
-			if (!registeredUser.isEmpty()) {
-				router.setPage(PagePath.HOME);
-				router.setRedirect();
+			if (!registeredUser.isEmpty()) {				
 				User user = registeredUser.get();
 				activationSenderService.sendActivationCode(user);
+				router.setPage(PagePath.HOME_REDIRECT);
+				router.setRedirect();
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_REGISTRATION);
 				router.setPage(PagePath.REGISTRATION);
 			}
 		} catch (ServiceException e) {
-			logger.error("service exception {}", e);
-			router.setPage(PagePath.ERROR);
-			router.setRedirect();
+			logger.error("service exception ", e);
+			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			router.setPage(PagePath.ERROR);	
 		}
 		return router;
 	}

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
@@ -42,16 +43,19 @@ public class LogInCommand implements Command {
 				Role role = user.getRole();
 				session.setAttribute(ATRIBUTE_NAME_ROLE, role);
 				session.setAttribute(ATRIBUTE_NAME_USERNAME, userName);
-				router.setPage(PagePath.HOME);
+				router.setPage(PagePath.HOME_REDIRECT);
 				router.setRedirect();
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_ERROR_AUTHENTICATION);
 				router.setPage(PagePath.LOGIN);
 			}
 		} catch (ServiceException e) {
-			logger.error("service exception {}", e);
-			router.setPage(PagePath.ERROR);
-			router.setRedirect();
+			logger.error("service exception ", e);
+			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			router.setPage(PagePath.ERROR);			
 		}
 		return router;
 	}

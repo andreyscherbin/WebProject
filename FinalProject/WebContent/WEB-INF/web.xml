@@ -9,17 +9,17 @@
 		<servlet-name>ControllerServlet</servlet-name>
 		<servlet-class>com.epam.forum.controller.ControllerServlet</servlet-class>
 		<load-on-startup>20</load-on-startup>
-	</servlet>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/jsp/error/error.jsp</location>
-	</error-page>
+	</servlet>		
 	<error-page>
 		<error-code>404</error-code>
-		<location>/jsp/error/error.jsp</location>
+		<location>/WEB-INF/jsp/error/error_404.jsp</location>
 	</error-page>
 	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/error/error_500.jsp</location>
+	</error-page>	
+	<error-page>
 		<exception-type>java.lang.ExceptionInInitializerError</exception-type>
-		<location>/jsp/error/database_error.jsp</location>
-	</error-page>
+		<location>/WEB-INF/jsp/error/database_init_error.jsp</location>
+	</error-page>	
 </web-app>

@@ -9,6 +9,9 @@ import com.epam.forum.command.impl.CreatePostCommand;
 import com.epam.forum.command.impl.DeletePostByIdCommand;
 import com.epam.forum.command.impl.EditPostCommand;
 import com.epam.forum.command.impl.EmptyCommand;
+import com.epam.forum.command.impl.GoToHomePageCommand;
+import com.epam.forum.command.impl.GoToLoginPageCommand;
+import com.epam.forum.command.impl.GoToRegistrationPageCommand;
 import com.epam.forum.command.impl.LanguageCommand;
 import com.epam.forum.command.impl.LogInCommand;
 import com.epam.forum.command.impl.LogOutCommand;
@@ -61,6 +64,10 @@ public class CommandProvider {
 		commands.put(CommandName.DELETE_POST_BY_ID, new DeletePostByIdCommand(postService));
 		commands.put(CommandName.EDIT_POST_BY_ID, new EditPostCommand(postService));
 		commands.put(CommandName.LOGOUT, new LogOutCommand());
+		commands.put(CommandName.LANGUAGE, new LanguageCommand());
+		commands.put(CommandName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
+		commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
+		commands.put(CommandName.GO_TO_HOME_PAGE, new GoToHomePageCommand());		
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());
 	}
 

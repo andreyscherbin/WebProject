@@ -1,6 +1,10 @@
 package com.epam.forum.command;
 
 public enum CommandName {
+	GO_TO_LOGIN_PAGE,
+	GO_TO_REGISTRATION_PAGE,
+	GO_TO_HOME_PAGE,
+	GO_TO_ERROR_PAGE,
 	LOGIN,
 	REGISTRATION,
 	VIEW_USER,
