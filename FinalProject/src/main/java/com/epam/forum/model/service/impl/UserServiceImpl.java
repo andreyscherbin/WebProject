@@ -134,8 +134,8 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> registrate(String userName, String password, String email) throws ServiceException {
 		List<User> users = new ArrayList<>();
 		Optional<User> user = Optional.empty();
-		if (!DigitLatinValidator.isValid(userName) || !PasswordValidator.isValid(password)
-				|| !EmailValidator.isValid(email)) {
+		if (!DigitLatinValidator.isValid(userName)
+				|| !PasswordValidator.isValid(password) || !EmailValidator.isValid(email)) {
 			logger.info("not valid username or password or email");
 			return user;
 		}

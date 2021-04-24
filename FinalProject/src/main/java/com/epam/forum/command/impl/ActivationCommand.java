@@ -21,8 +21,10 @@ public class ActivationCommand implements Command {
 	private static final String PARAM_NAME_USERNAME = "username";
 	private static final String PARAM_NAME_CODE = "code";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_FAILED_ACTIVATION = "message.error.activation";
 	private static final String ATTRIBUTE_VALUE_SUCCESS_ACTIVATION = "message.success.activation";
+
 	private UserService userService;
 	private ActivationSenderService activationSenderService;
 
@@ -36,6 +38,11 @@ public class ActivationCommand implements Command {
 		Router router = new Router();
 		String username = request.getParameter(PARAM_NAME_USERNAME);
 		String activationCodeId = request.getParameter(PARAM_NAME_CODE);
+		if (username == null || activationCodeId == null) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+			router.setPage(PagePath.HOME);
+			return router;
+		}
 		Optional<ActivationCode> activationCode;
 		try {
 			activationCode = activationSenderService.findActivationCodeById(activationCodeId);
@@ -58,7 +65,7 @@ public class ActivationCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

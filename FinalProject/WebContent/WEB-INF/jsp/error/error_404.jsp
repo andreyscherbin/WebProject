@@ -17,7 +17,7 @@
 					<h1>Oops!</h1>
 					<h2>
 						${fn:escapeXml(pageContext.errorData.requestURI)} is failed <br />
-						Servlet name or type: ${pageContext.errorData.servletName} <br />
+						Servlet name or type: ${fn:escapeXml(pageContext.errorData.servletName)} <br />
 						Status code: ${pageContext.errorData.statusCode} <br />
 					</h2>
 					<div class="error-details">Sorry, an error has occured,

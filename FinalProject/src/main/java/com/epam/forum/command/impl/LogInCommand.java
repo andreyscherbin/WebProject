@@ -19,9 +19,10 @@ public class LogInCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_LOGIN = "username";
 	private static final String PARAM_NAME_PASSWORD = "password";
-	private static final String ATRIBUTE_NAME_ROLE = "role";
-	private static final String ATRIBUTE_NAME_USERNAME = "username";
+	private static final String ATTRIBUTE_NAME_ROLE = "role";
+	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_ERROR_AUTHENTICATION = "message.error.authentication";
 	private UserService userService;
 
@@ -34,6 +35,11 @@ public class LogInCommand implements Command {
 		Router router = new Router();
 		String userName = request.getParameter(PARAM_NAME_LOGIN);
 		String password = request.getParameter(PARAM_NAME_PASSWORD);
+		if (userName == null || password == null) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+			router.setPage(PagePath.HOME);
+			return router;
+		}
 		try {
 			Optional<User> authenticatedUser = userService.authenticate(userName, password);
 			if (!authenticatedUser.isEmpty()) {
@@ -41,8 +47,8 @@ public class LogInCommand implements Command {
 				HttpSession session = request.getSession();
 				User user = authenticatedUser.get();
 				Role role = user.getRole();
-				session.setAttribute(ATRIBUTE_NAME_ROLE, role);
-				session.setAttribute(ATRIBUTE_NAME_USERNAME, userName);
+				session.setAttribute(ATTRIBUTE_NAME_ROLE, role);
+				session.setAttribute(ATTRIBUTE_NAME_USERNAME, userName);
 				router.setPage(PagePath.HOME_REDIRECT);
 				router.setRedirect();
 			} else {
@@ -55,7 +61,7 @@ public class LogInCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);			
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

@@ -47,8 +47,9 @@ public class CreatePostCommand implements Command {
 		String id = request.getParameter(PARAM_NAME_TOPIC_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (!DigitValidator.isValid(id) || !PostValidator.isValid(content)) {
-			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);			
+		if (content == null || id == null || username == null || !DigitValidator.isValid(id)
+				|| !PostValidator.isValid(content)) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;
 		}
@@ -65,7 +66,7 @@ public class CreatePostCommand implements Command {
 				post.setContent(content);
 				post.setUser(user);
 				post.setTopic(topic.get());
-				postService.create(post);				
+				postService.create(post);
 				router.setPage(PagePath.TOPIC);
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_USERS);
@@ -77,7 +78,7 @@ public class CreatePostCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

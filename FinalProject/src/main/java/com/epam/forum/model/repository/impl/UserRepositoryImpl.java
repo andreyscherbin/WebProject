@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -83,7 +84,12 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			statement = connection.prepareStatement(SQL_UPDATE_USER);
 			statement.setBoolean(1, user.isActive());
 			statement.setString(2, user.getRole().name());
-			statement.setTimestamp(3, Timestamp.valueOf(user.getLastLoginDate()));
+			LocalDateTime lastLoginDate = user.getLastLoginDate();
+			if (lastLoginDate == null) {
+				statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+			} else {
+				statement.setTimestamp(3, Timestamp.valueOf(user.getLastLoginDate()));
+			}
 			statement.setLong(4, user.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
@@ -180,7 +186,10 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
 				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
-				user.setLastLoginDate(resultSet.getTimestamp(LAST_LOGIN_DATE).toLocalDateTime());
+				Timestamp lastLoginDate = resultSet.getTimestamp(LAST_LOGIN_DATE);
+				if (lastLoginDate != null) {
+					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
+				}
 				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
 				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));

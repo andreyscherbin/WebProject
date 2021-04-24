@@ -43,7 +43,7 @@ public class ViewSectionCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

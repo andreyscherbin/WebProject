@@ -33,12 +33,12 @@ public class HomeFilter implements Filter {
 		Command command = commandProvider.getCommand(COMMAND_VIEW_SECTION);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);
 		String page = router.getPage();
-		
 		if (page.equals(PagePath.ERROR)) {
 			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(page);
 			dispatcher.forward(request, response);
+		} else {
+			chain.doFilter(request, response);
 		}
-		chain.doFilter(request, response);
 	}
 
 	public void destroy() {

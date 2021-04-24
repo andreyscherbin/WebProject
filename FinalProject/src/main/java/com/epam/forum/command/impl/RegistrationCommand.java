@@ -20,11 +20,7 @@ public class RegistrationCommand implements Command {
 	private static final String PARAM_NAME_LOGIN = "username";
 	private static final String PARAM_NAME_PASSWORD = "password";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	/*
-	 * private static final String ATTRIBUTE_VALUE_EMAIL =
-	 * "message.error.registration.email"; private static final String
-	 * ATTRIBUTE_VALUE_USERNAME = "message.error.registration.username";
-	 */
+	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_REGISTRATION = "message.error.registration";
 	private UserService userService;
 	private ActivationSenderService activationSenderService;
@@ -40,9 +36,14 @@ public class RegistrationCommand implements Command {
 		String userName = request.getParameter(PARAM_NAME_LOGIN);
 		String email = request.getParameter(PARAM_NAME_EMAIL);
 		String password = request.getParameter(PARAM_NAME_PASSWORD);
+		if (userName == null || email == null || password == null) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+			router.setPage(PagePath.HOME);
+			return router;
+		}
 		try {
 			Optional<User> registeredUser = userService.registrate(userName, password, email);
-			if (!registeredUser.isEmpty()) {				
+			if (!registeredUser.isEmpty()) {
 				User user = registeredUser.get();
 				activationSenderService.sendActivationCode(user);
 				router.setPage(PagePath.HOME_REDIRECT);
@@ -57,7 +58,7 @@ public class RegistrationCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

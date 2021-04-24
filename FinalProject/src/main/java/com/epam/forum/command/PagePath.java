@@ -12,6 +12,7 @@ public final class PagePath {
 	public static final String TOPIC = "/WEB-INF/jsp/topic.jsp";	
 	
 	public static final String HOME_REDIRECT = "/controller?command=go_to_home_page";
+	public static final String FORBIDDEN_PAGE = "/WEB-INF/jsp/error/forbidden_page.jsp";
 	
 	private PagePath() {
 	}

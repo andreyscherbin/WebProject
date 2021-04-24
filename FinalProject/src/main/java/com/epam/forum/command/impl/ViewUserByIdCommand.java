@@ -33,7 +33,7 @@ public class ViewUserByIdCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String idString = request.getParameter(PARAM_NAME_ID);
-		if (!DigitValidator.isValid(idString)) {
+		if (idString == null || !DigitValidator.isValid(idString)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.HOME);
 			return router;
@@ -57,7 +57,7 @@ public class ViewUserByIdCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

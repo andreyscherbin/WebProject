@@ -20,6 +20,7 @@ public class ViewUserByUserNameCommand implements Command {
 	private static final String PARAM_NAME_USERNAME = "user_name";
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.users";
 	private UserService userService;
 
@@ -31,6 +32,11 @@ public class ViewUserByUserNameCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String userName = request.getParameter(PARAM_NAME_USERNAME);
+		if (userName == null) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
+			router.setPage(PagePath.HOME);
+			return router;
+		}
 		List<User> users;
 		try {
 			users = userService.findUsersByUserName(userName);
@@ -47,7 +53,7 @@ public class ViewUserByUserNameCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

@@ -35,7 +35,7 @@ public class ViewTopicBySectionCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String section = request.getParameter(PARAM_NAME_SECTION);
-		if (!DigitValidator.isValid(section)) {
+		if (section == null || !DigitValidator.isValid(section)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_SECTION);
 			router.setPage(PagePath.HOME);
 			return router;
@@ -57,7 +57,7 @@ public class ViewTopicBySectionCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

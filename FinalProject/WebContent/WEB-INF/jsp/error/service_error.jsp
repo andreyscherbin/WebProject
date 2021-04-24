@@ -16,8 +16,8 @@
 				<div class="error-template">
 					<h1>Oops!</h1>
 					<h2>
-						Exception Message: ${requestScope.errorMessage} <br> Cause:
-						${requestScope.errorCause} <br> URI:
+						Exception Message: ${fn:escapeXml(requestScope.errorMessage)} <br> Cause:
+						${fn:escapeXml(requestScope.errorCause)} <br> URI:
 						${fn:escapeXml(requestScope.errorLocation)} <br> Status code:
 						${requestScope.errorCode} <br>
 					</h2>
