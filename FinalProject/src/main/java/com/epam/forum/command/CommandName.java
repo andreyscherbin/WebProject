@@ -2,6 +2,7 @@ package com.epam.forum.command;
 
 public enum CommandName {
 	GO_TO_LOGIN_PAGE,
+	SEARCH,
 	GO_TO_REGISTRATION_PAGE,
 	GO_TO_HOME_PAGE,	
 	LOGIN,

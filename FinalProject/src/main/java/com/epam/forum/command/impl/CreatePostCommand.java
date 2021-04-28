@@ -19,7 +19,6 @@ import com.epam.forum.model.service.PostService;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.validator.DigitValidator;
-import com.epam.forum.validator.LatinCyrillicDigitValidator;
 import com.epam.forum.validator.PostValidator;
 
 public class CreatePostCommand implements Command {

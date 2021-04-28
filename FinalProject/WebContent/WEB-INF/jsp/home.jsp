@@ -10,8 +10,12 @@
 <html>
 <head>
 <%@ include file="fragments/head.jspf"%>
+<script src="${pageContext.request.contextPath}/js/search_ajax.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/search.css">
 </head>
 <body>
+
 	<%@ include file="fragments/navbar.jspf"%>
 
 	<div class="container-fluid mt-100"<%-- style="background-image: url('${pageContext.request.contextPath}/image/anon.jpg'); height: 100vh;" --%>>

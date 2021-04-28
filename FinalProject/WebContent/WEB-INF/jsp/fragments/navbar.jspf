@@ -6,6 +6,8 @@
 <%@ page session="true"%>
 <html>
 <head>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/search.css">
 </head>
 <body>
 	<!-- <nav th:fragment="navbar" class="nav-wrapper amber darken-4">
@@ -32,8 +34,7 @@
 			th:replace="fragments/create_user_modal_form :: create_user_modal_form"></div>
 	</nav> -->
 	<nav class="navbar navbar-expand-lg navbar-ligh tbg-light">
-		<a class="navbar-brand"
-			href="${pageContext.request.contextPath}">Forum</a>
+		<a class="navbar-brand" href="${pageContext.request.contextPath}">Forum</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -50,7 +51,9 @@
 					</a></li>
 				</c:if>
 				<c:if test="${sessionScope.role == null}">
-					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/controller?command=go_to_registration_page">Sign Up</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="${pageContext.request.contextPath}/controller?command=go_to_registration_page">Sign
+							Up</a></li>
 				</c:if>
 				<c:if test="${sessionScope.role != null}">
 					<li class="nav-item"><a class="nav-link"
@@ -74,15 +77,39 @@
 							class="flag-icon flag-icon-ru"> </span> Belarusian</a>
 					</div></li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0"
+		</div>
+
+		<div class="collapse navbar-collapse">
+			<%-- <form class="form-inline my-2 my-lg-0"
 				action="${pageContext.request.contextPath}/controller">
 				<input type="hidden" name="command" value="view_topic_by_header" />
-				<input class="form-control mr-sm-2" type="search" name="header"
-					required pattern="[A-Za-z0-9А-Яа-я]+" placeholder="Search"
-					aria-label="Search"
-					title="Must contain only digits and upperscase or lowercase letter" />
+				<input class="form-control mr-sm-2" type="text" name="search"
+					id="search" required pattern="[A-Za-z0-9А-Яа-я]+"
+					placeholder="Search" aria-label="Search"
+					title="Must contain only digits and upperscase
+				or lowercase letter" />
+
+				<ul class="list-group" id="result"></ul>
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form> --%>
+
+			<form action="${pageContext.request.contextPath}/controller">
+				<input type="hidden" name="command" value="view_topic_by_header" />
+				<div class="input-group mb-4">
+					<div class="input-group-prepend">
+						<button id="button-addon5" type="submit" class="btn btn-primary">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+					<div style="width: 900px;">
+						<input type="search" placeholder="What're you searching for?"
+							aria-describedby="button-addon5" class="form-control"
+							name="header" id="search">
+						<ul class="list-group" id="result"></ul>
+					</div>
+				</div>
 			</form>
+			<!--end of col-->
 		</div>
 	</nav>
 </body>

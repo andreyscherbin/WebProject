@@ -17,8 +17,8 @@ import com.epam.forum.pool.ConnectionPool;
 @WebServlet(name = "/ControllerServlet", urlPatterns = { "/controller" })
 public class ControllerServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 87620L;
-	
+	private static final long serialVersionUID = -8638304278665235496L;
+
 	@Override
 	public void init() throws ServletException {
 		ConnectionPool.getInstance();
@@ -26,13 +26,13 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	@Override
-	public void destroy() {		
-		ConnectionPool.getInstance().shutdown();		
+	public void destroy() {
+		ConnectionPool.getInstance().shutdown();
 		super.destroy();
 	}
 
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_COMMAND = "command";	
+	private static final String PARAM_NAME_COMMAND = "command";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -57,7 +57,7 @@ public class ControllerServlet extends HttpServlet {
 		if (Boolean.FALSE == isRedirect) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
 			dispatcher.forward(request, response);
-		} else {			
+		} else {
 			response.sendRedirect(request.getContextPath() + page);
 		}
 	}
