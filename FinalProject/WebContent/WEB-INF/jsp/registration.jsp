@@ -12,37 +12,61 @@
 <!-- Custom styles for this template -->
 <link href="${pageContext.request.contextPath}/css/signin.css"
 	rel="stylesheet">
+<script
+	src="${pageContext.request.contextPath}/js/registration_validation.js"></script>
 </head>
 
 <body class="text-center">
-	<form class="form-signin" method="POST"
-		action="${pageContext.request.contextPath}/controller">
+	<form id="formSignUp" class="form-signin needs-validation" novalidate
+		method="POST" action="${pageContext.request.contextPath}/controller">
 		<input type="hidden" name="command" value="registration">
 		<h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+
+
 		<!-- email address -->
-		<label for="inputEmail" class="sr-only">Email address</label> <input
-			type="email" id="inputEmail" name="email" class="form-control"
-			placeholder="Enter Email" required autofocus>
+		<label for="inputEmail" class="form-label">Email address</label>
+		<div class="input-group has-validation">
+			<input type="text" id="inputEmail" name="email" class="form-control"
+				aria-describedby="inputGroupPrepend" required autofocus
+				pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$">
+			<div class="invalid-feedback">Please enter valid email</div>
+		</div>
+
 		<!-- username -->
-		<label for="inputUsername" class="sr-only">Username</label> <input
-			type="text" id="inputUsername" name="username" class="form-control"
-			placeholder="Enter Username" required autofocus
-			pattern="[A-Za-z0-9]+" maxlength="10"
-			title="Must contain only digits and upperscase or lowercase letter, with max length 10" />
+		<label for="inputUsername" class="form-label">Username</label>
+		<div class="input-group has-validation">
+			<input type="text" id="inputUsername" name="username"
+				class="form-control" required autofocus
+				aria-describedby="inputGroupPrepend" pattern="[A-Za-z0-9]+"
+				maxlength="10" />
+			<div class="invalid-feedback">Must contain only digits and
+				upperscase or lowercase letter, with max length 10</div>
+		</div>
+
 		<!-- password -->
-		<label for="inputPassword" class="sr-only">Password</label> <input
-			type="password" name="password" id="inputPassword"
-			class="form-control" placeholder="Enter Password" required
-			pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-			title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
+		<label for="inputPassword" class="form-label">Password</label>
+		<div class="input-group has-validation">
+			<input type="password" id="inputPassword" name="password"
+				class="form-control" required autofocus
+				aria-describedby="inputGroupPrepend"
+				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+			<div class="invalid-feedback">Must contain at least one number
+				and one uppercase and lowercase letter, and at least 8 or more
+				characters</div>
+		</div>
+
 		<!-- repeat password -->
-		<label for="repeatPassword" class="sr-only">RepeatPassword</label> <input
-			type="password" name="repeatPassword" id="repeatPassword"
-			class="form-control" placeholder="Repeat Password" required
-			pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-			title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
-		<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-			Up</button>
+		<label for="repeatPassword" class="form-label">RepeatPassword</label>
+		<div class="input-group has-validation">
+			<input type="password" id="repeatPassword" name="repeatPassword"
+				class="form-control" required autofocus
+				aria-describedby="inputGroupPrepend"
+				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+			<div class="invalid-feedback">Passwords Don't Match</div>
+		</div>
+
+		<button id="btnSignUp" class="btn btn-lg btn-primary btn-block"
+			type="submit">Sign Up</button>
 		<br>
 		<script
 			src="${pageContext.request.contextPath}/js/password_validation.js"></script>
