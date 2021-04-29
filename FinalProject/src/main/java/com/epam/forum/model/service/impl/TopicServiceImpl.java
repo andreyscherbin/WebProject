@@ -11,18 +11,14 @@ import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.TopicTable;
-import com.epam.forum.model.entity.User;
-import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.impl.HeaderTopicSpecification;
 import com.epam.forum.model.repository.impl.IdTopicSpecification;
-import com.epam.forum.model.repository.impl.IdUserSpecification;
 import com.epam.forum.model.repository.impl.SectionTopicSpecification;
 import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
 import com.epam.forum.model.service.TopicService;
-import com.epam.forum.validator.DigitValidator;
-import com.epam.forum.validator.LatinCyrillicDigitValidator;
+import com.epam.forum.validator.TextValidator;
 
 public class TopicServiceImpl implements TopicService {
 	private static Logger logger = LogManager.getLogger();
@@ -51,7 +47,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<Topic> findTopicsByHeader(String pattern) throws ServiceException {
 		List<Topic> topics = new ArrayList<>();
-		if (!LatinCyrillicDigitValidator.isValid(pattern)) {
+		if (!TextValidator.isValid(pattern)) {
 			logger.info("not valid pattern");
 			return topics;
 		}

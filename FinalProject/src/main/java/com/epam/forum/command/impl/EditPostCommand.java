@@ -14,7 +14,7 @@ import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.service.PostService;
 import com.epam.forum.validator.DigitValidator;
-import com.epam.forum.validator.PostValidator;
+import com.epam.forum.validator.TextValidator;
 
 public class EditPostCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
@@ -38,7 +38,7 @@ public class EditPostCommand implements Command {
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		if (username == null || id == null || content == null
-				|| !DigitValidator.isValid(id) && !PostValidator.isValid(content)) {
+				|| !DigitValidator.isValid(id) && !TextValidator.isValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;
