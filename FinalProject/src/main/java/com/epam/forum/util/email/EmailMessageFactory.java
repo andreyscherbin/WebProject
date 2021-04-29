@@ -1,5 +1,8 @@
 package com.epam.forum.util.email;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
 import com.epam.forum.model.entity.ActivationCode;
 import com.epam.forum.model.entity.EmailMessage;
 import com.epam.forum.model.entity.User;
@@ -19,7 +22,8 @@ public class EmailMessageFactory {
 		String emailAddress = activationCode.getUser().getEmail();
 		StringBuilder builder = new StringBuilder();
 		User user = activationCode.getUser();
-		String name = user.getUserName(); // fix me, need escape string before send to user
+		String name = user.getUserName();
+		name = Jsoup.clean(name, Whitelist.none());
 		String id = activationCode.getId();
 		builder.append(H1_STARTING_TAG);
 		builder.append(A_STARTING_TAG);

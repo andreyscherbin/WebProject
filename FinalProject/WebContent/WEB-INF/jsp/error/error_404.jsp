@@ -24,7 +24,7 @@
 						Requested page not found!</div>
 					<div class="error-actions">
 						<a href="${pageContext.request.contextPath}" 
-							class="btn btn-primary btn-lg" > Take Me Home 
+							class="btn btn-primary btn-lg bi bi-house" > Take Me Home 
 						</a>
 					</div>
 				</div>

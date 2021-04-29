@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
 			user = Optional.of(registeredUser);
 			logger.info("success registration: {} {}", userName, email);
 		} else {
-			logger.info("user with such username: {} or email: {} already exists: {}", userName, email);
+			logger.info("user with such username: {} or email: {} already exists", userName, email);
 			logger.info("failed registration: {}", userName);
 			/*
 			 * for (User alreadyExistingUser : users) { if

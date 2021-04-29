@@ -97,8 +97,7 @@
 				<input type="hidden" name="command" value="view_topic_by_header" />
 				<div class="input-group mb-4">
 					<div class="input-group-prepend">
-						<button id="button-addon5" type="submit" class="btn btn-primary">
-							<i class="fa fa-search"></i>
+						<button id="button-addon5" type="submit" class="btn btn-primary bi bi-search">							
 						</button>
 					</div>
 					<div style="width: 900px;">

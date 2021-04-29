@@ -92,9 +92,11 @@
 									<c:if test="${sessionScope.username == username }">
 										<div>
 											<a
-												href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}">delete
-											</a> <a href="javascript:void();" id="editLink${post.id}"
-												onclick="showEdit(${post.id});">edit </a>
+												href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
+												class="btn btn-light bi bi-trash">delete </a> <a
+												class="btn btn-light bi bi-pencil" href="javascript:void();"
+												id="editLink${post.id}" onclick="showEdit(${post.id});">edit
+											</a>
 										</div>
 									</c:if>
 									<div class="text-muted small">
@@ -119,10 +121,8 @@
 
 						<!-- R -->
 						<div class="card-body">
-							<p id="edit${post.id}">
-								<%-- th:utext="${#strings.replace(post.content,T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" --%>
-								${fn:escapeXml(post.content)}
-							</p>
+						<!-- POST CONTENT -->
+							<p id="edit${post.id}">${(post.content)}</p>
 							<div id="editForm${post.id}" style="display: none">
 								<form name="formEdit"
 									onsubmit="return validateEditForm(${post.id});"
@@ -140,15 +140,6 @@
 								</form>
 							</div>
 						</div>
-
-						<!-- <div
-									class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-									<div class="px-4 pt-3">
-										<button type="button" class="btn btn-primary">
-											<i class="ion ion-md-create"></i>&nbsp; Reply
-										</button>
-									</div>
-								</div> -->
 					</div>
 				</div>
 			</div>
@@ -164,8 +155,8 @@
 						<label for="comment">Your Reply</label>
 						<textarea class="form-control" id="content" name="content"> </textarea>
 					</div>
-					<button class="btn btn-outline-dark" id="submit" type="submit">
-						Send reply</button>
+					<button class="btn btn-outline-dark bi bi-reply" id="submit"
+						type="submit">Send reply</button>
 				</form>
 
 			</c:if>

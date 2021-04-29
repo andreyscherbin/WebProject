@@ -1,6 +1,6 @@
 function validateEditForm(x) {
 	var content = document.getElementById('content' + x);
-	var contentRGEX = /^[a-z0-9а-я\s?,.!]+$/i;
+	var contentRGEX = /^[a-z0-9а-я\s?,.!<->;:=+/()"'#]+$/i;
 
 	if (trimfield(content.value) == '') {
 		alert("Empty field, pls provide more information!");
@@ -18,7 +18,7 @@ function validateEditForm(x) {
 
 function validateReplyForm() {
 	var content = document.getElementById('content');
-	var contentRGEX = /^[a-z0-9а-я\s?,.!]+$/i;
+	var contentRGEX = /^[a-z0-9а-я\s?,.!<->;:=+/()\\"'#]+$/i;
 
 	if (trimfield(content.value) == '') {
 		alert("Empty field, pls provide more information!");
