@@ -47,7 +47,7 @@ public class LogInCommand implements Command {
 				HttpSession session = request.getSession();
 				User user = authenticatedUser.get();
 				Role role = user.getRole();
-				session.setAttribute(ATTRIBUTE_NAME_ROLE, role);
+				session.setAttribute(ATTRIBUTE_NAME_ROLE, role.toString());
 				session.setAttribute(ATTRIBUTE_NAME_USERNAME, userName);
 				router.setPage(PagePath.HOME_REDIRECT);
 				router.setRedirect();

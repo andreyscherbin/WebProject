@@ -3,10 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
+<%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
 <%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
+<fmt:message key="topic.login_to_reply" var="login_to_reply_message" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -121,7 +124,7 @@
 
 						<!-- R -->
 						<div class="card-body">
-						<!-- POST CONTENT -->
+							<!-- POST CONTENT -->
 							<p id="edit${post.id}">${(post.content)}</p>
 							<div id="editForm${post.id}" style="display: none">
 								<form name="formEdit"
@@ -147,7 +150,7 @@
 
 		<div>
 			<!-- SECTION REPLY -->
-			<c:if test="${sessionScope.role != null}">
+			<sec:authorize access="${f:isAuthenticated(pageContext)}">
 				<form name="formReply" onsubmit="return validateReplyForm();"
 					action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
 					method="POST">
@@ -159,16 +162,14 @@
 						type="submit">Send reply</button>
 				</form>
 
-			</c:if>
-			<c:if test="${sessionScope.role == null}">
+			</sec:authorize>
+			<sec:authorize access="${!f:isAuthenticated(pageContext)}">
 				<div class="row">
 					<div class="col ">
-						<h5>
-							<fmt:message key="login.to.reply" />
-						</h5>
+						<h5>${login_to_reply_message}</h5>
 					</div>
 				</div>
-			</c:if>
+			</sec:authorize>
 		</div>
 	</div>
 </body>

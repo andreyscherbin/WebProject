@@ -3,10 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
+<%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
 <%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
+<fmt:message key="section.delete_section" var="delete_section_message" />
+<fmt:message key="section.topics" var="topics_message" />
+<fmt:message key="section.new_topic" var="new_topic_message" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,18 +28,13 @@
 		<%@ include file="fragments/messages.jspf"%>
 
 
-		<h3>
-			<fmt:message key="page.section.topics.in.section" />
-			${fn:escapeXml(section.header)}
-		</h3>
+		<h3>${topics_message}${fn:escapeXml(section.header)}</h3>
 		<p>${fn:escapeXml(section.description)}</p>
-		<c:if test="${sessionScope.role == 'ADMIN'}">
-			<a href="section/delete/${sections.id}"> <fmt:message
-					key="page.section.delete.section" />
-			</a>
-		</c:if>
-		<a href="topic/new/"> <fmt:message key="page.section.new.topic" />
-		</a>
+		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
+			<a href="section/delete/${sections.id}">
+				${delete_section_message} </a>
+		</sec:authorize>
+		<a href="topic/new/"> ${new_topic_message} </a>
 
 		<c:forEach var="topic" items="${topics}">
 			<div class="row">

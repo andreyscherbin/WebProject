@@ -13,6 +13,8 @@ public class LogOutCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_LANGUAGE = "lang";
 	private static final String ATRIBUTE_VALUE_LANGUAGE = "en_US";
+	private static final String ATRIBUTE_NAME_ROLE = "role";
+	private static final String ATRIBUTE_VALUE_ROLE = "GUEST";
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
@@ -20,6 +22,7 @@ public class LogOutCommand implements Command {
 		router.setPage(PagePath.HOME);
 		request.getSession().invalidate();
 		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, ATRIBUTE_VALUE_LANGUAGE);
+		request.getSession().setAttribute(ATRIBUTE_NAME_ROLE, ATRIBUTE_VALUE_ROLE);
 		return router;
 	}
 }

@@ -29,8 +29,5 @@
 			</div>
 		</div>
 	</div>
-
-	<div id="footer" class="text-center">Hak Cipta 2018, Garuda Cyber
-		Technologies</div>
 </body>
 </html>

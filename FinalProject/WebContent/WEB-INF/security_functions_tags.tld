@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/
+web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+	<description>
+		Security Functions
+	</description>
+	<tlib-version>1.0</tlib-version>
+	<function>
+		<description>Is User Authenticated</description>
+		<name>isAuthenticated</name>
+		<function-class>com.epam.forum.function.IsAuthenticatedFunction
+		</function-class>
+		<function-signature>
+			java.lang.Boolean
+			isAuthenticated(javax.servlet.jsp.JspContext)
+		</function-signature>
+	</function>
+	<function>
+		<description>Has User Role </description>
+		<name>hasRole</name>
+		<function-class>com.epam.forum.function.HasRoleFunction
+		</function-class>
+		<function-signature>
+			java.lang.Boolean
+			hasRole(java.lang.String,javax.servlet.jsp.JspContext)
+		</function-signature>
+	</function>
+</taglib>
