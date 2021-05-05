@@ -8,6 +8,7 @@ import com.epam.forum.command.impl.ActivationCommand;
 import com.epam.forum.command.impl.CreatePostCommand;
 import com.epam.forum.command.impl.CreateTopicCommand;
 import com.epam.forum.command.impl.DeletePostByIdCommand;
+import com.epam.forum.command.impl.DeleteTopicCommand;
 import com.epam.forum.command.impl.EditPostCommand;
 import com.epam.forum.command.impl.EmptyCommand;
 import com.epam.forum.command.impl.GoToHomePageCommand;
@@ -60,7 +61,8 @@ public class CommandProvider {
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.VIEW_TOPIC, new ViewTopicCommand(topicService));
 		commands.put(CommandName.CREATE_TOPIC, new CreateTopicCommand(userService, topicService, sectionService));
-		commands.put(CommandName.SEARCH, new SearchAjaxCommand(topicService));
+		commands.put(CommandName.DELETE_TOPIC, new DeleteTopicCommand(topicService));
+		commands.put(CommandName.SEARCH, new SearchAjaxCommand(topicService));		
 		commands.put(CommandName.VIEW_TOPIC_BY_HEADER, new ViewTopicByHeaderCommand(topicService));
 		commands.put(CommandName.VIEW_SECTION_BY_ID, new ViewSectionByIdCommand(topicService, sectionService));
 		commands.put(CommandName.VIEW_TOPIC_BY_ID, new ViewTopicByIdCommand(topicService, postService));

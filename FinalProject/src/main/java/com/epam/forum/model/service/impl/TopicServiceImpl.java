@@ -3,7 +3,6 @@ package com.epam.forum.model.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
@@ -99,6 +98,15 @@ public class TopicServiceImpl implements TopicService {
 			topicRepository.create(topic);
 		} catch (RepositoryException e) {
 			throw new ServiceException("create topic exception with topic: " + topic, e);
+		}
+	}
+
+	@Override
+	public void delete(Topic topic) throws ServiceException {
+		try {
+			topicRepository.delete(topic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("delete topic exception with topic: " + topic, e);
 		}
 	}
 }

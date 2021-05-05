@@ -29,6 +29,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			+ "users.is_email_verifed, users.is_active, users.role "
 			+ "FROM topics JOIN sections ON topics.section_id = sections.section_id JOIN users ON topics.user_id = users.user_id ";
 	private static final String SQL_INSERT_TOPIC = "INSERT INTO topics (header, content, is_pinned, is_closed, creation_date, section_id, user_id) VALUES(?,?,?,?,?,?,?)";
+	private static final String SQL_DELETE_TOPIC = "DELETE FROM topics WHERE topic_id = ?";
 
 	@Override
 	public Optional<Topic> find(Long id) throws RepositoryException {
@@ -73,9 +74,27 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	}
 
 	@Override
-	public void delete(Topic entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+	public void delete(Topic topic) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_DELETE_TOPIC);
+			statement.setLong(1, topic.getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("Deleting topic failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override

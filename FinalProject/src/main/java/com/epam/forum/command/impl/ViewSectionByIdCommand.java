@@ -49,13 +49,17 @@ public class ViewSectionByIdCommand implements Command {
 		try {
 			section = sectionService.findSectionById(sectionIdLong);
 			topics = topicService.findTopicsBySection(sectionIdLong);
-			if (!topics.isEmpty() && !section.isEmpty()) {
-				request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
+			if (!section.isEmpty()) {
+				if (!topics.isEmpty()) {
+					request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
+				} else {
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_TOPICS);
+				}
 				request.setAttribute(ATRIBUTE_NAME_SECTION, section.get());
 				router.setPage(PagePath.SECTION);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_TOPICS);
-				router.setPage(PagePath.SECTION);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+				router.setPage(PagePath.HOME);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

@@ -32,7 +32,7 @@
 			<div class="col s12">
 				<h5>
 					<a
-						href="${pageContext.request.contextPath}/controller?command=view_topic_by_section&section=${topic.section.id}">${fn:escapeXml(topic.section.header)}
+						href="${pageContext.request.contextPath}/controller?command=view_section_by_id&section_id=${topic.section.id}">${fn:escapeXml(topic.section.header)}
 					</a> <span"${fn:escapeXml(topic.header)}"></span>
 				</h5>
 			</div>

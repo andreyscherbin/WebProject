@@ -66,15 +66,15 @@
 											access="${f:hasAnyRole(pageContext,'ADMIN','MODER')}">
 											<!-- delete topic button -->
 											<a class="btn btn-danger bi bi-trash"
-												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}">
+												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}&section_id=${section.id}">
 												${delete_topic_message} </a>
 											<!--  pin topic button -->
 											<a class="btn btn-light bi bi-pin"
-												href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}">
+												href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
 												${pin_topic_message} </a>
 											<!-- close topic button -->
 											<a class="btn btn-light bi bi-lock-fill"
-												href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}">
+												href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
 												${close_topic_message} </a>
 										</sec:authorize>
 									</div>
