@@ -28,7 +28,9 @@ public aspect AspectSecurity {
 	String around(): getParameter(){
 		String parameterValue = proceed();
 		logger.info("before sanitization: {} ", parameterValue);
-		parameterValue = Jsoup.clean(parameterValue, Whitelist.basicWithImages());
+		if (parameterValue != null) {
+			parameterValue = Jsoup.clean(parameterValue, Whitelist.basicWithImages());
+		}
 		logger.info("after sanitization: {} ", parameterValue);
 		return parameterValue;
 	}

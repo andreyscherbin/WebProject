@@ -4,6 +4,7 @@ public final class PagePath {
 	public static final String INDEX = "/WEB-INF/index.jsp";
 	public static final String LOGIN = "/WEB-INF/jsp/login.jsp";
 	public static final String REGISTRATION = "/WEB-INF/jsp/registration.jsp";
+	public static final String NEW_TOPIC = "/WEB-INF/jsp/new_topic.jsp";
 	public static final String HOME = "/WEB-INF/jsp/home.jsp";
 	public static final String ERROR = "/WEB-INF/jsp/error/service_error.jsp";
 	public static final String SEARCH = "/WEB-INF/jsp/search.jsp";

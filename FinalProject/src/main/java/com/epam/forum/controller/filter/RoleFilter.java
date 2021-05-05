@@ -33,7 +33,12 @@ public class RoleFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpSession session = httpRequest.getSession();
 		String stringRole = (String) session.getAttribute(ATTRIBUTE_NAME_ROLE);
-		Role role = Role.valueOf(stringRole);
+		Role role;
+		if (stringRole != null) {
+			role = Role.valueOf(stringRole);
+		} else {
+			role = Role.GUEST;
+		}
 		String command = httpRequest.getParameter(PARAM_NAME_COMMAND);
 		if (command != null && isValidCommand(command) && !hasAuthority(role, command)) {
 			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(PagePath.FORBIDDEN_PAGE);

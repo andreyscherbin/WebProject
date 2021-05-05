@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.Specification;
 import com.epam.forum.pool.ConnectionPool;
-
 import com.epam.forum.model.entity.TopicTable;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
@@ -30,6 +28,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	private static final String SQL_SELECT_ALL_TOPICS = "SELECT topics.topic_id, topics.header, topics.content, topics.is_pinned, topics.is_closed, topics.creation_date, sections.section_id, sections.header, sections.description, users.user_id, users.username, users.password, users.email, users.register_date, users.last_login_date, "
 			+ "users.is_email_verifed, users.is_active, users.role "
 			+ "FROM topics JOIN sections ON topics.section_id = sections.section_id JOIN users ON topics.user_id = users.user_id ";
+	private static final String SQL_INSERT_TOPIC = "INSERT INTO topics (header, content, is_pinned, is_closed, creation_date, section_id, user_id) VALUES(?,?,?,?,?,?,?)";
 
 	@Override
 	public Optional<Topic> find(Long id) throws RepositoryException {
@@ -38,9 +37,33 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	}
 
 	@Override
-	public void create(Topic entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+	public void create(Topic topic) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_INSERT_TOPIC);
+			statement.setString(1, topic.getHeader());
+			statement.setString(2, topic.getContent());
+			statement.setBoolean(3, topic.isPinned());
+			statement.setBoolean(4, topic.isClosed());
+			statement.setTimestamp(5, Timestamp.valueOf(topic.getCreationDate()));
+			statement.setLong(6, topic.getSection().getId());
+			statement.setLong(7, topic.getUser().getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("Creating topic failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override

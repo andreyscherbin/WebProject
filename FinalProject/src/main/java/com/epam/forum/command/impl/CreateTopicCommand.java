@@ -12,64 +12,69 @@ import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
-import com.epam.forum.model.entity.Post;
+import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.User;
-import com.epam.forum.model.service.PostService;
+import com.epam.forum.model.service.SectionService;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.validator.DigitValidator;
 import com.epam.forum.validator.TextValidator;
 
-public class CreatePostCommand implements Command {
-
+public class CreateTopicCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
+	private static final String PARAM_NAME_SECTION_ID = "section_id";
 	private static final String PARAM_NAME_CONTENT = "content";
+	private static final String PARAM_NAME_HEADER = "header";
+
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
-	
+
 	private UserService userService;
 	private TopicService topicService;
-	private PostService postService;
+	private SectionService sectionService;
 
-	public CreatePostCommand(UserService userService, TopicService topicService, PostService postService) {
+	public CreateTopicCommand(UserService userService, TopicService topicService, SectionService sectionService) {
 		this.userService = userService;
 		this.topicService = topicService;
-		this.postService = postService;
+		this.sectionService = sectionService;
 	}
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		String id = request.getParameter(PARAM_NAME_TOPIC_ID);
+		String sectionId = request.getParameter(PARAM_NAME_SECTION_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
+		String header = request.getParameter(PARAM_NAME_HEADER);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (content == null || id == null || username == null || !DigitValidator.isValid(id)
-				|| !TextValidator.isValid(content)) {
+		if (content == null || sectionId == null || username == null || header == null
+				|| !DigitValidator.isValid(sectionId) || !TextValidator.isValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
-			router.setPage(PagePath.TOPIC);
+			router.setPage(PagePath.SECTION);
 			return router;
 		}
-		long topicId = Integer.parseInt(id);
+		long sectionIdLong = Integer.parseInt(sectionId);
 		List<User> users;
-		Optional<Topic> topic = Optional.empty();
+		Optional<Section> section = Optional.empty();
 		try {
 			users = userService.findUsersByUserName(username);
-			topic = topicService.findTopicById(topicId);
-			if (!users.isEmpty() && !topic.isEmpty()) {
+			section = sectionService.findSectionById(sectionIdLong);
+			if (!users.isEmpty() && !section.isEmpty()) {
 				User user = users.get(0);
-				Post post = new Post();
-				post.setCreationDate(LocalDateTime.now());
-				post.setContent(content);
-				post.setUser(user);
-				post.setTopic(topic.get());
-				postService.create(post);
-				router.setPage(PagePath.TOPIC);
+				Topic topic = new Topic();
+				topic.setHeader(header);
+				topic.setContent(content);
+				topic.setClosed(false);
+				topic.setPinned(false);
+				topic.setCreationDate(LocalDateTime.now());
+				topic.setUser(user);
+				topic.setSection(section.get());
+				topicService.create(topic);
+				router.setPage(PagePath.SECTION);
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
-				router.setPage(PagePath.TOPIC);
+				router.setPage(PagePath.SECTION);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

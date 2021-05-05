@@ -6,11 +6,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.epam.forum.command.impl.ActivationCommand;
 import com.epam.forum.command.impl.CreatePostCommand;
+import com.epam.forum.command.impl.CreateTopicCommand;
 import com.epam.forum.command.impl.DeletePostByIdCommand;
 import com.epam.forum.command.impl.EditPostCommand;
 import com.epam.forum.command.impl.EmptyCommand;
 import com.epam.forum.command.impl.GoToHomePageCommand;
 import com.epam.forum.command.impl.GoToLoginPageCommand;
+import com.epam.forum.command.impl.GoToNewTopicPageCommand;
 import com.epam.forum.command.impl.GoToRegistrationPageCommand;
 import com.epam.forum.command.impl.LanguageCommand;
 import com.epam.forum.command.impl.LogInCommand;
@@ -21,7 +23,7 @@ import com.epam.forum.command.impl.SortUserByIdCommand;
 import com.epam.forum.command.impl.ViewSectionCommand;
 import com.epam.forum.command.impl.ViewTopicByHeaderCommand;
 import com.epam.forum.command.impl.ViewTopicByIdCommand;
-import com.epam.forum.command.impl.ViewTopicBySectionCommand;
+import com.epam.forum.command.impl.ViewSectionByIdCommand;
 import com.epam.forum.command.impl.ViewTopicCommand;
 import com.epam.forum.command.impl.ViewUserByIdCommand;
 import com.epam.forum.command.impl.ViewUserByUserNameCommand;
@@ -57,9 +59,10 @@ public class CommandProvider {
 		commands.put(CommandName.SORT_USER_BY_ID, new SortUserByIdCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.VIEW_TOPIC, new ViewTopicCommand(topicService));
+		commands.put(CommandName.CREATE_TOPIC, new CreateTopicCommand(userService, topicService, sectionService));
 		commands.put(CommandName.SEARCH, new SearchAjaxCommand(topicService));
 		commands.put(CommandName.VIEW_TOPIC_BY_HEADER, new ViewTopicByHeaderCommand(topicService));
-		commands.put(CommandName.VIEW_TOPIC_BY_SECTION, new ViewTopicBySectionCommand(topicService));
+		commands.put(CommandName.VIEW_SECTION_BY_ID, new ViewSectionByIdCommand(topicService, sectionService));
 		commands.put(CommandName.VIEW_TOPIC_BY_ID, new ViewTopicByIdCommand(topicService, postService));
 		commands.put(CommandName.VIEW_SECTION, new ViewSectionCommand(sectionService));
 		commands.put(CommandName.CREATE_POST, new CreatePostCommand(userService, topicService, postService));
@@ -69,7 +72,8 @@ public class CommandProvider {
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());
 		commands.put(CommandName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
 		commands.put(CommandName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
-		commands.put(CommandName.GO_TO_HOME_PAGE, new GoToHomePageCommand());		
+		commands.put(CommandName.GO_TO_NEW_TOPIC_PAGE, new GoToNewTopicPageCommand());
+		commands.put(CommandName.GO_TO_HOME_PAGE, new GoToHomePageCommand());
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());
 	}
 

@@ -78,8 +78,6 @@
 			</div>
 		</div>
 
-
-
 		<!-- POSTS -->
 
 		<c:forEach var="post" items="${posts}">

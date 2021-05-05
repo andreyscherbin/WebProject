@@ -12,6 +12,9 @@
 <fmt:message key="section.delete_section" var="delete_section_message" />
 <fmt:message key="section.topics" var="topics_message" />
 <fmt:message key="section.new_topic" var="new_topic_message" />
+<fmt:message key="section.delete_topic" var="delete_topic_message" />
+<fmt:message key="section.pin_topic" var="pin_topic_message" />
+<fmt:message key="section.close_topic" var="close_topic_message" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,11 +33,16 @@
 
 		<h3>${topics_message}${fn:escapeXml(section.header)}</h3>
 		<p>${fn:escapeXml(section.description)}</p>
+
 		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
-			<a href="section/delete/${sections.id}">
+			<a class="btn btn-primary" href="section/delete/${sections.id}">
 				${delete_section_message} </a>
 		</sec:authorize>
-		<a href="topic/new/"> ${new_topic_message} </a>
+		<sec:authorize access="${f:isAuthenticated(pageContext)}">
+			<a class="btn btn-primary"
+				href="${pageContext.request.contextPath}/controller?command=go_to_new_topic_page&section_id=${section.id}">
+				${new_topic_message} </a>
+		</sec:authorize>
 
 		<c:forEach var="topic" items="${topics}">
 			<div class="row">
@@ -54,6 +62,21 @@
 										<fmt:formatDate pattern="dd.MM.yyyy HH:mm"
 											value="${ parsedDateTime }" />
 										Topic Id : ${topic.id}
+										<sec:authorize
+											access="${f:hasAnyRole(pageContext,'ADMIN','MODER')}">
+											<!-- delete topic button -->
+											<a class="btn btn-danger bi bi-trash"
+												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}">
+												${delete_topic_message} </a>
+											<!--  pin topic button -->
+											<a class="btn btn-light bi bi-pin"
+												href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}">
+												${pin_topic_message} </a>
+											<!-- close topic button -->
+											<a class="btn btn-light bi bi-lock-fill"
+												href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}">
+												${close_topic_message} </a>
+										</sec:authorize>
 									</div>
 								</div>
 								<div class="text-muted small ml-3">

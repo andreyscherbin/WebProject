@@ -17,6 +17,6 @@ web-jsptaglibrary_2_1.xsd"
 			<name>access</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 	</tag>
 </taglib>

@@ -25,7 +25,7 @@
 
 	<%@ include file="fragments/navbar.jspf"%>
 
-	<h3>${welcome_message}${username}!${lang_message}${lang}
+	<h3>${welcome_message}${username} ${lang_message}${lang}
 		${role_message} ${role}</h3>
 	<div class="container-fluid mt-100">
 		<%@ include file="fragments/messages.jspf"%>
@@ -57,7 +57,7 @@
 									<li>
 										<div>
 											<a
-												href="${pageContext.request.contextPath}/controller?command=view_topic_by_section&section=${section.id}">${fn:escapeXml(section.header)}
+												href="${pageContext.request.contextPath}/controller?command=view_section_by_id&section_id=${section.id}">${fn:escapeXml(section.header)}
 											</a>
 										</div>
 										<div>

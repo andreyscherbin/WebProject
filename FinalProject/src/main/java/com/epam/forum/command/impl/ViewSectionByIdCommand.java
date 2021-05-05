@@ -2,53 +2,59 @@ package com.epam.forum.command.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
+import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.entity.Topic;
+import com.epam.forum.model.service.SectionService;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.validator.DigitValidator;
 
-public class ViewTopicBySectionCommand implements Command {
+public class ViewSectionByIdCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_SECTION = "section";
+	private static final String PARAM_ID_SECTION = "section_id";
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
+	private static final String ATRIBUTE_NAME_SECTION = "section";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_VALUE_TOPICS = "message.empty.topics";
-	private static final String ATTRIBUTE_VALUE_WRONG_SECTION = "topic.sectionId.validation";
+	private static final String ATTRIBUTE_VALUE_EMPTY_TOPICS = "message.empty.topics";
+	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private TopicService topicService;
+	private SectionService sectionService;
 
-	public ViewTopicBySectionCommand(TopicService topicService) {
+	public ViewSectionByIdCommand(TopicService topicService, SectionService sectionService) {
 		this.topicService = topicService;
+		this.sectionService = sectionService;
 	}
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		String section = request.getParameter(PARAM_NAME_SECTION);
-		if (section == null || !DigitValidator.isValid(section)) {
-			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_SECTION);
+		String sectionId = request.getParameter(PARAM_ID_SECTION);
+		if (sectionId == null || !DigitValidator.isValid(sectionId)) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.HOME);
 			return router;
 		}
-		Long sectionId = Long.parseLong(section);
+		Long sectionIdLong = Long.parseLong(sectionId);
 		List<Topic> topics = new ArrayList<>();
+		Optional<Section> section = Optional.empty();
 		try {
-			topics = topicService.findTopicsBySection(sectionId);
-			if (!topics.isEmpty()) {
+			section = sectionService.findSectionById(sectionIdLong);
+			topics = topicService.findTopicsBySection(sectionIdLong);
+			if (!topics.isEmpty() && !section.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
+				request.setAttribute(ATRIBUTE_NAME_SECTION, section.get());
 				router.setPage(PagePath.SECTION);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_TOPICS);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_TOPICS);
 				router.setPage(PagePath.SECTION);
 			}
 		} catch (ServiceException e) {

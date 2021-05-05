@@ -92,4 +92,13 @@ public class TopicServiceImpl implements TopicService {
 		}
 		return topic;
 	}
+
+	@Override
+	public void create(Topic topic) throws ServiceException {
+		try {
+			topicRepository.create(topic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("create topic exception with topic: " + topic, e);
+		}
+	}
 }

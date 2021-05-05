@@ -28,4 +28,14 @@ web-jsptaglibrary_2_1.xsd"
 			hasRole(java.lang.String,javax.servlet.jsp.JspContext)
 		</function-signature>
 	</function>
+	<function>
+		<description>Has User Role </description>
+		<name>hasAnyRole</name>
+		<function-class>com.epam.forum.function.HasAnyRoleFunction
+		</function-class>
+		<function-signature>
+			java.lang.Boolean
+			hasAnyRole(javax.servlet.jsp.JspContext, java.lang.String[])
+		</function-signature>
+	</function>
 </taglib>
