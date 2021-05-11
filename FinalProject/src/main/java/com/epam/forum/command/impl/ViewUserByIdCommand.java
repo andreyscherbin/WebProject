@@ -22,7 +22,7 @@ public class ViewUserByIdCommand implements Command {
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_USER = "message.empty.user";
+	private static final String ATTRIBUTE_VALUE_KEY_USER_EMPTY = "message.user.empty";
 	private UserService userService;
 
 	public ViewUserByIdCommand(UserService userService) {
@@ -46,10 +46,10 @@ public class ViewUserByIdCommand implements Command {
 				List<User> users = new ArrayList<>();
 				users.add(user.get());
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
-				router.setPage(PagePath.VIEW);
+				router.setPage(PagePath.ADMIN_HOME);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_USER);
-				router.setPage(PagePath.VIEW);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_EMPTY);
+				router.setPage(PagePath.ADMIN_HOME);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

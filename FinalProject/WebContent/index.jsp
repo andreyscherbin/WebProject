@@ -6,7 +6,10 @@
 <title>Index</title>
 </head>
 <body>
-	<c:set var="lang" value="en_US" scope="session" />		
-	<jsp:forward page="/WEB-INF/jsp/home.jsp" /> 
+	<c:set var="lang" value="en_US" scope="session" />
+	<c:if test="${empty sessionScope.role}">
+		<c:set var="role" value="GUEST" scope="session" />
+	</c:if>
+	<jsp:forward page="/WEB-INF/jsp/home.jsp" />
 </body>
 </html>

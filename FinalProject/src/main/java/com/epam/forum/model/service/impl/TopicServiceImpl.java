@@ -1,8 +1,12 @@
 package com.epam.forum.model.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
@@ -17,11 +21,11 @@ import com.epam.forum.model.repository.impl.IdTopicSpecification;
 import com.epam.forum.model.repository.impl.SectionTopicSpecification;
 import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
 import com.epam.forum.model.service.TopicService;
-import com.epam.forum.validator.TextValidator;
+import com.epam.forum.validator.TopicValidator;
 
 public class TopicServiceImpl implements TopicService {
 	private static Logger logger = LogManager.getLogger();
-	private static final TopicService instance = new TopicServiceImpl();
+	private static TopicService instance;
 	private Repository<Long, Topic> topicRepository;
 
 	private TopicServiceImpl() {
@@ -29,6 +33,9 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	public static TopicService getInstance() {
+		if (instance == null) {
+			instance = new TopicServiceImpl();
+		}
 		return instance;
 	}
 
@@ -46,8 +53,8 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<Topic> findTopicsByHeader(String pattern) throws ServiceException {
 		List<Topic> topics = new ArrayList<>();
-		if (!TextValidator.isValid(pattern)) {
-			logger.info("not valid pattern");
+		if (!TopicValidator.isHeaderValid(pattern)) {
+			logger.info("not valid header");
 			return topics;
 		}
 		try {
@@ -61,7 +68,7 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public List<Topic> findTopicsBySection(Long sectionId) throws ServiceException {
+	public Queue<Topic> findTopicsBySection(Long sectionId) throws ServiceException {
 		List<Topic> topics = new ArrayList<>();
 		try {
 			SectionTopicSpecification sectionSpecification = new SectionTopicSpecification(
@@ -70,7 +77,21 @@ public class TopicServiceImpl implements TopicService {
 		} catch (RepositoryException e) {
 			throw new ServiceException("find topics exception with section: " + sectionId, e);
 		}
-		return topics;
+		Queue<Topic> queueTopics = new LinkedList<>();
+		Iterator<Topic> itr = topics.iterator();
+		while (itr.hasNext()) {
+			Topic topic = itr.next();
+			if (topic.isPinned()) {
+				queueTopics.add(topic);
+				itr.remove();
+			}
+		}
+		if (!topics.isEmpty()) {
+			for (Topic topic : topics) {
+				queueTopics.add(topic);
+			}
+		}
+		return queueTopics;
 	}
 
 	@Override
@@ -107,6 +128,42 @@ public class TopicServiceImpl implements TopicService {
 			topicRepository.delete(topic);
 		} catch (RepositoryException e) {
 			throw new ServiceException("delete topic exception with topic: " + topic, e);
+		}
+	}
+
+	@Override
+	public void pinTopic(Topic pinTopic) throws ServiceException {
+		try {
+			topicRepository.update(pinTopic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("pin topic exception with topic: " + pinTopic, e);
+		}
+	}
+
+	@Override
+	public void unpinTopic(Topic unpinTopic) throws ServiceException {
+		try {
+			topicRepository.update(unpinTopic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("unpin topic exception with topic: " + unpinTopic, e);
+		}
+	}
+
+	@Override
+	public void closeTopic(Topic closeTopic) throws ServiceException {
+		try {
+			topicRepository.update(closeTopic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("close topic exception with topic: " + closeTopic, e);
+		}
+	}
+
+	@Override
+	public void uncloseTopic(Topic uncloseTopic) throws ServiceException {
+		try {
+			topicRepository.update(uncloseTopic);
+		} catch (RepositoryException e) {
+			throw new ServiceException("unclose topic exception with topic: " + uncloseTopic, e);
 		}
 	}
 }

@@ -31,7 +31,7 @@ public class RoleFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpSession session = httpRequest.getSession();
+		HttpSession session = httpRequest.getSession();		
 		String stringRole = (String) session.getAttribute(ATTRIBUTE_NAME_ROLE);
 		Role role;
 		if (stringRole != null) {

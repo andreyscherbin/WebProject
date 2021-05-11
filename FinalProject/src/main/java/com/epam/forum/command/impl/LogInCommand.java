@@ -49,7 +49,11 @@ public class LogInCommand implements Command {
 				Role role = user.getRole();
 				session.setAttribute(ATTRIBUTE_NAME_ROLE, role.toString());
 				session.setAttribute(ATTRIBUTE_NAME_USERNAME, userName);
-				router.setPage(PagePath.HOME_REDIRECT);
+				if (role == Role.ADMIN) {
+					router.setPage(PagePath.ADMIN_HOME_REDIRECT);
+				} else {
+					router.setPage(PagePath.HOME_REDIRECT);
+				}
 				router.setRedirect();
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_ERROR_AUTHENTICATION);

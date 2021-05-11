@@ -25,9 +25,15 @@
 
 	<%@ include file="fragments/navbar.jspf"%>
 
-	<h3>${welcome_message}${username} ${lang_message}${lang}
-		${role_message} ${role}</h3>
+
 	<div class="container-fluid mt-100">
+		<h3>${welcome_message}${username}${lang_message}${lang}
+			${role_message} ${role}</h3>
+		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
+			<a class="btn btn-primary"
+				href="${pageContext.request.contextPath}/controller?command=go_to_new_section_page">
+				${new_section_message} </a>
+		</sec:authorize>
 		<%@ include file="fragments/messages.jspf"%>
 		<!-- SECTIONS -->
 
@@ -40,11 +46,6 @@
 							<div class="row">
 								<div class="col s6">
 									<h4>${sections_message}</h4>
-								</div>
-								<div class="col s6">
-									<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
-										<a href="section/new"> ${new_section_message} </a>
-									</sec:authorize>
 								</div>
 							</div>
 						</div>

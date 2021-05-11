@@ -26,9 +26,8 @@
 		<!-- email address -->
 		<label for="inputEmail" class="form-label">Email address</label>
 		<div class="input-group has-validation">
-			<input type="text" id="inputEmail" name="email" class="form-control"
-				aria-describedby="inputGroupPrepend" required autofocus
-				pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$">
+			<input type="email" id="inputEmail" name="email" class="form-control"
+				aria-describedby="inputGroupPrepend" required autofocus>
 			<div class="invalid-feedback">Please enter valid email</div>
 		</div>
 
@@ -37,7 +36,7 @@
 		<div class="input-group has-validation">
 			<input type="text" id="inputUsername" name="username"
 				class="form-control" required autofocus
-				aria-describedby="inputGroupPrepend" pattern="[A-Za-z0-9]+"
+				aria-describedby="inputGroupPrepend" pattern="[A-Za-z0-9]{1,10}"
 				maxlength="10" />
 			<div class="invalid-feedback">Must contain only digits and
 				upperscase or lowercase letter, with max length 10</div>
@@ -49,7 +48,7 @@
 			<input type="password" id="inputPassword" name="password"
 				class="form-control" required autofocus
 				aria-describedby="inputGroupPrepend"
-				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,60}" />
 			<div class="invalid-feedback">Must contain at least one number
 				and one uppercase and lowercase letter, and at least 8 or more
 				characters</div>
@@ -61,7 +60,7 @@
 			<input type="password" id="repeatPassword" name="repeatPassword"
 				class="form-control" required autofocus
 				aria-describedby="inputGroupPrepend"
-				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,60}" />
 			<div class="invalid-feedback">Passwords Don't Match</div>
 		</div>
 

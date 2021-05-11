@@ -47,6 +47,7 @@ public class ControllerServlet extends HttpServlet {
 
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		logger.info("session id: {}", request.getSession().getId());
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		String commandName = request.getParameter(PARAM_NAME_COMMAND);
 		Command command = commandProvider.getCommand(commandName);

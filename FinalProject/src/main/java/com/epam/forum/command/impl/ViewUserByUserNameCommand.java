@@ -21,7 +21,7 @@ public class ViewUserByUserNameCommand implements Command {
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.users";
+	private static final String ATTRIBUTE_VALUE_KEY_USERS_EMPTY = "message.users.empty";
 	private UserService userService;
 
 	public ViewUserByUserNameCommand(UserService userService) {
@@ -42,10 +42,10 @@ public class ViewUserByUserNameCommand implements Command {
 			users = userService.findUsersByUserName(userName);
 			if (!users.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
-				router.setPage(PagePath.VIEW);
+				router.setPage(PagePath.ADMIN_HOME);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
-				router.setPage(PagePath.VIEW);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
+				router.setPage(PagePath.ADMIN_HOME);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

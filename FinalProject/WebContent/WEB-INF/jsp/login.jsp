@@ -27,7 +27,7 @@
 		<div class="input-group has-validation">
 			<input type="text" id="forUsername" name="username"
 				class="form-control" required autofocus
-				aria-describedby="inputGroupPrepend" pattern="[A-Za-z0-9]+"
+				aria-describedby="inputGroupPrepend" pattern="[A-Za-z0-9]{1,10}"
 				maxlength="10" />
 			<div class="invalid-feedback">Must contain only digits and
 				upperscase or lowercase letter, with max length 10</div>
@@ -39,7 +39,7 @@
 			<input type="password" id="forPassword" name="password"
 				class="form-control" required autofocus
 				aria-describedby="inputGroupPrepend"
-				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,60}" />
 			<div class="invalid-feedback">Must contain at least one number
 				and one uppercase and lowercase letter, and at least 8 or more
 				characters</div>

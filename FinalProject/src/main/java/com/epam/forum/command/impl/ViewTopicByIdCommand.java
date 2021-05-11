@@ -24,12 +24,13 @@ import com.epam.forum.validator.DigitValidator;
 public class ViewTopicByIdCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_ID = "topic_id";
+	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
 	private static final String ATRIBUTE_NAME_TOPIC = "topic";
 	private static final String ATRIBUTE_NAME_POSTS = "posts";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_TOPIC = "message.empty.topic";
+	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
+	private static final String ATTRIBUTE_VALUE_KEY_POSTS_EMPTY = "message.posts.empty";
 	private TopicService topicService;
 	private PostService postService;
 
@@ -41,24 +42,30 @@ public class ViewTopicByIdCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		String idString = request.getParameter(PARAM_NAME_ID);
-		if (idString == null || !DigitValidator.isValid(idString)) {
+		String topicId = request.getParameter(PARAM_NAME_TOPIC_ID);
+		if (topicId == null || !DigitValidator.isValid(topicId)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.SECTION);
 			return router;
 		}
-		long id = Integer.parseInt(idString);
+		long id = Integer.parseInt(topicId);
 		Optional<Topic> topic = Optional.empty();
 		List<Post> posts = new ArrayList<>();
 		try {
 			topic = topicService.findTopicById(id);
 			posts = postService.findPostsByTopic(id);
 			if (!topic.isEmpty()) {
-				request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
-				request.setAttribute(ATRIBUTE_NAME_POSTS, posts);
-				router.setPage(PagePath.TOPIC);
+				if (!posts.isEmpty()) {
+					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
+					request.setAttribute(ATRIBUTE_NAME_POSTS, posts);
+					router.setPage(PagePath.TOPIC);
+				} else {
+					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_POSTS_EMPTY);
+					router.setPage(PagePath.TOPIC);
+				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_TOPIC);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY);
 				router.setPage(PagePath.SECTION);
 			}
 		} catch (ServiceException e) {

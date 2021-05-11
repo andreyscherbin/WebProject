@@ -32,7 +32,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	@Override
 	public Optional<User> find(Long id) throws RepositoryException {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	@Override
 	public void delete(User entity) throws RepositoryException {
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	@Override
 	public List<User> sort(Comparator<User> comparator) throws RepositoryException {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

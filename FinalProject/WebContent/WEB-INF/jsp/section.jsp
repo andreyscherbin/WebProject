@@ -14,7 +14,11 @@
 <fmt:message key="section.new_topic" var="new_topic_message" />
 <fmt:message key="section.delete_topic" var="delete_topic_message" />
 <fmt:message key="section.pin_topic" var="pin_topic_message" />
+<fmt:message key="section.unpin_topic" var="unpin_topic_message" />
 <fmt:message key="section.close_topic" var="close_topic_message" />
+<fmt:message key="section.unclose_topic" var="unclose_topic_message" />
+<fmt:message key="message.topic.closed" var="closed_topic_message" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +39,7 @@
 		<p>${fn:escapeXml(section.description)}</p>
 
 		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
-			<a class="btn btn-primary" href="section/delete/${sections.id}">
+			<a class="btn btn-danger" href="${pageContext.request.contextPath}/controller?command=delete_section&section_id=${section.id}">
 				${delete_section_message} </a>
 		</sec:authorize>
 		<sec:authorize access="${f:isAuthenticated(pageContext)}">
@@ -55,6 +59,9 @@
 										<a
 											href="${pageContext.request.contextPath}/controller?command=view_topic_by_id&topic_id=${topic.id}">${fn:escapeXml(topic.header)}
 										</a>
+										<c:if test="${topic.closed}">
+										${closed_topic_message}
+										</c:if>
 									</p>
 									<div class="text-muted small">
 										<fmt:parseDate value="${ topic.creationDate }"
@@ -69,13 +76,29 @@
 												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}&section_id=${section.id}">
 												${delete_topic_message} </a>
 											<!--  pin topic button -->
-											<a class="btn btn-light bi bi-pin"
-												href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
-												${pin_topic_message} </a>
+											<c:if test="${!topic.pinned}">
+												<a class="btn btn-light bi bi-pin"
+													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
+													${pin_topic_message} </a>
+											</c:if>
+											<!--  unpin topic button -->
+											<c:if test="${topic.pinned}">
+												<a class="btn btn-light bi bi bi-x"
+													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
+													${unpin_topic_message} </a>
+											</c:if>
 											<!-- close topic button -->
-											<a class="btn btn-light bi bi-lock-fill"
-												href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
-												${close_topic_message} </a>
+											<c:if test="${!topic.closed}">
+												<a class="btn btn-light bi bi-lock-fill"
+													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
+													${close_topic_message} </a>
+											</c:if>
+											<!-- unclose topic button -->
+											<c:if test="${topic.closed}">
+												<a class="btn btn-light bi bi-unlock-fill"
+													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
+													${unclose_topic_message} </a>
+											</c:if>
 										</sec:authorize>
 									</div>
 								</div>

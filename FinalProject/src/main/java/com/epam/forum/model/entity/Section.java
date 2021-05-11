@@ -9,14 +9,7 @@ public class Section extends Entity {
 
 	public Section() {
 	}
-
-	public Section(Long id, String header, String description) {
-		super();
-		this.id = id;
-		this.header = header;
-		this.description = description;
-	}
-
+	
 	public Long getId() {
 		return id;
 	}

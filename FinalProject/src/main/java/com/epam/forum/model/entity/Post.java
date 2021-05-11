@@ -11,9 +11,8 @@ public class Post extends Entity {
 	private Topic topic;
 	private User user;
 
-	public Post(Long id, String content, LocalDateTime creationDate, Topic topic, User user) {
+	public Post(String content, LocalDateTime creationDate, Topic topic, User user) {
 		super();
-		this.id = id;
 		this.content = content;
 		this.creationDate = creationDate;
 		this.topic = topic;

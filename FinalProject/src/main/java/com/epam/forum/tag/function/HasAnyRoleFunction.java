@@ -1,4 +1,4 @@
-package com.epam.forum.function;
+package com.epam.forum.tag.function;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspContext;
@@ -6,14 +6,18 @@ import javax.servlet.jsp.PageContext;
 
 import com.epam.forum.model.entity.Role;
 
-public class HasRoleFunction {
+public class HasAnyRoleFunction {
 	private static final String ATTRIBUTE_NAME_ROLE = "role";
 
-	public static Boolean hasRole(String parameterRole, JspContext jspContext) {
-		PageContext pageContext = (PageContext) jspContext; // need to think why
+	public static Boolean hasAnyRole(JspContext jspContext, String... roles) {
+		PageContext pageContext = (PageContext) jspContext;
 		HttpSession session = pageContext.getSession();
 		String stringRole = (String) session.getAttribute(ATTRIBUTE_NAME_ROLE);
 		Role role = Role.valueOf(stringRole);
-		return role == Role.valueOf(parameterRole);
+		for (String str : roles) {
+			if (role == Role.valueOf(str))
+				return true;
+		}
+		return false;
 	}
 }

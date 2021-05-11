@@ -19,7 +19,7 @@ import com.epam.forum.model.service.SectionService;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.validator.DigitValidator;
-import com.epam.forum.validator.TextValidator;
+import com.epam.forum.validator.TopicValidator;
 
 public class CreateTopicCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
@@ -30,6 +30,8 @@ public class CreateTopicCommand implements Command {
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
+	private static final String ATTRIBUTE_VALUE_KEY_USERS_EMPTY = "message.users.empty";
+	private static final String ATTRIBUTE_VALUE_SECTION_EMPTY = "message.section.empty";
 
 	private UserService userService;
 	private TopicService topicService;
@@ -49,7 +51,8 @@ public class CreateTopicCommand implements Command {
 		String header = request.getParameter(PARAM_NAME_HEADER);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		if (content == null || sectionId == null || username == null || header == null
-				|| !DigitValidator.isValid(sectionId) || !TextValidator.isValid(content)) {
+				|| !DigitValidator.isValid(sectionId) || !TopicValidator.isContentValid(content)
+				|| !TopicValidator.isHeaderValid(header)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.SECTION);
 			return router;
@@ -60,22 +63,25 @@ public class CreateTopicCommand implements Command {
 		try {
 			users = userService.findUsersByUserName(username);
 			section = sectionService.findSectionById(sectionIdLong);
-			if (!users.isEmpty() && !section.isEmpty()) {
-				User user = users.get(0);
-				Topic topic = new Topic();
-				topic.setHeader(header);
-				topic.setContent(content);
-				topic.setClosed(false);
-				topic.setPinned(false);
-				topic.setCreationDate(LocalDateTime.now());
-				topic.setUser(user);
-				topic.setSection(section.get());
-				topicService.create(topic);
-				router.setPage(PagePath.SECTION);
+			if (!users.isEmpty()) {
+				if (!section.isEmpty()) {
+					User user = users.get(0);
+					Topic topic = new Topic();
+					topic.setHeader(header);
+					topic.setContent(content);
+					topic.setClosed(false);
+					topic.setPinned(false);
+					topic.setCreationDate(LocalDateTime.now());
+					topic.setUser(user);
+					topic.setSection(section.get());
+					topicService.create(topic);
+				} else {
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTION_EMPTY);
+				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
-				router.setPage(PagePath.SECTION);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
 			}
+			router.setPage(PagePath.SECTION);
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
 			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());

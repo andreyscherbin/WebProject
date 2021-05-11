@@ -21,6 +21,8 @@ import static com.epam.forum.model.entity.SectionTable.*;
 public class SectionRepositoryImpl implements Repository<Long, Section> {
 
 	private static final String SQL_SELECT_ALL_SECTIONS = "SELECT section_id, header, description FROM sections";
+	private static final String SQL_INSERT_SECTION = "INSERT INTO sections (header, description) VALUES(?,?)";
+	private static final String SQL_DELETE_SECTION = "DELETE FROM sections WHERE section_id = ?";
 
 	@Override
 	public Optional<Section> find(Long id) throws RepositoryException {
@@ -28,8 +30,28 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	}
 
 	@Override
-	public void create(Section entity) throws RepositoryException {
-		throw new UnsupportedOperationException();
+	public void create(Section section) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_INSERT_SECTION);
+			statement.setString(1, section.getHeader());
+			statement.setString(2, section.getDescription());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("Creating section failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override
@@ -38,8 +60,27 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	}
 
 	@Override
-	public void delete(Section entity) throws RepositoryException {
-		throw new UnsupportedOperationException();
+	public void delete(Section section) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_DELETE_SECTION);
+			statement.setLong(1, section.getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("Deleting section failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override

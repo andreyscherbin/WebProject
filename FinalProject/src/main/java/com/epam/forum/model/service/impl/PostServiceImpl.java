@@ -3,7 +3,6 @@ package com.epam.forum.model.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
@@ -11,19 +10,16 @@ import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.PostTable;
-import com.epam.forum.model.entity.User;
-import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
 import com.epam.forum.model.repository.impl.IdPostSpecification;
-import com.epam.forum.model.repository.impl.IdUserSpecification;
 import com.epam.forum.model.repository.impl.PostRepositoryImpl;
 import com.epam.forum.model.repository.impl.TopicPostSpecification;
 import com.epam.forum.model.service.PostService;
 
 public class PostServiceImpl implements PostService {
 	private static Logger logger = LogManager.getLogger();
-	private static final PostService instance = new PostServiceImpl();
+	private static PostService instance;
 	private Repository<Long, Post> postRepository;
 
 	private PostServiceImpl() {
@@ -31,6 +27,9 @@ public class PostServiceImpl implements PostService {
 	}
 
 	public static PostService getInstance() {
+		if (instance == null) {
+			instance = new PostServiceImpl();
+		}
 		return instance;
 	}
 
@@ -96,7 +95,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public void edit(Post post) throws ServiceException {		
+	public void edit(Post post) throws ServiceException {
 		try {
 			postRepository.update(post);
 		} catch (RepositoryException e) {

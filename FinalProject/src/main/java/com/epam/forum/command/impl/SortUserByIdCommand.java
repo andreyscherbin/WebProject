@@ -34,10 +34,10 @@ public class SortUserByIdCommand implements Command {
 			users = userService.sort(UserComparator.ID);
 			if (!users.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
-				router.setPage(PagePath.VIEW);
+				router.setPage(PagePath.ADMIN_HOME);
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
-				router.setPage(PagePath.VIEW);
+				router.setPage(PagePath.ADMIN_HOME);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

@@ -17,7 +17,7 @@ public class ViewSectionCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_SECTIONS = "sections";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.sections";
+	private static final String ATTRIBUTE_VALUE_SECTIONS_EMPTY = "message.sections.empty";
 	private SectionService sectionService;
 
 	public ViewSectionCommand(SectionService sectionService) {
@@ -34,7 +34,7 @@ public class ViewSectionCommand implements Command {
 				request.setAttribute(ATRIBUTE_NAME_SECTIONS, sections);
 				router.setPage(PagePath.HOME);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTIONS_EMPTY);
 				router.setPage(PagePath.HOME);
 			}
 		} catch (ServiceException e) {

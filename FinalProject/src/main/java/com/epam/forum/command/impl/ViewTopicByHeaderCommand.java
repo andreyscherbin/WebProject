@@ -20,7 +20,7 @@ public class ViewTopicByHeaderCommand implements Command {
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.topics";
+	private static final String ATTRIBUTE_VALUE_TOPICS_EMPTY = "message.topics.empty";
 	private TopicService topicService;
 
 	public ViewTopicByHeaderCommand(TopicService topicService) {
@@ -43,7 +43,7 @@ public class ViewTopicByHeaderCommand implements Command {
 				request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
 				router.setPage(PagePath.SEARCH);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_TOPICS_EMPTY);
 				router.setPage(PagePath.SEARCH);
 			}
 		} catch (ServiceException e) {

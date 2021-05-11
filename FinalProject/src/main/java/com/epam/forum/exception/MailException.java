@@ -1,6 +1,11 @@
 package com.epam.forum.exception;
 
 public class MailException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public MailException() {
 	}
 

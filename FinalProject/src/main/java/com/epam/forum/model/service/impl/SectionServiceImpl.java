@@ -18,7 +18,7 @@ import com.epam.forum.model.service.SectionService;
 public class SectionServiceImpl implements SectionService {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final SectionService instance = new SectionServiceImpl();
+	private static SectionService instance;
 	private Repository<Long, Section> sectionRepository;
 
 	private SectionServiceImpl() {
@@ -26,6 +26,9 @@ public class SectionServiceImpl implements SectionService {
 	}
 
 	public static SectionService getInstance() {
+		if (instance == null) {
+			instance = new SectionServiceImpl();
+		}
 		return instance;
 	}
 
@@ -57,5 +60,23 @@ public class SectionServiceImpl implements SectionService {
 			throw new ServiceException("find section exception with id: " + sectionId, e);
 		}
 		return section;
+	}
+
+	@Override
+	public void create(Section section) throws ServiceException {
+		try {
+			sectionRepository.create(section);
+		} catch (RepositoryException e) {
+			throw new ServiceException("create section exception with section: " + section, e);
+		}
+	}
+
+	@Override
+	public void delete(Section section) throws ServiceException {
+		try {
+			sectionRepository.delete(section);
+		} catch (RepositoryException e) {
+			throw new ServiceException("delete section exception with section: " + section, e);
+		}
 	}
 }

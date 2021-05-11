@@ -26,7 +26,7 @@ import com.epam.forum.util.email.MailSender;
 public class ActivationSenderServiceImpl implements ActivationSenderService {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final ActivationSenderService instance = new ActivationSenderServiceImpl();
+	private static ActivationSenderService instance;
 	private ActivationCode activationCode;
 	private Repository<String, ActivationCode> activationCodeRepository;
 
@@ -35,6 +35,9 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 	}
 
 	public static ActivationSenderService getInstance() {
+		if (instance == null) {
+			instance = new ActivationSenderServiceImpl();
+		}
 		return instance;
 	}
 

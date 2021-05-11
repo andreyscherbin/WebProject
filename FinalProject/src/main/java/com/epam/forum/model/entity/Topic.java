@@ -8,25 +8,12 @@ public class Topic extends Entity {
 	private Long id;
 	private String header;
 	private String content;
-	private boolean isPinned;
-	private boolean isClosed;
+	private boolean pinned;
+	private boolean closed;
 	private LocalDateTime creationDate;
 	private Section section;
 	private User user;
-
-	public Topic(Long id, String header, String content, boolean isPinned, boolean isClosed,
-			LocalDateTime creationDate, Section section, User user) {
-		super();
-		this.id = id;
-		this.header = header;
-		this.content = content;
-		this.isPinned = isPinned;
-		this.isClosed = isClosed;
-		this.creationDate = creationDate;
-		this.section = section;
-		this.user = user;
-	}
-
+	
 	public Topic() {
 	}
 
@@ -55,19 +42,19 @@ public class Topic extends Entity {
 	}
 
 	public boolean isPinned() {
-		return isPinned;
+		return pinned;
 	}
 
 	public void setPinned(boolean isPinned) {
-		this.isPinned = isPinned;
+		this.pinned = isPinned;
 	}
 
 	public boolean isClosed() {
-		return isClosed;
+		return closed;
 	}
 
 	public void setClosed(boolean isClosed) {
-		this.isClosed = isClosed;
+		this.closed = isClosed;
 	}
 
 	public LocalDateTime getCreationDate() {
@@ -101,8 +88,8 @@ public class Topic extends Entity {
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result + ((header == null) ? 0 : header.hashCode());
-		result = prime * result + (isClosed ? 1231 : 1237);
-		result = prime * result + (isPinned ? 1231 : 1237);
+		result = prime * result + (closed ? 1231 : 1237);
+		result = prime * result + (pinned ? 1231 : 1237);
 		result = prime * result + ((section == null) ? 0 : section.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -133,9 +120,9 @@ public class Topic extends Entity {
 				return false;
 		} else if (!header.equals(other.header))
 			return false;
-		if (isClosed != other.isClosed)
+		if (closed != other.closed)
 			return false;
-		if (isPinned != other.isPinned)
+		if (pinned != other.pinned)
 			return false;
 		if (section == null) {
 			if (other.section != null)
@@ -165,9 +152,9 @@ public class Topic extends Entity {
 		builder.append(", content=");
 		builder.append(content);
 		builder.append(", isPinned=");
-		builder.append(isPinned);
+		builder.append(pinned);
 		builder.append(", isClosed=");
-		builder.append(isClosed);
+		builder.append(closed);
 		builder.append(", creationDate=");
 		builder.append(creationDate);
 		builder.append(", section=");

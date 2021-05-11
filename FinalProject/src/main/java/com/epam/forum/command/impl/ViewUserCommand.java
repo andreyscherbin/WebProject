@@ -17,7 +17,7 @@ public class ViewUserCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.users";
+	private static final String ATTRIBUTE_VALUE_KEY_USERS_EMPTY = "message.users.empty";
 	private UserService userService;
 
 	public ViewUserCommand(UserService userService) {
@@ -32,10 +32,10 @@ public class ViewUserCommand implements Command {
 			users = userService.findAllUsers();
 			if (!users.isEmpty()) {
 				request.setAttribute(ATRIBUTE_NAME_USERS, users);
-				router.setPage(PagePath.VIEW);
+				router.setPage(PagePath.ADMIN_HOME);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY);
-				router.setPage(PagePath.VIEW);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
+				router.setPage(PagePath.ADMIN_HOME);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
@@ -43,7 +43,7 @@ public class ViewUserCommand implements Command {
 			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
 			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
 			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			router.setPage(PagePath.ERROR);	
+			router.setPage(PagePath.ERROR);
 		}
 		return router;
 	}

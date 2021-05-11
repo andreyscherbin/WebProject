@@ -16,20 +16,6 @@ public class User extends Entity {
 	private boolean isActive;
 	private Role role;
 
-	public User(Long id, String userName, String password, String email, LocalDateTime registerDate,
-			LocalDateTime lastLoginDate, boolean isEmailVerifed, boolean isActive, Role role) {
-		super();
-		this.id = id;
-		this.userName = userName;
-		this.password = password;
-		this.email = email;
-		this.registerDate = registerDate;
-		this.lastLoginDate = lastLoginDate;
-		this.isEmailVerifed = isEmailVerifed;
-		this.isActive = isActive;
-		this.role = role;
-	}
-
 	public User() {
 	}
 

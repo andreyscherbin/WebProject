@@ -30,6 +30,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			+ "FROM topics JOIN sections ON topics.section_id = sections.section_id JOIN users ON topics.user_id = users.user_id ";
 	private static final String SQL_INSERT_TOPIC = "INSERT INTO topics (header, content, is_pinned, is_closed, creation_date, section_id, user_id) VALUES(?,?,?,?,?,?,?)";
 	private static final String SQL_DELETE_TOPIC = "DELETE FROM topics WHERE topic_id = ?";
+	private static final String SQL_UPDATE_TOPIC = "UPDATE topics SET is_pinned = ? , is_closed = ? WHERE topic_id = ?";
 
 	@Override
 	public Optional<Topic> find(Long id) throws RepositoryException {
@@ -68,9 +69,29 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	}
 
 	@Override
-	public void update(Topic entity) throws RepositoryException {
-		// TODO Auto-generated method stub
-
+	public void update(Topic topic) throws RepositoryException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ConnectionPool pool = null;
+		try {
+			pool = ConnectionPool.getInstance();
+			connection = pool.getConnection();
+			statement = connection.prepareStatement(SQL_UPDATE_TOPIC);
+			statement.setBoolean(1, topic.isPinned());
+			statement.setBoolean(2, topic.isClosed());
+			statement.setLong(3, topic.getId());
+			int affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				throw new RepositoryException("updated topic failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			close(resultSet);
+			close(statement);
+			close(connection);
+		}
 	}
 
 	@Override

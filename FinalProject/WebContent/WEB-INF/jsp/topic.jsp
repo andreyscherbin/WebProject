@@ -10,6 +10,7 @@
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
 <fmt:message key="topic.login_to_reply" var="login_to_reply_message" />
+<fmt:message key="message.topic.closed" var="closed_topic_message" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +51,9 @@
 									<a
 										href="${pageContext.request.contextPath}/controller?command=view_topic_by_id&topic_id=${topic.id}">${fn:escapeXml(topic.header)}
 									</a>
+									<c:if test="${topic.closed}">
+										${closed_topic_message}
+										</c:if>
 								</p>
 								<div class="text-muted small">
 
@@ -91,14 +95,16 @@
 									<c:set var="username" scope="request"
 										value="${fn:escapeXml(post.user.userName)}" />
 									<c:if test="${sessionScope.username == username }">
-										<div>
-											<a
-												href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
-												class="btn btn-light bi bi-trash">delete </a> <a
-												class="btn btn-light bi bi-pencil" href="javascript:void();"
-												id="editLink${post.id}" onclick="showEdit(${post.id});">edit
-											</a>
-										</div>
+										<c:if test="${!topic.closed}">
+											<div>
+												<a
+													href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
+													class="btn btn-light bi bi-trash">delete </a> <a
+													class="btn btn-light bi bi-pencil"
+													href="javascript:void();" id="editLink${post.id}"
+													onclick="showEdit(${post.id});">edit </a>
+											</div>
+										</c:if>
 									</c:if>
 									<div class="text-muted small">
 										<fmt:parseDate value="${ post.creationDate }"
@@ -146,29 +152,31 @@
 			</div>
 		</c:forEach>
 
-		<div>
-			<!-- SECTION REPLY -->
-			<sec:authorize access="${f:isAuthenticated(pageContext)}">
-				<form name="formReply" onsubmit="return validateReplyForm();"
-					action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
-					method="POST">
-					<div class="form-group">
-						<label for="comment">Your Reply</label>
-						<textarea class="form-control" id="content" name="content"> </textarea>
-					</div>
-					<button class="btn btn-outline-dark bi bi-reply" id="submit"
-						type="submit">Send reply</button>
-				</form>
+		<c:if test="${!topic.closed}">
+			<div>
+				<!-- SECTION REPLY -->
+				<sec:authorize access="${f:isAuthenticated(pageContext)}">
+					<form name="formReply" onsubmit="return validateReplyForm();"
+						action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
+						method="POST">
+						<div class="form-group">
+							<label for="comment">Your Reply</label>
+							<textarea class="form-control" id="content" name="content"> </textarea>
+						</div>
+						<button class="btn btn-outline-dark bi bi-reply" id="submit"
+							type="submit">Send reply</button>
+					</form>
 
-			</sec:authorize>
-			<sec:authorize access="${!f:isAuthenticated(pageContext)}">
-				<div class="row">
-					<div class="col ">
-						<h5>${login_to_reply_message}</h5>
+				</sec:authorize>
+				<sec:authorize access="${!f:isAuthenticated(pageContext)}">
+					<div class="row">
+						<div class="col ">
+							<h5>${login_to_reply_message}</h5>
+						</div>
 					</div>
-				</div>
-			</sec:authorize>
-		</div>
+				</sec:authorize>
+			</div>
+		</c:if>
 	</div>
 </body>
 </html>

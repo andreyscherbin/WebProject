@@ -19,7 +19,7 @@ public class DeleteTopicCommand implements Command {
 	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_TOPIC = "message.empty.topic";
+	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 
 	private TopicService topicService;
@@ -46,7 +46,7 @@ public class DeleteTopicCommand implements Command {
 				topicService.delete(topic.get());
 				router.setPage(PagePath.SECTION);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_TOPIC);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY);
 				router.setPage(PagePath.SECTION);
 			}
 		} catch (ServiceException e) {

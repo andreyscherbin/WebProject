@@ -11,7 +11,7 @@ web-jsptaglibrary_2_1.xsd"
 	<function>
 		<description>Is User Authenticated</description>
 		<name>isAuthenticated</name>
-		<function-class>com.epam.forum.function.IsAuthenticatedFunction
+		<function-class>com.epam.forum.tag.function.IsAuthenticatedFunction
 		</function-class>
 		<function-signature>
 			java.lang.Boolean
@@ -21,7 +21,7 @@ web-jsptaglibrary_2_1.xsd"
 	<function>
 		<description>Has User Role </description>
 		<name>hasRole</name>
-		<function-class>com.epam.forum.function.HasRoleFunction
+		<function-class>com.epam.forum.tag.function.HasRoleFunction
 		</function-class>
 		<function-signature>
 			java.lang.Boolean
@@ -31,7 +31,7 @@ web-jsptaglibrary_2_1.xsd"
 	<function>
 		<description>Has User Role </description>
 		<name>hasAnyRole</name>
-		<function-class>com.epam.forum.function.HasAnyRoleFunction
+		<function-class>com.epam.forum.tag.function.HasAnyRoleFunction
 		</function-class>
 		<function-signature>
 			java.lang.Boolean

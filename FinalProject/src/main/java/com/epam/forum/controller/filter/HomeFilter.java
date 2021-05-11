@@ -29,6 +29,7 @@ public class HomeFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		logger.info("home filter");
+		logger.info("session id: {}", ((HttpServletRequest) request).getSession().getId());
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_VIEW_SECTION);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);

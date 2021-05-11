@@ -3,8 +3,6 @@ package com.epam.forum.pool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,17 +16,17 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 public class ConnectionPool {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final int POOL_SIZE = 8;
+	private static final int DEFAULT_POOL_SIZE = 8;
 	private static ConnectionPool instance;
 	private static ReentrantLock lock = new ReentrantLock();
 	private static AtomicBoolean isPoolCreated = new AtomicBoolean(false);
 	private BlockingQueue<ProxyConnection> freeConnections;
-	private Queue<ProxyConnection> usedConnections;
+	private BlockingQueue<ProxyConnection> usedConnections;
 
 	private ConnectionPool() {
-		usedConnections = new ArrayDeque<>(POOL_SIZE);
-		freeConnections = new LinkedBlockingDeque<>(POOL_SIZE);
-		for (int i = 0; i < POOL_SIZE; i++) {
+		usedConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
+		freeConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
+		for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
 			try {
 				Connection connection = ConnectionFactory.createConnection();
 				ProxyConnection proxyConnection = new ProxyConnection(connection);
@@ -40,9 +38,9 @@ public class ConnectionPool {
 		if (freeConnections.isEmpty()) {
 			logger.fatal("can't create connections, empty pool");
 			throw new RuntimeException("can't create connections, empty pool");
-		} else if (freeConnections.size() == POOL_SIZE) {
+		} else if (freeConnections.size() == DEFAULT_POOL_SIZE) {
 			logger.info("pool successfully created");
-		} else if (freeConnections.size() > 0 && freeConnections.size() < POOL_SIZE) {
+		} else if (freeConnections.size() > 0 && freeConnections.size() < DEFAULT_POOL_SIZE) {
 			logger.info("not full pool, need create others connections");
 		}
 	}
@@ -63,7 +61,7 @@ public class ConnectionPool {
 		ProxyConnection proxyConnection = null;
 		try {
 			proxyConnection = freeConnections.take();
-			usedConnections.add(proxyConnection);
+			usedConnections.put(proxyConnection);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
@@ -84,12 +82,12 @@ public class ConnectionPool {
 	}
 
 	public boolean isLeakConnections() {
-		return freeConnections.size() + usedConnections.size() != POOL_SIZE;
+		return freeConnections.size() + usedConnections.size() != DEFAULT_POOL_SIZE;
 	}
 
 	public void shutdown() {
 		ProxyConnection proxyConnection = null;
-		for (int i = 0; i < POOL_SIZE; i++) {
+		for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
 			try {
 				proxyConnection = freeConnections.take();
 				proxyConnection.reallyClose();
@@ -107,7 +105,7 @@ public class ConnectionPool {
 	private void deregisterDrivers() {
 		DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
 			try {
-				DriverManager.deregisterDriver(driver);				
+				DriverManager.deregisterDriver(driver);
 			} catch (SQLException e) {
 				logger.error("error deregisterDriver with driver: {} with exception {}", driver, e);
 			}

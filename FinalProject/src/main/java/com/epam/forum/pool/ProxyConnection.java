@@ -27,6 +27,14 @@ class ProxyConnection implements Connection {
 		this.connection = connection;
 	}
 
+	public void close() throws SQLException {
+		ConnectionPool.getInstance().releaseConnection(this);
+	}
+
+	void reallyClose() throws SQLException {
+		connection.close();
+	}
+
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		return connection.unwrap(iface);
 	}
@@ -65,14 +73,6 @@ class ProxyConnection implements Connection {
 
 	public void rollback() throws SQLException {
 		connection.rollback();
-	}
-
-	public void close() throws SQLException {
-		ConnectionPool.getInstance().releaseConnection(this);
-	}
-
-	void reallyClose() throws SQLException {
-		connection.close();
 	}
 
 	public boolean isClosed() throws SQLException {

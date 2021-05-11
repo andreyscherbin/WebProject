@@ -11,6 +11,7 @@ import com.epam.forum.command.Router;
 import com.epam.forum.exception.ErrorTable;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
+import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.service.PostService;
 import com.epam.forum.validator.DigitValidator;
@@ -20,7 +21,8 @@ public class DeletePostByIdCommand implements Command {
 	private static final String PARAM_NAME_POST_ID = "post_id";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
-	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_POST = "message.empty.post";
+	private static final String ATTRIBUTE_VALUE_KEY_POST_EMPTY = "message.post.empty";
+	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED = "message.topic.closed";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 
 	private PostService postService;
@@ -44,17 +46,23 @@ public class DeletePostByIdCommand implements Command {
 		try {
 			post = postService.findPostById(postId);
 			if (!post.isEmpty()) {
-				Post deletedPost = post.get();
-				User user = deletedPost.getUser();
-				String usernamePost = user.getUserName();
-				if (usernamePost.equals(username)) {
-					postService.delete(post.get());
-					router.setPage(PagePath.TOPIC);
+				Topic topic = post.get().getTopic();
+				if (!topic.isClosed()) {
+					Post deletedPost = post.get();
+					User user = deletedPost.getUser();
+					String usernamePost = user.getUserName();
+					if (usernamePost.equals(username)) {
+						postService.delete(post.get());
+						router.setPage(PagePath.TOPIC);
+					} else {
+						router.setPage(PagePath.FORBIDDEN_PAGE);
+					}
 				} else {
-					router.setPage(PagePath.FORBIDDEN_PAGE);
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
+					router.setPage(PagePath.TOPIC);
 				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_POST);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_POST_EMPTY);
 				router.setPage(PagePath.TOPIC);
 			}
 		} catch (ServiceException e) {

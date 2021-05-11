@@ -8,5 +8,10 @@ import com.epam.forum.model.entity.Section;
 
 public interface SectionService {
 	List<Section> findAllSections() throws ServiceException;
+
 	Optional<Section> findSectionById(long sectionId) throws ServiceException;
+
+	void create(Section section) throws ServiceException;
+
+	void delete(Section section) throws ServiceException;
 }

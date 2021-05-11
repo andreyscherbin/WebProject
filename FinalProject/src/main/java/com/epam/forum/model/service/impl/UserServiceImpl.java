@@ -21,13 +21,13 @@ import com.epam.forum.model.repository.impl.UserNameSpecification;
 import com.epam.forum.model.repository.impl.UserRepositoryImpl;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.security.PasswordEncoder;
-import com.epam.forum.validator.DigitLatinValidator;
-import com.epam.forum.validator.EmailValidator;
-import com.epam.forum.validator.PasswordValidator;
+import com.epam.forum.template.builder.UserBuilder;
+import com.epam.forum.template.builder.impl.UserBuilderImpl;
+import com.epam.forum.validator.UserValidator;
 
 public class UserServiceImpl implements UserService {
 	private static Logger logger = LogManager.getLogger();
-	private static final UserService instance = new UserServiceImpl();
+	private static UserService instance;
 	private Repository<Long, User> userRepository;
 
 	private UserServiceImpl() {
@@ -35,6 +35,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public static UserService getInstance() {
+		if (instance == null) {
+			instance = new UserServiceImpl();
+		}
 		return instance;
 	}
 
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findUsersByUserName(String userName) throws ServiceException {
 		List<User> users = new ArrayList<>();
-		if (!DigitLatinValidator.isValid(userName)) {
+		if (!UserValidator.isUserNameValid(userName)) {
 			logger.info("not valid username");
 			return users;
 		}
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> authenticate(String userName, String password) throws ServiceException {
 		List<User> users = new ArrayList<>();
 		Optional<User> user = Optional.empty();
-		if (!DigitLatinValidator.isValid(userName) || !PasswordValidator.isValid(password)) {
+		if (!UserValidator.isUserNameValid(userName) || !UserValidator.isPasswordValid(password)) {
 			logger.info("not valid username or password");
 			return user;
 		}
@@ -134,8 +137,8 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> registrate(String userName, String password, String email) throws ServiceException {
 		List<User> users = new ArrayList<>();
 		Optional<User> user = Optional.empty();
-		if (!DigitLatinValidator.isValid(userName)
-				|| !PasswordValidator.isValid(password) || !EmailValidator.isValid(email)) {
+		if (!UserValidator.isUserNameValid(userName) || !UserValidator.isPasswordValid(password)
+				|| !UserValidator.isEmailValid(email)) {
 			logger.info("not valid username or password or email");
 			return user;
 		}
@@ -149,14 +152,15 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("query exception with username: " + userName + " and email : " + email, e);
 		}
 		if (users.isEmpty()) {
-			User registeredUser = new User();
-			registeredUser.setUserName(userName);
-			registeredUser.setPassword(PasswordEncoder.encodeString(password));
-			registeredUser.setEmail(email);
-			registeredUser.setRegisterDate(LocalDateTime.now());
-			registeredUser.setEmailVerifed(false);
-			registeredUser.setActive(false);
-			registeredUser.setRole(Role.GUEST);
+			UserBuilder userBuilder = new UserBuilderImpl();
+			userBuilder.buildUsername(userName);
+			userBuilder.buildPassword(password);
+			userBuilder.buildEmail(email);
+			userBuilder.buildRegisterDate(LocalDateTime.now());
+			userBuilder.buildIsEmailVerifed(false);
+			userBuilder.buildIsActive(false);
+			userBuilder.buildRole(Role.GUEST);
+			User registeredUser = userBuilder.getUser();
 			try {
 				userRepository.create(registeredUser);
 			} catch (RepositoryException e) {
@@ -167,13 +171,6 @@ public class UserServiceImpl implements UserService {
 		} else {
 			logger.info("user with such username: {} or email: {} already exists", userName, email);
 			logger.info("failed registration: {}", userName);
-			/*
-			 * for (User alreadyExistingUser : users) { if
-			 * (alreadyExistingUser.getEmail().equals(email) ||
-			 * alreadyExistingUser.getUserName().equals(userName)) { user =
-			 * Optional.of(alreadyExistingUser); } }
-			 */
-			// fix this, придумать что возвращать в случае совпадения почты или имени
 		}
 		return user;
 	}

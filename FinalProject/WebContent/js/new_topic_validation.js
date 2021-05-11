@@ -18,7 +18,7 @@ $(function() {
 
 function validateDescription() {
 	var content = document.getElementById('inputDescription');
-	var contentRGEX = /^[a-z0-9а-я\s?,.!<->;:=+/()\\"'#]+$/i;
+	var contentRGEX = /^[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]+$/i;
 
 	if (trimfield(content.value) == '') {
 		content.setCustomValidity('error');

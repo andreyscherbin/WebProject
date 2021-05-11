@@ -41,7 +41,7 @@ public class RegistrationCommand implements Command {
 			router.setPage(PagePath.HOME);
 			return router;
 		}
-		try {
+		try {			
 			Optional<User> registeredUser = userService.registrate(userName, password, email);
 			if (!registeredUser.isEmpty()) {
 				User user = registeredUser.get();

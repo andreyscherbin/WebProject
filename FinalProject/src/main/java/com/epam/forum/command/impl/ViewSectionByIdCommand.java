@@ -1,8 +1,9 @@
 package com.epam.forum.command.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Queue;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,8 @@ public class ViewSectionByIdCommand implements Command {
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
 	private static final String ATRIBUTE_NAME_SECTION = "section";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
-	private static final String ATTRIBUTE_VALUE_EMPTY_TOPICS = "message.empty.topics";
+	private static final String ATTRIBUTE_VALUE_TOPICS_EMPTY = "message.topics.empty";
+	private static final String ATTRIBUTE_VALUE_SECTIONS_EMPTY = "message.sections.empty";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private TopicService topicService;
 	private SectionService sectionService;
@@ -44,7 +46,7 @@ public class ViewSectionByIdCommand implements Command {
 			return router;
 		}
 		Long sectionIdLong = Long.parseLong(sectionId);
-		List<Topic> topics = new ArrayList<>();
+		Queue<Topic> topics = new LinkedList<>();
 		Optional<Section> section = Optional.empty();
 		try {
 			section = sectionService.findSectionById(sectionIdLong);
@@ -53,12 +55,12 @@ public class ViewSectionByIdCommand implements Command {
 				if (!topics.isEmpty()) {
 					request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
 				} else {
-					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_EMPTY_TOPICS);
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_TOPICS_EMPTY);
 				}
 				request.setAttribute(ATRIBUTE_NAME_SECTION, section.get());
 				router.setPage(PagePath.SECTION);
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTIONS_EMPTY);
 				router.setPage(PagePath.HOME);
 			}
 		} catch (ServiceException e) {
