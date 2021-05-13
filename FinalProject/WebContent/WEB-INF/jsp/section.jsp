@@ -39,14 +39,17 @@
 		<p>${fn:escapeXml(section.description)}</p>
 
 		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
-			<a class="btn btn-danger" href="${pageContext.request.contextPath}/controller?command=delete_section&section_id=${section.id}">
+			<a class="btn btn-danger"
+				href="${pageContext.request.contextPath}/controller?command=delete_section&section_id=${section.id}">
 				${delete_section_message} </a>
 		</sec:authorize>
-		<sec:authorize access="${f:isAuthenticated(pageContext)}">
-			<a class="btn btn-primary"
-				href="${pageContext.request.contextPath}/controller?command=go_to_new_topic_page&section_id=${section.id}">
-				${new_topic_message} </a>
-		</sec:authorize>
+		<c:if test="${sessionScope.status}">
+			<sec:authorize access="${f:isAuthenticated(pageContext)}">
+				<a class="btn btn-primary"
+					href="${pageContext.request.contextPath}/controller?command=go_to_new_topic_page&section_id=${section.id}">
+					${new_topic_message} </a>
+			</sec:authorize>
+		</c:if>
 
 		<c:forEach var="topic" items="${topics}">
 			<div class="row">

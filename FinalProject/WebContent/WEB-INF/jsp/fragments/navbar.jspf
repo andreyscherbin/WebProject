@@ -11,6 +11,7 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/search.css">
 <script src="${pageContext.request.contextPath}/js/search_ajax.js"></script>
+
 </head>
 <body>
 
@@ -68,12 +69,15 @@
 						<button id="button-addon5" type="submit"
 							class="btn btn-primary bi bi-search"></button>
 					</div>
-					<!-- fix me: add js validation -->
+
 					<div style="width: 900px;">
-						<input type="search" placeholder="What're you searching for?"
+						<input autocomplete="off" type="search"
+							placeholder="What're you searching for?"
 							aria-describedby="button-addon5" class="form-control"
 							name="header" id="search">
-						<ul class="list-group" id="result"></ul>
+						<div class="collapse">
+							<ul class="list-group" id="result"></ul>
+						</div>
 					</div>
 				</div>
 			</form>

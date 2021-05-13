@@ -26,6 +26,8 @@ public class EditPostCommand implements Command {
 	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_POST = "message.empty.post";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED = "message.topic.closed";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
+	private static final String ATTRIBUTE_NAME_STATUS = "status";
+	private static final String ATTRIBUTE_VALUE_KEY_USER_BANNED = "message.user.banned";
 
 	private PostService postService;
 
@@ -39,7 +41,8 @@ public class EditPostCommand implements Command {
 		String id = request.getParameter(PARAM_NAME_POST_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (username == null || id == null || content == null
+		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
+		if (username == null || id == null || content == null || status == null
 				|| !DigitValidator.isValid(id) && !PostValidator.isContentValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
@@ -48,27 +51,31 @@ public class EditPostCommand implements Command {
 		Long postId = Long.parseLong(id);
 		Optional<Post> post = Optional.empty();
 		try {
-			post = postService.findPostById(postId);
-			if (!post.isEmpty()) {
-				Topic topic = post.get().getTopic();
-				if (!topic.isClosed()) {
-					Post editedPost = post.get();
-					User user = editedPost.getUser();
-					String usernamePost = user.getUserName();
-					if (usernamePost.equals(username)) {
-						post.get().setContent(content);
-						postService.edit(post.get());
-						router.setPage(PagePath.TOPIC);
+			if (status) {
+				post = postService.findPostById(postId);
+				if (!post.isEmpty()) {
+					Topic topic = post.get().getTopic();
+					if (!topic.isClosed()) {
+						Post editedPost = post.get();
+						User user = editedPost.getUser();
+						String usernamePost = user.getUserName();
+						if (usernamePost.equals(username)) {
+							post.get().setContent(content);
+							postService.edit(post.get());
+							router.setPage(PagePath.TOPIC);
+						} else {
+							router.setPage(PagePath.FORBIDDEN_PAGE);
+						}
 					} else {
-						router.setPage(PagePath.FORBIDDEN_PAGE);
+						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
+						router.setPage(PagePath.TOPIC);
 					}
 				} else {
-					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_POST);
 					router.setPage(PagePath.TOPIC);
 				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_EMPTY_POST);
-				router.setPage(PagePath.TOPIC);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_BANNED);
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);

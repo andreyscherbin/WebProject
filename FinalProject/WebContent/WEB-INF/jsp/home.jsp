@@ -26,7 +26,7 @@
 	<%@ include file="fragments/navbar.jspf"%>
 
 
-	<div class="container-fluid mt-100">
+	<div class="container-fluid mt-100 ">
 		<h3>${welcome_message}${username}${lang_message}${lang}
 			${role_message} ${role}</h3>
 		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">

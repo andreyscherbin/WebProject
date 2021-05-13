@@ -20,6 +20,7 @@ public class LogInCommand implements Command {
 	private static final String PARAM_NAME_LOGIN = "username";
 	private static final String PARAM_NAME_PASSWORD = "password";
 	private static final String ATTRIBUTE_NAME_ROLE = "role";
+	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
@@ -47,8 +48,10 @@ public class LogInCommand implements Command {
 				HttpSession session = request.getSession();
 				User user = authenticatedUser.get();
 				Role role = user.getRole();
+				Boolean status = user.isActive();
 				session.setAttribute(ATTRIBUTE_NAME_ROLE, role.toString());
 				session.setAttribute(ATTRIBUTE_NAME_USERNAME, userName);
+				session.setAttribute(ATTRIBUTE_NAME_STATUS, status);
 				if (role == Role.ADMIN) {
 					router.setPage(PagePath.ADMIN_HOME_REDIRECT);
 				} else {

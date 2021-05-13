@@ -15,4 +15,7 @@ public interface UserService {
 	Optional<User> registrate(String userName, String password, String email) throws ServiceException;
 	void save(User user) throws ServiceException;
 	void updateLastLoginDate(User user) throws ServiceException;
+	void changeRole(User user) throws ServiceException;
+	void banUser(User user) throws ServiceException;
+	void unbanUser(User user) throws ServiceException;
 }

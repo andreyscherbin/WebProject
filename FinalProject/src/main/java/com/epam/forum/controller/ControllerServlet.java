@@ -21,13 +21,14 @@ public class ControllerServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		super.init();				
+		super.init();
+		ConnectionPool.getInstance();
 	}
 
 	@Override
-	public void destroy() {
+	public void destroy() {	
 		super.destroy();
-		ConnectionPool.getInstance().shutdown();		
+		ConnectionPool.getInstance().shutdown();				
 	}
 
 	private static Logger logger = LogManager.getLogger();

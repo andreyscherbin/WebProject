@@ -11,6 +11,7 @@
 <fmt:setBundle basename="pagecontent" />
 <fmt:message key="topic.login_to_reply" var="login_to_reply_message" />
 <fmt:message key="message.topic.closed" var="closed_topic_message" />
+<fmt:message key="message.user.banned" var="banned_user_message" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,8 +22,8 @@
 </head>
 <body>
 
-	<script src="${pageContext.request.contextPath}/js/post_validation.js"></script>
-	<script src="${pageContext.request.contextPath}/js/edit_post.js"></script>
+	<script
+		src="${pageContext.request.contextPath}/js/new_post_validation.js"></script>
 
 	<%@ include file="fragments/navbar.jspf"%>
 
@@ -95,15 +96,17 @@
 									<c:set var="username" scope="request"
 										value="${fn:escapeXml(post.user.userName)}" />
 									<c:if test="${sessionScope.username == username }">
-										<c:if test="${!topic.closed}">
-											<div>
-												<a
-													href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
-													class="btn btn-light bi bi-trash">delete </a> <a
-													class="btn btn-light bi bi-pencil"
-													href="javascript:void();" id="editLink${post.id}"
-													onclick="showEdit(${post.id});">edit </a>
-											</div>
+										<c:if test="${sessionScope.status}">
+											<c:if test="${!topic.closed}">
+												<div class="row">
+													<a
+														href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
+														class="btn btn-light bi bi-trash">delete </a> <a
+														class="btn btn-light bi bi-pencil"
+														href="javascript:void();" id="editLink${post.id}"
+														onclick="showEdit(${post.id});">edit </a>
+												</div>
+											</c:if>
 										</c:if>
 									</c:if>
 									<div class="text-muted small">
@@ -129,23 +132,28 @@
 						<!-- R -->
 						<div class="card-body">
 							<!-- POST CONTENT -->
-							<p id="edit${post.id}">${(post.content)}</p>
-							<div id="editForm${post.id}" style="display: none">
-								<form name="formEdit"
-									onsubmit="return validateEditForm(${post.id});"
-									action="${pageContext.request.contextPath}/controller?command=edit_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
-									method="POST">
-									<div class="form-group">
-										<label for="content${post.id}">Your Edit</label>
-										<textarea class="form-control" id="content${post.id}"
-											name="content"> </textarea>
-									</div>
-									<button class="btn btn-outline-dark" id="submit${post.id}"
-										type="submit">Send Edit</button>
-									<button class="btn btn-outline-dark" id="cancel${post.id}"
-										onclick="closeEdit(${post.id})" type="button">Cancel</button>
-								</form>
-							</div>
+							<c:if test="${sessionScope.status}">
+								<p id="edit${post.id}">${(post.content)}</p>
+								<div id="editForm${post.id}" style="display: none">
+									<form id="formEditPost${post.id}" name="formEditPost${post.id}"
+										onsubmit="return validateEditForm(${post.id});"
+										class="needs-validation" novalidate
+										action="${pageContext.request.contextPath}/controller?command=edit_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
+										method="POST">
+										<div class="form-group has-validation">
+											<label for="content${post.id}">Your Edit</label>
+											<textarea class="form-control" id="content${post.id}"
+												name="content"> </textarea>
+											<div class="invalid-feedback">Must not be empty</div>
+										</div>
+										<button class="btn btn-outline-dark"
+											id="btnEditPost${post.id}" type="submit">Send Edit</button>
+										<button class="btn btn-outline-dark"
+											id="btnCancelEditPost${post.id}"
+											onclick="closeEdit(${post.id})" type="button">Cancel</button>
+									</form>
+								</div>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -155,19 +163,21 @@
 		<c:if test="${!topic.closed}">
 			<div>
 				<!-- SECTION REPLY -->
-				<sec:authorize access="${f:isAuthenticated(pageContext)}">
-					<form name="formReply" onsubmit="return validateReplyForm();"
-						action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
-						method="POST">
-						<div class="form-group">
-							<label for="comment">Your Reply</label>
-							<textarea class="form-control" id="content" name="content"> </textarea>
-						</div>
-						<button class="btn btn-outline-dark bi bi-reply" id="submit"
-							type="submit">Send reply</button>
-					</form>
-
-				</sec:authorize>
+				<c:if test="${sessionScope.status}">
+					<sec:authorize access="${f:isAuthenticated(pageContext)}">
+						<form id="formCreatePost" class="needs-validation" novalidate
+							action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
+							method="POST">
+							<div class="form-group has-validation">
+								<label for="comment">Your Reply</label>
+								<textarea class="form-control" id="content" name="content"> </textarea>
+								<div class="invalid-feedback">Must not be empty</div>
+							</div>
+							<button class="btn btn-outline-dark bi bi-reply"
+								id="btnCreatePost" type="submit">Send reply</button>
+						</form>
+					</sec:authorize>
+				</c:if>
 				<sec:authorize access="${!f:isAuthenticated(pageContext)}">
 					<div class="row">
 						<div class="col ">
@@ -175,6 +185,13 @@
 						</div>
 					</div>
 				</sec:authorize>
+				<c:if test="${!sessionScope.status}">
+					<div class="row">
+						<div class="col ">
+							<h5>${banned_user_message}</h5>
+						</div>
+					</div>
+				</c:if>
 			</div>
 		</c:if>
 	</div>

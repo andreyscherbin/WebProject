@@ -3,13 +3,13 @@
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	version="4.0">
-	
+
 	<servlet>
 		<servlet-name>ControllerServlet</servlet-name>
 		<servlet-class>com.epam.forum.controller.ControllerServlet</servlet-class>
 		<load-on-startup>20</load-on-startup>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -23,10 +23,11 @@
 		<servlet-name>Jersey REST Service</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<listener>
 		<listener-class>
-			com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+			com.sun.xml.ws.transport.http.servlet.WSServletContextListener
+		</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>JAXWSServlet</servlet-name>

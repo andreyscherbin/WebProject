@@ -29,11 +29,13 @@ public class CreatePostCommand implements Command {
 	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
 	private static final String PARAM_NAME_CONTENT = "content";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
+	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED = "message.topic.closed";
 	private static final String ATTRIBUTE_VALUE_KEY_USER_EMPTY = "message.user.empty";
+	private static final String ATTRIBUTE_VALUE_KEY_USER_BANNED = "message.user.banned";
 
 	private UserService userService;
 	private TopicService topicService;
@@ -51,7 +53,8 @@ public class CreatePostCommand implements Command {
 		String id = request.getParameter(PARAM_NAME_TOPIC_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (content == null || id == null || username == null || !DigitValidator.isValid(id)
+		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
+		if (content == null || id == null || username == null || status == null || !DigitValidator.isValid(id)
 				|| !PostValidator.isContentValid(content)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
@@ -61,28 +64,29 @@ public class CreatePostCommand implements Command {
 		List<User> users;
 		Optional<Topic> topic = Optional.empty();
 		try {
-			users = userService.findUsersByUserName(username);
-			topic = topicService.findTopicById(topicId);
-			if (!users.isEmpty()) {
-				if (!topic.isEmpty()) {
-					if (!topic.get().isClosed()) {
-						User user = users.get(0);
-						Post post = PostCreator.getPostFromFactoryMethod(LocalDateTime.now(), content, user,
-								topic.get());
-						postService.create(post);
-						router.setPage(PagePath.TOPIC);
+			if (status) {
+				users = userService.findUsersByUserName(username);
+				topic = topicService.findTopicById(topicId);
+				if (!users.isEmpty()) {
+					if (!topic.isEmpty()) {
+						if (!topic.get().isClosed()) {
+							User user = users.get(0);
+							Post post = PostCreator.getPostFromFactoryMethod(LocalDateTime.now(), content, user,
+									topic.get());
+							postService.create(post);
+						} else {
+							request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
+						}
 					} else {
-						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
-						router.setPage(PagePath.TOPIC);
+						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY);
 					}
 				} else {
-					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY);
-					router.setPage(PagePath.TOPIC);
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_EMPTY);
 				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_EMPTY);
-				router.setPage(PagePath.TOPIC);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_BANNED);
 			}
+			router.setPage(PagePath.TOPIC);
 		} catch (ServiceException | EntityException e) {
 			logger.error("exception ", e);
 			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());

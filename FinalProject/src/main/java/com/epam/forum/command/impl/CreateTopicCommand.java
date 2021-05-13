@@ -27,11 +27,13 @@ public class CreateTopicCommand implements Command {
 	private static final String PARAM_NAME_CONTENT = "content";
 	private static final String PARAM_NAME_HEADER = "header";
 
+	private static final String ATTRIBUTE_NAME_STATUS = "status";	
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_USERS_EMPTY = "message.users.empty";
 	private static final String ATTRIBUTE_VALUE_SECTION_EMPTY = "message.section.empty";
+	private static final String ATTRIBUTE_VALUE_KEY_USER_BANNED = "message.user.banned";
 
 	private UserService userService;
 	private TopicService topicService;
@@ -50,7 +52,8 @@ public class CreateTopicCommand implements Command {
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String header = request.getParameter(PARAM_NAME_HEADER);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
-		if (content == null || sectionId == null || username == null || header == null
+		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
+		if (content == null || sectionId == null || username == null || header == null || status == null
 				|| !DigitValidator.isValid(sectionId) || !TopicValidator.isContentValid(content)
 				|| !TopicValidator.isHeaderValid(header)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
@@ -61,27 +64,32 @@ public class CreateTopicCommand implements Command {
 		List<User> users;
 		Optional<Section> section = Optional.empty();
 		try {
-			users = userService.findUsersByUserName(username);
-			section = sectionService.findSectionById(sectionIdLong);
-			if (!users.isEmpty()) {
-				if (!section.isEmpty()) {
-					User user = users.get(0);
-					Topic topic = new Topic();
-					topic.setHeader(header);
-					topic.setContent(content);
-					topic.setClosed(false);
-					topic.setPinned(false);
-					topic.setCreationDate(LocalDateTime.now());
-					topic.setUser(user);
-					topic.setSection(section.get());
-					topicService.create(topic);
+			if (status) {
+				users = userService.findUsersByUserName(username);
+				section = sectionService.findSectionById(sectionIdLong);
+				if (!users.isEmpty()) {
+					if (!section.isEmpty()) {
+						User user = users.get(0);
+						Topic topic = new Topic();
+						topic.setHeader(header);
+						topic.setContent(content);
+						topic.setClosed(false);
+						topic.setPinned(false);
+						topic.setCreationDate(LocalDateTime.now());
+						topic.setUser(user);
+						topic.setSection(section.get());
+						topicService.create(topic);
+					} else {
+						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTION_EMPTY);
+					}
 				} else {
-					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTION_EMPTY);
+					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
 				}
 			} else {
-				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_BANNED);
 			}
 			router.setPage(PagePath.SECTION);
+
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
 			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());

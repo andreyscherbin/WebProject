@@ -12,8 +12,8 @@ public class User extends Entity {
 	private String email;
 	private LocalDateTime registerDate;
 	private LocalDateTime lastLoginDate;
-	private boolean isEmailVerifed;
-	private boolean isActive;
+	private boolean emailVerifed;
+	private boolean active;
 	private Role role;
 
 	public User() {
@@ -79,19 +79,19 @@ public class User extends Entity {
 	}
 
 	public boolean isEmailVerifed() {
-		return isEmailVerifed;
+		return emailVerifed;
 	}
 
 	public void setEmailVerifed(boolean isEmailVerifed) {
-		this.isEmailVerifed = isEmailVerifed;
+		this.emailVerifed = isEmailVerifed;
 	}
 
 	public boolean isActive() {
-		return isActive;
+		return active;
 	}
 
 	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+		this.active = isActive;
 	}
 
 	public Role getRole() {
@@ -107,8 +107,8 @@ public class User extends Entity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + (isActive ? 1231 : 1237);
-		result = prime * result + (isEmailVerifed ? 1231 : 1237);
+		result = prime * result + (active ? 1231 : 1237);
+		result = prime * result + (emailVerifed ? 1231 : 1237);
 		result = prime * result + ((lastLoginDate == null) ? 0 : lastLoginDate.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((registerDate == null) ? 0 : registerDate.hashCode());
@@ -132,9 +132,9 @@ public class User extends Entity {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (isActive != other.isActive)
+		if (active != other.active)
 			return false;
-		if (isEmailVerifed != other.isEmailVerifed)
+		if (emailVerifed != other.emailVerifed)
 			return false;
 		if (lastLoginDate == null) {
 			if (other.lastLoginDate != null)
@@ -182,9 +182,9 @@ public class User extends Entity {
 		builder.append(", lastLoginDate=");
 		builder.append(lastLoginDate);
 		builder.append(", isEmailVerifed=");
-		builder.append(isEmailVerifed);
+		builder.append(emailVerifed);
 		builder.append(", isActive=");
-		builder.append(isActive);
+		builder.append(active);
 		builder.append(", role=");
 		builder.append(role);
 		builder.append("]");

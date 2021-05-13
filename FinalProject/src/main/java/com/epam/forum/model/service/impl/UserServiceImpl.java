@@ -193,4 +193,31 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("update user exception with user: " + user, e);
 		}
 	}
+
+	@Override
+	public void changeRole(User user) throws ServiceException {
+		try {
+			userRepository.update(user);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update user exception with user: " + user, e);
+		}
+	}
+
+	@Override
+	public void banUser(User user) throws ServiceException {
+		try {
+			userRepository.update(user);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update user exception with user: " + user, e);
+		}
+	}
+
+	@Override
+	public void unbanUser(User user) throws ServiceException {
+		try {
+			userRepository.update(user);
+		} catch (RepositoryException e) {
+			throw new ServiceException("update user exception with user: " + user, e);
+		}
+	}
 }

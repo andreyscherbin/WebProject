@@ -16,7 +16,7 @@ import com.epam.forum.validator.SectionValidator;
 public class CreateSectionCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_DESCRIPTION = "content";
-	private static final String PARAM_NAME_HEADER = "header";
+	private static final String PARAM_NAME_HEADER = "header";	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 

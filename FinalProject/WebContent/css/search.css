@@ -11,6 +11,12 @@
 	z-index: 1001;
 }
 
+.collapsing {
+	-webkit-transition: none;
+	transition: none;
+	display: none;
+}
+
 .link-class:hover {
 	background-color: #f1f1f1;
 }

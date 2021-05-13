@@ -30,7 +30,7 @@ public class ViewTopicByIdCommand implements Command {
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
-	private static final String ATTRIBUTE_VALUE_KEY_POSTS_EMPTY = "message.posts.empty";
+	
 	private TopicService topicService;
 	private PostService postService;
 
@@ -60,8 +60,7 @@ public class ViewTopicByIdCommand implements Command {
 					request.setAttribute(ATRIBUTE_NAME_POSTS, posts);
 					router.setPage(PagePath.TOPIC);
 				} else {
-					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
-					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_POSTS_EMPTY);
+					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());					
 					router.setPage(PagePath.TOPIC);
 				}
 			} else {

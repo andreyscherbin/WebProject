@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.epam.forum.command.impl.ActivationCommand;
+import com.epam.forum.command.impl.BanUserCommand;
+import com.epam.forum.command.impl.ChangeRoleCommand;
 import com.epam.forum.command.impl.CloseTopicCommand;
 import com.epam.forum.command.impl.CreatePostCommand;
 import com.epam.forum.command.impl.CreateSectionCommand;
@@ -61,6 +63,8 @@ public class CommandProvider {
 		commands.put(CommandName.REGISTRATION, new RegistrationCommand(userService, activationSenderService));
 		commands.put(CommandName.ACTIVATION, new ActivationCommand(userService, activationSenderService));
 		commands.put(CommandName.VIEW_USER, new ViewUserCommand(userService));
+		commands.put(CommandName.CHANGE_ROLE, new ChangeRoleCommand(userService));
+		commands.put(CommandName.BAN_USER, new BanUserCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_ID, new ViewUserByIdCommand(userService));
 		commands.put(CommandName.SORT_USER_BY_ID, new SortUserByIdCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
