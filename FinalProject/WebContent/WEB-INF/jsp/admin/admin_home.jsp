@@ -9,16 +9,24 @@
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
-<fmt:message key="home.welcome" var="welcome_message" />
-<fmt:message key="home.lang" var="lang_message" />
-<fmt:message key="home.role" var="role_message" />
-<fmt:message key="home.new_section" var="new_section_message" />
-<fmt:message key="home.sections" var="sections_message" />
+<fmt:message key="admin_home.title" var="title_message" />
+<fmt:message key="admin_home.manage_users" var="manage_users_message" />
+<fmt:message key="admin_home.name" var="name_message" />
+<fmt:message key="admin_home.email" var="email_message" />
+<fmt:message key="admin_home.register_date" var="register_date_message" />
+<fmt:message key="admin_home.last_login_date" var="last_login_date_message" />
+<fmt:message key="admin_home.is_email_verifed" var="is_email_verifed_message" />
+<fmt:message key="admin_home.is_active" var="is_active_message" />
+<fmt:message key="admin_home.role" var="role_message" />
+<fmt:message key="admin_home.change_role" var="change_role_message" />
+<fmt:message key="admin_home.manage" var="manage_message" />
+
 <c:set var="username" value="${fn:escapeXml(sessionScope.username)}" />
 <c:set var="lang" value="${sessionScope.lang}" />
 <c:set var="role" value="${sessionScope.role}" />
 <html>
 <head>
+<title>${title_message}</title>
 <%@ include file="/WEB-INF/jsp/fragments/head.jspf"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/admin_home.css">
@@ -45,20 +53,15 @@
 									<tr>
 										<th scope="col"
 											class="border-0 text-uppercase font-medium pl-4">#</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Name</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Email</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Register
-											Date</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Last
-											Login Date</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Is
-											Email Verifed</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Is
-											Active</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Role</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Change
-											Role</th>
-										<th scope="col" class="border-0 text-uppercase font-medium">Manage</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${name_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${email_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${register_date_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${last_login_date_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${is_email_verifed_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${is_active_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${role_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${change_role_message}</th>
+										<th scope="col" class="border-0 text-uppercase font-medium">${manage_message}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -93,7 +96,7 @@
 														<option value="USER">User</option>
 													</select>
 													<button id="btnSignIn" class="btn btn-dark btn-sm"
-														type="submit">Change Role</button>
+														type="submit">${change_role_message}</button>
 												</form>
 											</td>
 											<td>

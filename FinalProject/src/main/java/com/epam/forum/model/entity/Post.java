@@ -3,7 +3,7 @@ package com.epam.forum.model.entity;
 import java.time.LocalDateTime;
 
 public class Post extends Entity {
-	private static final long serialVersionUID = 6L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String content;
@@ -11,8 +11,7 @@ public class Post extends Entity {
 	private Topic topic;
 	private User user;
 
-	public Post(String content, LocalDateTime creationDate, Topic topic, User user) {
-		super();
+	public Post(String content, LocalDateTime creationDate, Topic topic, User user) {		
 		this.content = content;
 		this.creationDate = creationDate;
 		this.topic = topic;

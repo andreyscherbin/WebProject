@@ -2,20 +2,19 @@ package com.epam.forum.model.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.epam.forum.exception.MailException;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.ActivationCode;
 import com.epam.forum.model.entity.EmailMessage;
-import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.ActivationCodeTable;
+import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
+import com.epam.forum.model.repository.Specification;
 import com.epam.forum.model.repository.impl.ActivationCodeRepositoryImpl;
 import com.epam.forum.model.repository.impl.IdActivationCodeSpecification;
 import com.epam.forum.model.service.ActivationSenderService;
@@ -57,6 +56,7 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 		try {
 			activationCodeRepository.create(activationCode);
 		} catch (RepositoryException e) {
+			logger.error("create activationCode exception with activationCode: " + activationCode, e);
 			throw new ServiceException("create activationCode exception with activationCode: " + activationCode, e);
 		}
 	}
@@ -66,6 +66,7 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 		try {
 			MailSender.sendEmail(emailMessage);
 		} catch (MailException e) {
+			logger.error("sendEmail exception with emailMessage: " + emailMessage, e);
 			throw new ServiceException("sendEmail exception with emailMessage: " + emailMessage, e);
 		}
 	}
@@ -75,15 +76,16 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 		Optional<ActivationCode> activationCode;
 		List<ActivationCode> codes;
 		try {
-			IdActivationCodeSpecification spec1 = new IdActivationCodeSpecification(
+			Specification<ActivationCode> idSpec = new IdActivationCodeSpecification(
 					new SearchCriterion(ActivationCodeTable.ACTIVATION_CODE_ID, Operation.EQUAL, id));
-			codes = activationCodeRepository.query(spec1);
+			codes = (List<ActivationCode>) activationCodeRepository.query(idSpec);
 			if (!codes.isEmpty()) {
 				activationCode = Optional.of(codes.get(0));
 			} else {
 				activationCode = Optional.empty();
 			}
 		} catch (RepositoryException e) {
+			logger.error("find activationCode exception with id: " + id, e);
 			throw new ServiceException("find activationCode exception with id: " + id, e);
 		}
 		return activationCode;
@@ -94,6 +96,7 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 		try {
 			activationCodeRepository.delete(activationCode);
 		} catch (RepositoryException e) {
+			logger.error("delete activationCode exception with activationCode: " + activationCode, e);
 			throw new ServiceException("delete activationCode exception with activationCode: " + activationCode, e);
 		}
 	}

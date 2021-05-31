@@ -20,7 +20,7 @@ public class MailSender {
 	private static Logger logger = LogManager.getLogger();
 	private static final Properties properties = new Properties();
 	private static final String RESOURCE = "mail.properties";
-	private static final String FROM = "andrey123scherbin@gmail.com";
+	private static final String KEY_FROM = "mail.from";
 	private static final String TYPE = "text/html; charset=utf-8";
 
 	static {
@@ -37,10 +37,11 @@ public class MailSender {
 
 	public static void sendEmail(EmailMessage emailMessage) throws MailException {
 		Session session = SessionFactory.createSession(properties);
+		String from = properties.getProperty(KEY_FROM);
 		String sendToEmail = emailMessage.getRecipient();
 		try {
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(FROM));
+			message.setFrom(new InternetAddress(from));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sendToEmail));
 			message.setSubject(emailMessage.getSubject());
 			message.setContent(emailMessage.getContent(), TYPE);

@@ -1,11 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" session="true"
+	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
 <%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
-<%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
@@ -24,8 +23,7 @@
 <body>
 
 	<%@ include file="fragments/navbar.jspf"%>
-
-
+	
 	<div class="container-fluid mt-100 ">
 		<h3>${welcome_message}${username}${lang_message}${lang}
 			${role_message} ${role}</h3>

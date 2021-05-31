@@ -25,7 +25,7 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	private static final String SQL_DELETE_SECTION = "DELETE FROM sections WHERE section_id = ?";
 
 	@Override
-	public Optional<Section> find(Long id) throws RepositoryException {
+	public Optional<Section> findById(Long id) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -84,7 +84,7 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	}
 
 	@Override
-	public List<Section> query(Specification<Section> specification) throws RepositoryException {
+	public Iterable<Section> query(Specification<Section> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Section> sections = new ArrayList<>();
 		Connection connection = null;
@@ -127,12 +127,12 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	}
 
 	@Override
-	public List<Section> sort(Comparator<Section> comparator) throws RepositoryException {
+	public Iterable<Section> sort(Comparator<Section> comparator) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<Section> findAll() throws RepositoryException {
+	public Iterable<Section> findAll() throws RepositoryException {
 		List<Section> sections = new ArrayList<>();
 		Connection connection = null;
 		Statement statement = null;

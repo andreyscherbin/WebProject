@@ -33,9 +33,8 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	private static final String SQL_UPDATE_TOPIC = "UPDATE topics SET is_pinned = ? , is_closed = ? WHERE topic_id = ?";
 
 	@Override
-	public Optional<Topic> find(Long id) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<Topic> findById(Long id) throws RepositoryException {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -119,7 +118,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	}
 
 	@Override
-	public List<Topic> query(Specification<Topic> specification) throws RepositoryException {
+	public Iterable<Topic> query(Specification<Topic> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Topic> topics = new ArrayList<>();
 		Connection connection = null;
@@ -185,13 +184,12 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	}
 
 	@Override
-	public List<Topic> sort(Comparator<Topic> comparator) throws RepositoryException {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterable<Topic> sort(Comparator<Topic> comparator) throws RepositoryException {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<Topic> findAll() throws RepositoryException {
+	public Iterable<Topic> findAll() throws RepositoryException {
 		List<Topic> topics = new ArrayList<>();
 		Connection connection = null;
 		Statement statement = null;

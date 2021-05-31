@@ -2,9 +2,22 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${sessionScope.lang}" />
+<fmt:setBundle basename="pagecontent" />
+<fmt:message key="error_404.title" var="title_message" />
+<fmt:message key="error_404.error_details" var="error_details_message" />
+<fmt:message key="error_404.home" var="home_message" />
+<fmt:message key="error.is_failed" var="is_failed_message" />
+<fmt:message key="error.servlet_name_or_type"
+	var="servlet_name_or_type_message" />
+<fmt:message key="error.status_code" var="status_code_message" />
+<fmt:message key="error.exception_message" var="exception_message" />
+
 <html>
 <head>
-<title>404 Error Page</title>
+<title>${title_message}</title>
 <%@ include file="/WEB-INF/jsp/fragments/head.jspf"%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/error_page.css">
@@ -16,16 +29,15 @@
 				<div class="error-template">
 					<h1>Oops!</h1>
 					<h2>
-						${fn:escapeXml(pageContext.errorData.requestURI)} is failed <br />
-						Servlet name or type: ${fn:escapeXml(pageContext.errorData.servletName)} <br />
-						Status code: ${pageContext.errorData.statusCode} <br />
+						${fn:escapeXml(pageContext.errorData.requestURI)}
+						${is_failed_message} <br /> ${servlet_name_or_type_message}:
+						${fn:escapeXml(pageContext.errorData.servletName)} <br />
+						${status_code_message}: ${pageContext.errorData.statusCode} <br />
 					</h2>
-					<div class="error-details">Sorry, an error has occured,
-						Requested page not found!</div>
+					<div class="error-details">${error_details_message}</div>
 					<div class="error-actions">
-						<a href="${pageContext.request.contextPath}" 
-							class="btn btn-primary btn-lg bi bi-house" > Take Me Home 
-						</a>
+						<a href="${pageContext.request.contextPath}"
+							class="btn btn-primary btn-lg bi bi-house"> ${home_message} </a>
 					</div>
 				</div>
 			</div>

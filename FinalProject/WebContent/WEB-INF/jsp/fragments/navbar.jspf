@@ -5,18 +5,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
 <%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
-<%@ page session="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value="${sessionScope.lang}" />
+<fmt:setBundle basename="pagecontent" />
+<fmt:message key="navbar.forum" var="forum_message" />
+<fmt:message key="navbar.signin" var="signin_message" />
+<fmt:message key="navbar.siginup" var="signup_message" />
+<fmt:message key="navbar.logout" var="logout_message" />
+<fmt:message key="navbar.language" var="language_message" />
+<fmt:message key="navbar.germany" var="germany_message" />
+<fmt:message key="navbar.english" var="english_message" />
+<fmt:message key="navbar.belarusian" var="belarusian_message" />
+<fmt:message key="navbar.search" var="search_message" />
+
 <html>
 <head>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/search.css">
 <script src="${pageContext.request.contextPath}/js/search_ajax.js"></script>
-
 </head>
 <body>
-
 	<nav class="navbar navbar-expand-lg navbar-ligh tbg-light">
-		<a class="navbar-brand" href="${pageContext.request.contextPath}">Forum</a>
+		<a class="navbar-brand" href="${pageContext.request.contextPath}">${forum_message}</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -28,35 +39,33 @@
 			<ul class="navbar-nav mr-auto">
 				<sec:authorize access="${!f:isAuthenticated(pageContext)}">
 					<li class="nav-item active"><a class="nav-link"
-						href="${pageContext.request.contextPath}/controller?command=go_to_login_page">Sign
-							In<span class="sr-only">(current)</span>
+						href="${pageContext.request.contextPath}/controller?command=go_to_login_page">${signin_message}<span
+							class="sr-only">(current)</span>
 					</a></li>
 				</sec:authorize>
 				<sec:authorize access="${!f:isAuthenticated(pageContext)}">
 					<li class="nav-item"><a class="nav-link"
-						href="${pageContext.request.contextPath}/controller?command=go_to_registration_page">Sign
-							Up</a></li>
+						href="${pageContext.request.contextPath}/controller?command=go_to_registration_page">${signup_message}</a></li>
 				</sec:authorize>
 				<sec:authorize access="${f:isAuthenticated(pageContext)}">
 					<li class="nav-item"><a class="nav-link"
-						href="${pageContext.request.contextPath}/controller?command=logout">Log
-							Out</a></li>
+						href="${pageContext.request.contextPath}/controller?command=logout">${logout_message}</a></li>
 				</sec:authorize>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="http://example.com"
 					id="dropdown09" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false"><span class="flag-icon flag-icon-us">
-					</span>Language</a>
+					</span>${language_message}</a>
 					<div class="dropdown-menu" aria-labelledby="dropdown09">
 						<a class="dropdown-item"
 							href="${pageContext.request.contextPath}/controller?command=language&lang=de_DE"><span
-							class="flag-icon flag-icon-fr"> </span> Germany</a> <a
+							class="flag-icon flag-icon-fr"> </span> ${germany_message}</a> <a
 							class="dropdown-item"
 							href="${pageContext.request.contextPath}/controller?command=language&lang=en_US"><span
-							class="flag-icon flag-icon-it"> </span> English</a> <a
+							class="flag-icon flag-icon-it"> </span> ${english_message}</a> <a
 							class="dropdown-item"
 							href="${pageContext.request.contextPath}/controller?command=language&lang=be_BE"><span
-							class="flag-icon flag-icon-ru"> </span> Belarusian</a>
+							class="flag-icon flag-icon-ru"> </span> ${belarusian_message}</a>
 					</div></li>
 			</ul>
 		</div>
@@ -72,9 +81,8 @@
 
 					<div style="width: 900px;">
 						<input autocomplete="off" type="search"
-							placeholder="What're you searching for?"
-							aria-describedby="button-addon5" class="form-control"
-							name="header" id="search">
+							placeholder="${search_message}" aria-describedby="button-addon5"
+							class="form-control" name="header" id="search">
 						<div class="collapse">
 							<ul class="list-group" id="result"></ul>
 						</div>

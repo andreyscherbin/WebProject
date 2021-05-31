@@ -8,12 +8,20 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
-import com.epam.forum.exception.ErrorTable;
+import com.epam.forum.exception.ErrorAttribute;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.service.SectionService;
 import com.epam.forum.validator.DigitValidator;
 
+/**
+ * The {@code DeleteSectionCommand} class represents delete section command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class DeleteSectionCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();
@@ -49,10 +57,10 @@ public class DeleteSectionCommand implements Command {
 			router.setPage(PagePath.HOME);
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
-			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
-			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
-			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
-			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			request.setAttribute(ErrorAttribute.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorAttribute.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorAttribute.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorAttribute.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			router.setPage(PagePath.ERROR);
 		}
 		return router;

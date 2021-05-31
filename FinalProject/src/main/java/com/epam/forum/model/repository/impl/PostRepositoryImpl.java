@@ -34,7 +34,7 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 	private static final String SQL_UPDATE_POST = "UPDATE posts SET content = ? WHERE post_id = ?";
 
 	@Override
-	public Optional<Post> find(Long id) throws RepositoryException {
+	public Optional<Post> findById(Long id) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -115,7 +115,7 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 	}
 
 	@Override
-	public List<Post> query(Specification<Post> specification) throws RepositoryException {
+	public Iterable<Post> query(Specification<Post> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Post> posts = new ArrayList<>();
 		Connection connection = null;
@@ -181,12 +181,12 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 	}
 
 	@Override
-	public List<Post> sort(Comparator<Post> comparator) throws RepositoryException {
+	public Iterable<Post> sort(Comparator<Post> comparator) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<Post> findAll() throws RepositoryException {
+	public Iterable<Post> findAll() throws RepositoryException {
 		List<Post> posts = new ArrayList<>();
 		Connection connection = null;
 		Statement statement = null;

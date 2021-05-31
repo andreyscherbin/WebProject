@@ -3,7 +3,6 @@ package com.epam.forum.controller.filter;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
@@ -19,7 +18,7 @@ import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
-@WebFilter(filterName = "/HomeFilter", urlPatterns = { "/WEB-INF/jsp/home.jsp" }, dispatcherTypes = {
+@WebFilter(filterName = "HomeFilter", urlPatterns = { "/WEB-INF/jsp/home.jsp" }, dispatcherTypes = {
 		DispatcherType.REQUEST, DispatcherType.FORWARD })
 public class HomeFilter implements Filter {
 
@@ -28,8 +27,7 @@ public class HomeFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		logger.info("home filter");
-		logger.info("session id: {}", ((HttpServletRequest) request).getSession().getId());
+		logger.info("home filter");		
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_VIEW_SECTION);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);
@@ -40,11 +38,5 @@ public class HomeFilter implements Filter {
 		} else {
 			chain.doFilter(request, response);
 		}
-	}
-
-	public void destroy() {
-	}
-
-	public void init(FilterConfig fConfig) throws ServletException {
-	}
+	}	
 }

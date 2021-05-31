@@ -26,7 +26,7 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 	private static final String SQL_DELETE_ACTIVATION_CODE = "DELETE FROM activationcodes WHERE activationcode_id = ?";
 
 	@Override
-	public Optional<ActivationCode> find(String id) throws RepositoryException {
+	public Optional<ActivationCode> findById(String id) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -86,7 +86,7 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 	}
 
 	@Override
-	public List<ActivationCode> query(Specification<ActivationCode> specification) throws RepositoryException {
+	public Iterable<ActivationCode> query(Specification<ActivationCode> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<ActivationCode> codes = new ArrayList<>();
 		Connection connection = null;
@@ -139,12 +139,12 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 	}
 
 	@Override
-	public List<ActivationCode> sort(Comparator<ActivationCode> comparator) throws RepositoryException {
+	public Iterable<ActivationCode> sort(Comparator<ActivationCode> comparator) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<ActivationCode> findAll() throws RepositoryException {
+	public Iterable<ActivationCode> findAll() throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 }

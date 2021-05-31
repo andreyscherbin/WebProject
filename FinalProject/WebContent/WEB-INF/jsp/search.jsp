@@ -6,11 +6,12 @@
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
+<fmt:message key="search.title" var="title_message" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Search</title>
+<title>${title_message}</title>
 <%@ include file="fragments/head.jspf"%>
 </head>
 <body>

@@ -8,15 +8,24 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
-import com.epam.forum.exception.ErrorTable;
+import com.epam.forum.exception.ErrorAttribute;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.service.PostService;
 import com.epam.forum.validator.DigitValidator;
+import com.epam.forum.validator.UserValidator;
 
-public class DeletePostByIdCommand implements Command {
+/**
+ * The {@code DeletePostCommand} class represents delete post command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
+public class DeletePostCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String PARAM_NAME_POST_ID = "post_id";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
@@ -29,7 +38,7 @@ public class DeletePostByIdCommand implements Command {
 
 	private PostService postService;
 
-	public DeletePostByIdCommand(PostService postService) {
+	public DeletePostCommand(PostService postService) {
 		this.postService = postService;
 	}
 
@@ -39,7 +48,7 @@ public class DeletePostByIdCommand implements Command {
 		String id = request.getParameter(PARAM_NAME_POST_ID);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
-		if (username == null || id == null || status == null || !DigitValidator.isValid(id)) {
+		if (username == null || id == null || status == null || !DigitValidator.isValid(id) || !UserValidator.isUserNameValid(username)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;
@@ -74,10 +83,10 @@ public class DeletePostByIdCommand implements Command {
 			}
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
-			request.setAttribute(ErrorTable.ERROR_MESSAGE, e.getMessage());
-			request.setAttribute(ErrorTable.ERROR_CAUSE, e.getCause());
-			request.setAttribute(ErrorTable.ERROR_LOCATION, request.getRequestURI());
-			request.setAttribute(ErrorTable.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			request.setAttribute(ErrorAttribute.ERROR_MESSAGE, e.getMessage());
+			request.setAttribute(ErrorAttribute.ERROR_CAUSE, e.getCause());
+			request.setAttribute(ErrorAttribute.ERROR_LOCATION, request.getRequestURI());
+			request.setAttribute(ErrorAttribute.ERROR_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			router.setPage(PagePath.ERROR);
 		}
 		return router;

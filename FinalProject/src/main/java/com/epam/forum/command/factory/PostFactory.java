@@ -1,4 +1,4 @@
-package com.epam.forum.template.factorymethod;
+package com.epam.forum.command.factory;
 
 import java.time.LocalDateTime;
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +8,7 @@ import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.User;
 
-public class PostCreator {
+public class PostFactory {
 	private static Logger logger = LogManager.getLogger();
 
 	public static Post getPostFromFactoryMethod(LocalDateTime creationDate, String content, User user, Topic topic)

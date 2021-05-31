@@ -1,71 +1,66 @@
 package com.epam.forum.security;
 
-public final class AccessRules {
-	
-	 public static final String[] FOR_GUESTS = {
-		        "go_to_login_page",
-		        "go_to_registration_page",
-		        "go_to_home_page",
-		        "login",
-		        "registration",
-		        "view_topic",
-		        "view_section",
-		        "language",
-		        "view_topic_by_header",
-		        "view_topic_by_section",
-		        "view_topic_by_id",
-		        "activation"
-		    };
+import java.util.EnumSet;
+import com.epam.forum.command.CommandName;
+import com.epam.forum.model.entity.Role;
+import static com.epam.forum.command.CommandName.*;
 
-	 public static final String[] FOR_USERS = {
-		        "logout",
-		        "create_post",
-		        "create_topic",
-		        "go_to_new_topic_page",
-		        "delete_post_by_id",  
-		        "edit_post_by_id",		        
-		    };
+public class AccessRules {
 
-	public static final String[] FOR_MODERS = {
-			 "delete_topic",
-			 "pin_topic",
-			 "close_topic"
-			};
+	private EnumSet<CommandName> guests;
+	private EnumSet<CommandName> users;
+	private EnumSet<CommandName> moders;
+	private EnumSet<CommandName> admins;
+	private EnumSet<CommandName> allCommands;
 
-	public static final String[] FOR_ADMINS = {
-			    "view_user",
-		        "view_user_by_id",
-		        "sort_user_by_id",
-		        "view_user_by_username"
-			};
-	public static final String[] ALL_COMMANDS = {
-			    "go_to_login_page",
-		        "go_to_registration_page",
-		        "go_to_home_page",
-		        "go_to_new_topic_page",
-		        "create_topic",
-		        "login",
-		        "registration",
-		        "view_topic",
-		        "view_section",
-		        "language",
-		        "view_topic_by_header",
-		        "view_topic_by_section",
-		        "view_topic_by_id",
-		        "logout",
-		        "create_post",		        
-		        "delete_post_by_id", 
-		        "edit_post_by_id",
-		        "activation",
-		        "view_user",
-		        "view_user_by_id",
-		        "sort_user_by_id",
-			    "view_user_by_username",
-			    "delete_topic",
-				"pin_topic",
-				"close_topic"
-		};
-	
-	private AccessRules() {}
+	private AccessRules() {
+		guests = EnumSet.range(EMPTY_COMMAND, ACTIVATION);
+		users = EnumSet.range(LOGOUT, GO_TO_NEW_TOPIC_PAGE);
+		moders = EnumSet.range(DELETE_TOPIC, CLOSE_TOPIC);
+		admins = EnumSet.range(CREATE_SECTION, BAN_USER);
+		allCommands = EnumSet.allOf(CommandName.class);
+	}
+
+	public boolean hasAuthority(Role role, CommandName command) {
+		boolean result = false;
+		switch (role) {
+		case GUEST:
+			result = guests.contains(command);
+			break;
+		case USER:
+			result = users.contains(command);
+			if (result) {
+				break;
+			}
+			result = guests.contains(command);
+			break;
+		case MODER:
+			result = moders.contains(command);
+			if (result) {
+				break;
+			}
+			result = users.contains(command);
+			if (result) {
+				break;
+			}
+			result = guests.contains(command);
+			break;
+		case ADMIN:
+			result = true;
+			break;
+		}
+		return result;
+	}
+
+	public boolean isValidCommand(CommandName command) {
+		return allCommands.contains(command);
+	}
+
+	private static class LazyHolder {
+		private static final AccessRules instance = new AccessRules();
+	}
+
+	public static AccessRules getInstance() {
+		return LazyHolder.instance;
+	}
 }
-

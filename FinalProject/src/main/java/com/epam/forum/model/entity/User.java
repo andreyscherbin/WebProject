@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class User extends Entity {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String userName;

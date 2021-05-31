@@ -6,16 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
-import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.TopicTable;
+import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
+import com.epam.forum.model.repository.Specification;
 import com.epam.forum.model.repository.impl.HeaderTopicSpecification;
 import com.epam.forum.model.repository.impl.IdTopicSpecification;
 import com.epam.forum.model.repository.impl.SectionTopicSpecification;
@@ -43,8 +43,9 @@ public class TopicServiceImpl implements TopicService {
 	public List<Topic> findAllTopics() throws ServiceException {
 		List<Topic> topics = null;
 		try {
-			topics = topicRepository.findAll();
+			topics = (List<Topic>) topicRepository.findAll();
 		} catch (RepositoryException e) {
+			logger.error("findAll topics exception", e);
 			throw new ServiceException("findAll topics exception", e);
 		}
 		return topics;
@@ -58,10 +59,11 @@ public class TopicServiceImpl implements TopicService {
 			return topics;
 		}
 		try {
-			HeaderTopicSpecification headerSpecification = new HeaderTopicSpecification(new SearchCriterion(
+			Specification<Topic> headerSpecification = new HeaderTopicSpecification(new SearchCriterion(
 					TopicTable.HEADER, Operation.LIKE, Operation.ANY_SEQUENCE + pattern + Operation.ANY_SEQUENCE));
-			topics = topicRepository.query(headerSpecification);
+			topics = (List<Topic>) topicRepository.query(headerSpecification);
 		} catch (RepositoryException e) {
+			logger.error("find topics exception with pattern: " + pattern, e);
 			throw new ServiceException("find topics exception with pattern: " + pattern, e);
 		}
 		return topics;
@@ -71,10 +73,11 @@ public class TopicServiceImpl implements TopicService {
 	public Queue<Topic> findTopicsBySection(Long sectionId) throws ServiceException {
 		List<Topic> topics = new ArrayList<>();
 		try {
-			SectionTopicSpecification sectionSpecification = new SectionTopicSpecification(
+			Specification<Topic> sectionSpecification = new SectionTopicSpecification(
 					new SearchCriterion(TopicTable.SECTION_ID, Operation.EQUAL, sectionId));
-			topics = topicRepository.query(sectionSpecification);
+			topics = (List<Topic>) topicRepository.query(sectionSpecification);
 		} catch (RepositoryException e) {
+			logger.error("find topics exception with section: " + sectionId, e);
 			throw new ServiceException("find topics exception with section: " + sectionId, e);
 		}
 		Queue<Topic> queueTopics = new LinkedList<>();
@@ -99,15 +102,16 @@ public class TopicServiceImpl implements TopicService {
 		Optional<Topic> topic;
 		List<Topic> topics;
 		try {
-			IdTopicSpecification spec1 = new IdTopicSpecification(
+			Specification<Topic> idSpec = new IdTopicSpecification(
 					new SearchCriterion(TopicTable.TOPIC_ID, Operation.EQUAL, id));
-			topics = topicRepository.query(spec1);
+			topics = (List<Topic>) topicRepository.query(idSpec);
 			if (!topics.isEmpty()) {
 				topic = Optional.of(topics.get(0));
 			} else {
 				topic = Optional.empty();
 			}
 		} catch (RepositoryException e) {
+			logger.error("find topic exception with id: " + id, e);
 			throw new ServiceException("find topic exception with id: " + id, e);
 		}
 		return topic;
@@ -118,6 +122,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.create(topic);
 		} catch (RepositoryException e) {
+			logger.error("create topic exception with topic: " + topic, e);
 			throw new ServiceException("create topic exception with topic: " + topic, e);
 		}
 	}
@@ -127,6 +132,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.delete(topic);
 		} catch (RepositoryException e) {
+			logger.error("delete topic exception with topic: " + topic, e);
 			throw new ServiceException("delete topic exception with topic: " + topic, e);
 		}
 	}
@@ -136,6 +142,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.update(pinTopic);
 		} catch (RepositoryException e) {
+			logger.error("pin topic exception with topic: " + pinTopic, e);
 			throw new ServiceException("pin topic exception with topic: " + pinTopic, e);
 		}
 	}
@@ -145,6 +152,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.update(unpinTopic);
 		} catch (RepositoryException e) {
+			logger.error("unpin topic exception with topic: " + unpinTopic, e);
 			throw new ServiceException("unpin topic exception with topic: " + unpinTopic, e);
 		}
 	}
@@ -154,6 +162,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.update(closeTopic);
 		} catch (RepositoryException e) {
+			logger.error("close topic exception with topic: " + closeTopic, e);
 			throw new ServiceException("close topic exception with topic: " + closeTopic, e);
 		}
 	}
@@ -163,6 +172,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			topicRepository.update(uncloseTopic);
 		} catch (RepositoryException e) {
+			logger.error("unclose topic exception with topic: " + uncloseTopic, e);
 			throw new ServiceException("unclose topic exception with topic: " + uncloseTopic, e);
 		}
 	}

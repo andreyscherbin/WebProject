@@ -10,6 +10,14 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
+/**
+ * The {@code LanguageCommand} class represents switch language command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class LanguageCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String LANGUAGE = "lang";	

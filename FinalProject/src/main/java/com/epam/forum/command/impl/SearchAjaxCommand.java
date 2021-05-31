@@ -16,6 +16,14 @@ import com.epam.forum.model.service.TopicService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+/**
+ * The {@code SearchAjaxCommand} class represents search ajax command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class SearchAjaxCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();

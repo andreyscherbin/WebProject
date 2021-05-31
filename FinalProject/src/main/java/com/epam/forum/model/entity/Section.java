@@ -1,7 +1,7 @@
 package com.epam.forum.model.entity;
 
 public class Section extends Entity {
-	private static final long serialVersionUID = 4L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String header;

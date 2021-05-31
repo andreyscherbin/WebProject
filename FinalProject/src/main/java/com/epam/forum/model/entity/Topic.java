@@ -3,7 +3,7 @@ package com.epam.forum.model.entity;
 import java.time.LocalDateTime;
 
 public class Topic extends Entity {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String header;

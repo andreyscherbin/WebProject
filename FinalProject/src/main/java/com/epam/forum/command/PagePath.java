@@ -1,5 +1,12 @@
 package com.epam.forum.command;
 
+/**
+ * The {@code PagePath} contains all paths to pages and redirect paths
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0 
+ * @since   2021-05-30
+ */
 public final class PagePath {
 	public static final String INDEX = "/WEB-INF/index.jsp";
 	public static final String LOGIN = "/WEB-INF/jsp/login.jsp";

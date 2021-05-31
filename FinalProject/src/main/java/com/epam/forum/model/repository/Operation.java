@@ -1,5 +1,13 @@
-package com.epam.forum.model.entity;
+package com.epam.forum.model.repository;
 
+/**
+ * The {@code Operation} class contains operations which are used to build query 
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public final class Operation {
 	public static final String EQUAL = "=";
 	public static final String GREATER_THAN = ">";

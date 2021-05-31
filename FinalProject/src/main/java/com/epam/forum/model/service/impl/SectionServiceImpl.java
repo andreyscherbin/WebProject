@@ -6,11 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
-import com.epam.forum.model.entity.Operation;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.entity.SectionTable;
+import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.SearchCriterion;
+import com.epam.forum.model.repository.Specification;
 import com.epam.forum.model.repository.impl.IdSectionSpecification;
 import com.epam.forum.model.repository.impl.SectionRepositoryImpl;
 import com.epam.forum.model.service.SectionService;
@@ -36,8 +37,9 @@ public class SectionServiceImpl implements SectionService {
 	public List<Section> findAllSections() throws ServiceException {
 		List<Section> sections = null;
 		try {
-			sections = sectionRepository.findAll();
+			sections = (List<Section>) sectionRepository.findAll();
 		} catch (RepositoryException e) {
+			logger.error("findAll sections exception", e);
 			throw new ServiceException("findAll sections exception", e);
 		}
 		return sections;
@@ -48,15 +50,16 @@ public class SectionServiceImpl implements SectionService {
 		Optional<Section> section;
 		List<Section> sections;
 		try {
-			IdSectionSpecification spec1 = new IdSectionSpecification(
+			Specification<Section> idSpec = new IdSectionSpecification(
 					new SearchCriterion(SectionTable.SECTION_ID, Operation.EQUAL, sectionId));
-			sections = sectionRepository.query(spec1);
+			sections = (List<Section>) sectionRepository.query(idSpec);
 			if (!sections.isEmpty()) {
 				section = Optional.of(sections.get(0));
 			} else {
 				section = Optional.empty();
 			}
 		} catch (RepositoryException e) {
+			logger.error("find section exception with id: " + sectionId, e);
 			throw new ServiceException("find section exception with id: " + sectionId, e);
 		}
 		return section;
@@ -67,6 +70,7 @@ public class SectionServiceImpl implements SectionService {
 		try {
 			sectionRepository.create(section);
 		} catch (RepositoryException e) {
+			logger.error("create section exception with section: " + section, e);
 			throw new ServiceException("create section exception with section: " + section, e);
 		}
 	}
@@ -76,6 +80,7 @@ public class SectionServiceImpl implements SectionService {
 		try {
 			sectionRepository.delete(section);
 		} catch (RepositoryException e) {
+			logger.error("delete section exception with section: " + section, e);
 			throw new ServiceException("delete section exception with section: " + section, e);
 		}
 	}

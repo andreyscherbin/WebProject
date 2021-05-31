@@ -1,15 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" session="true"
+	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
 <%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
-<%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
 <fmt:message key="section.delete_section" var="delete_section_message" />
+<fmt:message key="section.title" var="title_message" />
 <fmt:message key="section.topics" var="topics_message" />
 <fmt:message key="section.new_topic" var="new_topic_message" />
 <fmt:message key="section.delete_topic" var="delete_topic_message" />
@@ -17,13 +17,14 @@
 <fmt:message key="section.unpin_topic" var="unpin_topic_message" />
 <fmt:message key="section.close_topic" var="close_topic_message" />
 <fmt:message key="section.unclose_topic" var="unclose_topic_message" />
+<fmt:message key="section.last_login_date" var="last_login_date_message" />
 <fmt:message key="message.topic.closed" var="closed_topic_message" />
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Section</title>
+<title>${title_message}</title>
 <%@ include file="fragments/head.jspf"%>
 </head>
 <body>
@@ -107,7 +108,7 @@
 								</div>
 								<div class="text-muted small ml-3">
 									<div>
-										last login date <strong><fmt:parseDate
+										${last_login_date_message} <strong><fmt:parseDate
 												value="${ topic.user.lastLoginDate }"
 												pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"
 												type="both" /> <fmt:formatDate pattern="dd.MM.yyyy HH:mm"

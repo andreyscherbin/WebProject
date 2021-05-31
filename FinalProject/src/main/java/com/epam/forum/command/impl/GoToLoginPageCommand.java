@@ -7,6 +7,14 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
+/**
+ * The {@code GoToLoginPageCommand} class represents go to login page command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class GoToLoginPageCommand implements Command {
 
 	@Override

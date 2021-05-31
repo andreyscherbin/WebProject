@@ -14,14 +14,10 @@ import com.epam.forum.command.CommandProvider;
 @WebServlet(name = "/AjaxServlet", urlPatterns = "/search")
 public class AjaxServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1288812835276078489L;
+	private static final long serialVersionUID = 1L;
 	private static Logger logger = LogManager.getLogger();
 	private static final String COMMAND_SEARCH = "search";
-
-	public AjaxServlet() {
-		super();
-	}
-
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		logger.info("ajax servlet");

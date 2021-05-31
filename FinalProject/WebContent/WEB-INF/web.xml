@@ -9,7 +9,6 @@
 		<servlet-class>com.epam.forum.controller.ControllerServlet</servlet-class>
 		<load-on-startup>20</load-on-startup>
 	</servlet>
-		
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/jsp/error/error_404.jsp</location>
@@ -22,4 +21,28 @@
 		<exception-type>java.lang.ExceptionInInitializerError</exception-type>
 		<location>/WEB-INF/jsp/error/database_init_error.jsp</location>
 	</error-page>
+	<filter-mapping>
+		<filter-name>AdminHomeFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>HomeFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>RoleFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SectionFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>TopicFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
 </web-app>

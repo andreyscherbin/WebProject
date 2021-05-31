@@ -4,13 +4,12 @@ import java.time.LocalDateTime;
 
 public class ActivationCode extends Entity {
 
-	private static final long serialVersionUID = 5L;
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private User user;
 	private LocalDateTime creationDate;
 
-	public ActivationCode(String id, User user) {
-		super();
+	public ActivationCode(String id, User user) {		
 		this.id = id;
 		this.user = user;
 		this.creationDate = LocalDateTime.now();

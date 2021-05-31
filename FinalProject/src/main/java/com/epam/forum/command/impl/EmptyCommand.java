@@ -9,6 +9,14 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
+/**
+ * The {@code EmptyCommand} class represents empty command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class EmptyCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";

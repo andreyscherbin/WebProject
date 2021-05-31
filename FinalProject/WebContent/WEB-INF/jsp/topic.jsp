@@ -1,27 +1,40 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" session="true"
+	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="/WEB-INF/security_tags.tld" prefix="sec"%>
 <%@ taglib uri="/WEB-INF/security_functions_tags.tld" prefix="f"%>
-<%@ page session="true"%>
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
-<fmt:message key="topic.login_to_reply" var="login_to_reply_message" />
+<fmt:message key="message.login_to_reply" var="login_to_reply_message" />
 <fmt:message key="message.topic.closed" var="closed_topic_message" />
 <fmt:message key="message.user.banned" var="banned_user_message" />
+<fmt:message key="topic.title" var="title_message" />
+<fmt:message key="validation.post.description"
+	var="description_validation_message" />
+<fmt:message key="topic.post.edit_post" var="post_edit_message" />
+<fmt:message key="topic.post.send_edit_button"
+	var="post_send_edit_button_message" />
+<fmt:message key="topic.post.cancel_button"
+	var="post_cancel_button_message" />
+<fmt:message key="topic.post.new_post" var="new_post_message" />
+<fmt:message key="topic.post.new_post_button"
+	var="new_post_button_message" />
+<fmt:message key="topic.post.delete_button"
+	var="post_delete_button_message" />
+<fmt:message key="topic.post.edit_button" var="post_edit_button_message" />
+<fmt:message key="topic.last_login_date" var="last_login_date_message" />
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Section</title>
+<title>${title_message}</title>
 <%@ include file="fragments/head.jspf"%>
-
 </head>
 <body>
-
 	<script
 		src="${pageContext.request.contextPath}/js/new_post_validation.js"></script>
 
@@ -67,7 +80,7 @@
 							</div>
 							<div class="text-muted small ml-3">
 								<div>
-									last login date <strong><fmt:parseDate
+									${last_login_date_message} <strong><fmt:parseDate
 											value="${ topic.user.lastLoginDate }"
 											pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
 										<fmt:formatDate pattern="dd.MM.yyyy HH:mm"
@@ -100,11 +113,11 @@
 											<c:if test="${!topic.closed}">
 												<div class="row">
 													<a
-														href="${pageContext.request.contextPath}/controller?command=delete_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
-														class="btn btn-light bi bi-trash">delete </a> <a
-														class="btn btn-light bi bi-pencil"
+														href="${pageContext.request.contextPath}/controller?command=delete_post&post_id=${post.id}&topic_id=${topic.id}"
+														class="btn btn-light bi bi-trash">${post_delete_button_message}
+													</a> <a class="btn btn-light bi bi-pencil"
 														href="javascript:void();" id="editLink${post.id}"
-														onclick="showEdit(${post.id});">edit </a>
+														onclick="showEdit(${post.id});">${post_edit_button_message}</a>
 												</div>
 											</c:if>
 										</c:if>
@@ -119,7 +132,7 @@
 								</div>
 								<div class="text-muted small ml-3">
 									<div>
-										last login date <strong><fmt:parseDate
+										${last_login_date_message} <strong><fmt:parseDate
 												value="${ post.user.lastLoginDate }"
 												pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"
 												type="both" /> <fmt:formatDate pattern="dd.MM.yyyy HH:mm"
@@ -138,19 +151,19 @@
 									<form id="formEditPost${post.id}" name="formEditPost${post.id}"
 										onsubmit="return validateEditForm(${post.id});"
 										class="needs-validation" novalidate
-										action="${pageContext.request.contextPath}/controller?command=edit_post_by_id&post_id=${post.id}&topic_id=${topic.id}"
+										action="${pageContext.request.contextPath}/controller?command=edit_post&post_id=${post.id}&topic_id=${topic.id}"
 										method="POST">
 										<div class="form-group has-validation">
-											<label for="content${post.id}">Your Edit</label>
+											<label for="content${post.id}">${post_edit_message}</label>
 											<textarea class="form-control" id="content${post.id}"
 												name="content"> </textarea>
-											<div class="invalid-feedback">Must not be empty</div>
+											<div class="invalid-feedback">${description_validation_message}</div>
 										</div>
 										<button class="btn btn-outline-dark"
-											id="btnEditPost${post.id}" type="submit">Send Edit</button>
+											id="btnEditPost${post.id}" type="submit">${post_send_edit_button_message}</button>
 										<button class="btn btn-outline-dark"
 											id="btnCancelEditPost${post.id}"
-											onclick="closeEdit(${post.id})" type="button">Cancel</button>
+											onclick="closeEdit(${post.id})" type="button">${post_cancel_button_message}</button>
 									</form>
 								</div>
 							</c:if>
@@ -169,12 +182,12 @@
 							action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
 							method="POST">
 							<div class="form-group has-validation">
-								<label for="comment">Your Reply</label>
+								<label for="comment">${new_post_message}</label>
 								<textarea class="form-control" id="content" name="content"> </textarea>
-								<div class="invalid-feedback">Must not be empty</div>
+								<div class="invalid-feedback">${description_validation_message}</div>
 							</div>
 							<button class="btn btn-outline-dark bi bi-reply"
-								id="btnCreatePost" type="submit">Send reply</button>
+								id="btnCreatePost" type="submit">${new_post_button_message}</button>
 						</form>
 					</sec:authorize>
 				</c:if>

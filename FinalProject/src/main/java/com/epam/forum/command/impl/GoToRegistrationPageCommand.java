@@ -7,6 +7,14 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
+/**
+ * The {@code GoToRegistrationPageCommand} class represents go to registration page command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class GoToRegistrationPageCommand implements Command {
 
 	@Override

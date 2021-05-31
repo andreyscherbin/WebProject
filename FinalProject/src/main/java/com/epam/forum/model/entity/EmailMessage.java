@@ -5,8 +5,7 @@ public class EmailMessage {
 	private String subject;
 	private String content;
 
-	public EmailMessage(String recipient, String subject, String content) {
-		super();
+	public EmailMessage(String recipient, String subject, String content) {		
 		this.recipient = recipient;
 		this.subject = subject;
 		this.content = content;

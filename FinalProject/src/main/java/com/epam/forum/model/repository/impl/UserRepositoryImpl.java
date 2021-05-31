@@ -28,10 +28,10 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			+ "is_email_verifed, is_active, role FROM users";
 	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
 			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
-	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , role = ? , last_login_date = ? WHERE user_id = ?";
+	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , is_email_verifed = ? , role = ? , last_login_date = ? WHERE user_id = ?";
 
 	@Override
-	public Optional<User> find(Long id) throws RepositoryException {
+	public Optional<User> findById(Long id) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -83,14 +83,15 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			connection = pool.getConnection();
 			statement = connection.prepareStatement(SQL_UPDATE_USER);
 			statement.setBoolean(1, user.isActive());
-			statement.setString(2, user.getRole().name());
+			statement.setBoolean(2, user.isEmailVerifed());
+			statement.setString(3, user.getRole().name());
 			LocalDateTime lastLoginDate = user.getLastLoginDate();
 			if (lastLoginDate == null) {
-				statement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+				statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
 			} else {
-				statement.setTimestamp(3, Timestamp.valueOf(user.getLastLoginDate()));
+				statement.setTimestamp(4, Timestamp.valueOf(user.getLastLoginDate()));
 			}
-			statement.setLong(4, user.getId());
+			statement.setLong(5, user.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				throw new RepositoryException("updated user failed, no rows affected.");
@@ -110,7 +111,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 	}
 
 	@Override
-	public List<User> query(Specification<User> specification) throws RepositoryException {
+	public Iterable<User> query(Specification<User> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<User> users = new ArrayList<>();
 		Connection connection = null;
@@ -163,12 +164,12 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 	}
 
 	@Override
-	public List<User> sort(Comparator<User> comparator) throws RepositoryException {
+	public Iterable<User> sort(Comparator<User> comparator) throws RepositoryException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<User> findAll() throws RepositoryException {
+	public Iterable<User> findAll() throws RepositoryException {
 		List<User> users = new ArrayList<>();
 		Connection connection = null;
 		Statement statement = null;

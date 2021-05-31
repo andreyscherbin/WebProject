@@ -14,25 +14,18 @@ import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.Router;
 import com.epam.forum.pool.ConnectionPool;
 
-@WebServlet(name = "/ControllerServlet", urlPatterns = { "/controller" })
+@WebServlet(name = "ControllerServlet", urlPatterns = { "/controller" })
 public class ControllerServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -8638304278665235496L;
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LogManager.getLogger();
+	private static final String PARAM_NAME_COMMAND = "command";
 
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		ConnectionPool.getInstance();
 	}
-
-	@Override
-	public void destroy() {	
-		super.destroy();
-		ConnectionPool.getInstance().shutdown();				
-	}
-
-	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_COMMAND = "command";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -55,11 +48,17 @@ public class ControllerServlet extends HttpServlet {
 		Router router = command.execute(request, response);
 		Boolean isRedirect = router.isRedirect();
 		String page = router.getPage();
-		if (Boolean.FALSE == isRedirect) {
+		if (!isRedirect) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
 			dispatcher.forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath() + page);
 		}
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		ConnectionPool.getInstance().shutdown();
 	}
 }

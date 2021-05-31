@@ -7,6 +7,14 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 
+/**
+ * The {@code GoToHomePageCommand} class represents go to home page command
+ * 
+ * @author Andrey Shcherbin
+ * @version 1.0
+ * @since 2021-05-30
+ *
+ */
 public class GoToHomePageCommand implements Command {
 
 	@Override

@@ -6,20 +6,22 @@
 
 <fmt:setLocale value="${sessionScope.lang}" />
 <fmt:setBundle basename="pagecontent" />
+<fmt:message key="new_section.title" var="title_message" />
 <fmt:message key="new_section.create_section"
 	var="create_section_message" />
 <fmt:message key="new_section.title" var="title_message" />
 <fmt:message key="new_section.description" var="description_message" />
 <fmt:message key="new_section.create_button" var="create_button_message" />
 <fmt:message key="new_section.cancel_button" var="cancel_button_message" />
-<fmt:message key="validation.latin_cyrillic_digit_100"
-	var="validation_title_message" />
-<fmt:message key="validation.empty" var="validation_empty_message" />
+<fmt:message key="validation.section.title"
+	var="title_validation_message" />
+<fmt:message key="validation.section.description"
+	var="description_validation_message" />
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Create section page</title>
+<title>${title_message}</title>
 <%@ include file="fragments/head.jspf"%>
 <script
 	src="${pageContext.request.contextPath}/js/new_section_validation.js"></script>
@@ -42,14 +44,14 @@
 							id="inputTitle" type="text" class="form-control" name="header"
 							required autofocus aria-describedby="inputGroupPrepend"
 							pattern="[A-Za-z]{1,100}" maxlength="100" />
-						<div class="invalid-feedback">${validation_title_message}</div>
+						<div class="invalid-feedback">${title_validation_message}</div>
 					</div>
 
 					<div class="form-group">
 						<label class="form-label" for="description">${description_message}</label>
 						<textarea id="inputDescription" rows="5" class="form-control"
 							name="content"></textarea>
-						<div class="invalid-feedback">${validation_empty_message}</div>
+						<div class="invalid-feedback">${description_validation_message}</div>
 					</div>
 
 					<div class="form-group">
@@ -57,7 +59,6 @@
 							class="btn btn-primary">${create_button_message}</button>
 						<button class="btn btn-light">${cancel_button_message}</button>
 					</div>
-
 				</form>
 			</div>
 		</div>
