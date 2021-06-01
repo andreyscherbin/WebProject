@@ -3,8 +3,18 @@ package com.epam.forum.command;
 import java.util.EnumMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.epam.forum.command.impl.*;
+import com.epam.forum.model.entity.ActivationCode;
+import com.epam.forum.model.entity.Post;
+import com.epam.forum.model.entity.Section;
+import com.epam.forum.model.entity.Topic;
+import com.epam.forum.model.entity.User;
+import com.epam.forum.model.repository.Repository;
+import com.epam.forum.model.repository.impl.ActivationCodeRepositoryImpl;
+import com.epam.forum.model.repository.impl.PostRepositoryImpl;
+import com.epam.forum.model.repository.impl.SectionRepositoryImpl;
+import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
+import com.epam.forum.model.repository.impl.UserRepositoryImpl;
 import com.epam.forum.model.service.ActivationSenderService;
 import com.epam.forum.model.service.PostService;
 import com.epam.forum.model.service.SectionService;
@@ -21,11 +31,18 @@ public class CommandProvider {
 	private EnumMap<CommandName, Command> commands = new EnumMap<>(CommandName.class);
 
 	private CommandProvider() {
-		UserService userService = UserServiceImpl.getInstance();
-		TopicService topicService = TopicServiceImpl.getInstance();
-		SectionService sectionService = SectionServiceImpl.getInstance();
-		PostService postService = PostServiceImpl.getInstance();
-		ActivationSenderService activationSenderService = ActivationSenderServiceImpl.getInstance();
+		Repository<Long, User> userRepository = UserRepositoryImpl.getInstance();
+		Repository<String, ActivationCode> activationCodeRepository = ActivationCodeRepositoryImpl.getInstance();
+		Repository<Long, Post> postRepository = PostRepositoryImpl.getInstance();
+		Repository<Long, Topic> topicRepository = TopicRepositoryImpl.getInstance();
+		Repository<Long, Section> sectionRepository = SectionRepositoryImpl.getInstance();
+		
+		UserService userService = UserServiceImpl.getInstance(userRepository);
+		TopicService topicService = TopicServiceImpl.getInstance(topicRepository);
+		SectionService sectionService = SectionServiceImpl.getInstance(sectionRepository);
+		PostService postService = PostServiceImpl.getInstance(postRepository);
+		ActivationSenderService activationSenderService = ActivationSenderServiceImpl
+				.getInstance(activationCodeRepository);
 
 		commands.put(CommandName.LOGIN, new LogInCommand(userService));
 		commands.put(CommandName.REGISTRATION, new RegistrationCommand(userService, activationSenderService));
@@ -33,7 +50,7 @@ public class CommandProvider {
 		commands.put(CommandName.VIEW_USER, new ViewUserCommand(userService));
 		commands.put(CommandName.CHANGE_ROLE, new ChangeRoleCommand(userService));
 		commands.put(CommandName.BAN_USER, new BanUserCommand(userService));
-		commands.put(CommandName.VIEW_USER_BY_ID, new ViewUserByIdCommand(userService));		
+		commands.put(CommandName.VIEW_USER_BY_ID, new ViewUserByIdCommand(userService));
 		commands.put(CommandName.VIEW_USER_BY_USERNAME, new ViewUserByUserNameCommand(userService));
 		commands.put(CommandName.VIEW_TOPIC, new ViewTopicCommand(topicService));
 		commands.put(CommandName.CREATE_TOPIC, new CreateTopicCommand(userService, topicService, sectionService));

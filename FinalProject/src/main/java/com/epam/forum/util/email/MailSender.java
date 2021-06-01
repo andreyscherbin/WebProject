@@ -36,7 +36,7 @@ public class MailSender {
 	}
 
 	public static void sendEmail(EmailMessage emailMessage) throws MailException {
-		Session session = SessionFactory.createSession(properties);
+		Session session = SessionFactory.createSession(properties);		
 		String from = properties.getProperty(KEY_FROM);
 		String sendToEmail = emailMessage.getRecipient();
 		try {
@@ -48,10 +48,10 @@ public class MailSender {
 			Transport.send(message);
 			logger.info("Email {} sent successfully...", emailMessage);
 		} catch (AddressException e) {
-			logger.error("Invalid address: " + sendToEmail + " " + e);
+			logger.error("Invalid address: " + sendToEmail, e);
 			throw new MailException("Invalid address: " + sendToEmail, e);
 		} catch (MessagingException e) {
-			logger.error("Error generating or sending message: " + e);
+			logger.error("Error generating or sending message: ", e);
 			throw new MailException("Error generating or sending message: ", e);
 		}
 	}

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Entity;
+import com.epam.forum.model.repository.spec.Specification;
 
 /**
  * Interface for generic CRUD operations on a repository for a specific type

@@ -26,7 +26,7 @@
 </head>
 
 <body>
-	<%@ include file="fragments/navbar.jspf"%>
+	
 	<div class="container-fluid mt-100 ">
 		<form id="formSignIn" class="form-signin needs-validation" novalidate
 			method="POST" action="${pageContext.request.contextPath}/controller">

@@ -40,6 +40,7 @@ public class RegistrationCommand implements Command {
 	private static final String ATTRIBUTE_VALUE_EMAIL_ALREADY_IN_USE = "message.email.already_in_use";
 	private static final String ATTRIBUTE_VALUE_USERNAME_ALREADY_IN_USE = "message.username.already_in_use";
 	private static final String ATTRIBUTE_VALUE_ALREADY_REGISTRATED = "message.error.already_registered";
+	private static final String ATTRIBUTE_VALUE_CONFIRM_EMAIL = "message.email.confirm_email";
 	private static final Long SUCCESS_REGISTRATION = 1L;
 	private static final Long EMAIL_ALREADY_IN_USE = 2L;
 	private static final Long USERNAME_ALREADY_IN_USE = 3L;
@@ -74,6 +75,7 @@ public class RegistrationCommand implements Command {
 				if (result.containsKey(SUCCESS_REGISTRATION)) {
 					User user = result.get(SUCCESS_REGISTRATION).get(0).get();
 					activationSenderService.sendActivationCode(user);
+					session.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_CONFIRM_EMAIL);
 					router.setPage(PagePath.HOME_REDIRECT);
 					router.setRedirect();
 				} else {

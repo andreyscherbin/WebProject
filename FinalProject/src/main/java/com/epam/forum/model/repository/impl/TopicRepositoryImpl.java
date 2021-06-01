@@ -13,8 +13,8 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 import com.epam.forum.pool.ConnectionPool;
 import com.epam.forum.model.entity.TopicTable;
 import com.epam.forum.model.entity.User;
@@ -31,6 +31,18 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	private static final String SQL_INSERT_TOPIC = "INSERT INTO topics (header, content, is_pinned, is_closed, creation_date, section_id, user_id) VALUES(?,?,?,?,?,?,?)";
 	private static final String SQL_DELETE_TOPIC = "DELETE FROM topics WHERE topic_id = ?";
 	private static final String SQL_UPDATE_TOPIC = "UPDATE topics SET is_pinned = ? , is_closed = ? WHERE topic_id = ?";
+
+	private static Repository<Long, Topic> instance;
+
+	private TopicRepositoryImpl() {
+	}
+
+	public static Repository<Long, Topic> getInstance() {
+		if (instance == null) {
+			instance = new TopicRepositoryImpl();
+		}
+		return instance;
+	}
 
 	@Override
 	public Optional<Topic> findById(Long id) throws RepositoryException {

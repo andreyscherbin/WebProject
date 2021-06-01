@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository;
+package com.epam.forum.model.repository.spec;
 
 /**
  * The {@code Operation} class contains operations which are used to build query 

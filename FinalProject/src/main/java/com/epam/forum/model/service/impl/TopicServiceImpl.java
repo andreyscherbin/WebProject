@@ -12,14 +12,13 @@ import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.entity.TopicTable;
-import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
-import com.epam.forum.model.repository.impl.HeaderTopicSpecification;
-import com.epam.forum.model.repository.impl.IdTopicSpecification;
-import com.epam.forum.model.repository.impl.SectionTopicSpecification;
-import com.epam.forum.model.repository.impl.TopicRepositoryImpl;
+import com.epam.forum.model.repository.spec.Operation;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
+import com.epam.forum.model.repository.spec.impl.HeaderTopicSpecification;
+import com.epam.forum.model.repository.spec.impl.IdTopicSpecification;
+import com.epam.forum.model.repository.spec.impl.SectionTopicSpecification;
 import com.epam.forum.model.service.TopicService;
 import com.epam.forum.validator.TopicValidator;
 
@@ -28,13 +27,13 @@ public class TopicServiceImpl implements TopicService {
 	private static TopicService instance;
 	private Repository<Long, Topic> topicRepository;
 
-	private TopicServiceImpl() {
-		topicRepository = new TopicRepositoryImpl();
+	private TopicServiceImpl(Repository<Long, Topic> topicRepository) {
+		this.topicRepository = topicRepository;
 	}
 
-	public static TopicService getInstance() {
+	public static TopicService getInstance(Repository<Long, Topic> topicRepository) {
 		if (instance == null) {
-			instance = new TopicServiceImpl();
+			instance = new TopicServiceImpl(topicRepository);
 		}
 		return instance;
 	}

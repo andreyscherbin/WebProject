@@ -20,8 +20,8 @@ import com.epam.forum.model.entity.TopicTable;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 import com.epam.forum.pool.ConnectionPool;
 
 public class PostRepositoryImpl implements Repository<Long, Post> {
@@ -32,6 +32,18 @@ public class PostRepositoryImpl implements Repository<Long, Post> {
 	private static final String SQL_INSERT_POST = "INSERT INTO posts (content, creation_date, topic_id, user_id) VALUES(?,?,?,?)";
 	private static final String SQL_DELETE_POST = "DELETE FROM posts WHERE post_id = ?";
 	private static final String SQL_UPDATE_POST = "UPDATE posts SET content = ? WHERE post_id = ?";
+
+	private static Repository<Long, Post> instance;
+
+	private PostRepositoryImpl() {
+	}
+
+	public static Repository<Long, Post> getInstance() {
+		if (instance == null) {
+			instance = new PostRepositoryImpl();
+		}
+		return instance;
+	}
 
 	@Override
 	public Optional<Post> findById(Long id) throws RepositoryException {

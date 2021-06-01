@@ -11,12 +11,11 @@ import com.epam.forum.model.entity.ActivationCode;
 import com.epam.forum.model.entity.EmailMessage;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.ActivationCodeTable;
-import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
-import com.epam.forum.model.repository.impl.ActivationCodeRepositoryImpl;
-import com.epam.forum.model.repository.impl.IdActivationCodeSpecification;
+import com.epam.forum.model.repository.spec.Operation;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
+import com.epam.forum.model.repository.spec.impl.IdActivationCodeSpecification;
 import com.epam.forum.model.service.ActivationSenderService;
 import com.epam.forum.util.activation.Sha256ActivationCodeGenerator;
 import com.epam.forum.util.email.EmailMessageFactory;
@@ -29,13 +28,13 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 	private ActivationCode activationCode;
 	private Repository<String, ActivationCode> activationCodeRepository;
 
-	private ActivationSenderServiceImpl() {
-		activationCodeRepository = new ActivationCodeRepositoryImpl();
+	private ActivationSenderServiceImpl(Repository<String, ActivationCode> activationCodeRepository) {
+		this.activationCodeRepository = activationCodeRepository;
 	}
 
-	public static ActivationSenderService getInstance() {
+	public static ActivationSenderService getInstance(Repository<String, ActivationCode> activationCodeRepository) {
 		if (instance == null) {
-			instance = new ActivationSenderServiceImpl();
+			instance = new ActivationSenderServiceImpl(activationCodeRepository);
 		}
 		return instance;
 	}

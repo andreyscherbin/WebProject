@@ -15,8 +15,8 @@ import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 import com.epam.forum.pool.ConnectionPool;
 import com.epam.forum.model.entity.ActivationCodeTable;
 
@@ -24,6 +24,18 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 
 	private static final String SQL_INSERT_ACTIVATION_CODE = "INSERT INTO activationcodes (activationcode_id, user_id, creation_date) VALUES(?,?,?)";
 	private static final String SQL_DELETE_ACTIVATION_CODE = "DELETE FROM activationcodes WHERE activationcode_id = ?";
+
+	private static Repository<String, ActivationCode> instance;
+
+	private ActivationCodeRepositoryImpl() {
+	}
+
+	public static Repository<String, ActivationCode> getInstance() {
+		if (instance == null) {
+			instance = new ActivationCodeRepositoryImpl();
+		}
+		return instance;
+	}
 
 	@Override
 	public Optional<ActivationCode> findById(String id) throws RepositoryException {

@@ -9,12 +9,20 @@
 </head>
 <body>
 	<div class="row">
-		<c:if test="${message != null}">
+		<c:if test="${not empty requestScope.message}">
 			<div class="col s12 green lighten-4">
 				<p style="color: red">
 					<fmt:message key="${message}" />
 				</p>
 			</div>
+		</c:if>
+		<c:if test="${not empty sessionScope.message}">
+			<div class="col s12 green lighten-4">
+				<p style="color: red">
+					<fmt:message key="${message}" />
+				</p>
+			</div>
+			<c:remove var="message" scope="session" />
 		</c:if>
 	</div>
 </body>

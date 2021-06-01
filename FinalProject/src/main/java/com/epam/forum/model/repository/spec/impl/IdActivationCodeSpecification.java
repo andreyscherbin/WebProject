@@ -1,11 +1,11 @@
-package com.epam.forum.model.repository.impl;
+package com.epam.forum.model.repository.spec.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.epam.forum.model.entity.ActivationCode;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 
 public class IdActivationCodeSpecification implements Specification<ActivationCode> {
 
@@ -33,4 +33,29 @@ public class IdActivationCodeSpecification implements Specification<ActivationCo
 	public List<SearchCriterion> getSearchCriterions() {
 		return criterions;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((criterions == null) ? 0 : criterions.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IdActivationCodeSpecification other = (IdActivationCodeSpecification) obj;
+		if (criterions == null) {
+			if (other.criterions != null)
+				return false;
+		} else if (!criterions.equals(other.criterions))
+			return false;
+		return true;
+	}	
 }

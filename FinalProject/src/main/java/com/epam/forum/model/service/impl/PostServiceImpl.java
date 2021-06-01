@@ -9,13 +9,12 @@ import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Post;
 import com.epam.forum.model.entity.PostTable;
-import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
-import com.epam.forum.model.repository.impl.IdPostSpecification;
-import com.epam.forum.model.repository.impl.PostRepositoryImpl;
-import com.epam.forum.model.repository.impl.TopicPostSpecification;
+import com.epam.forum.model.repository.spec.Operation;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
+import com.epam.forum.model.repository.spec.impl.IdPostSpecification;
+import com.epam.forum.model.repository.spec.impl.TopicPostSpecification;
 import com.epam.forum.model.service.PostService;
 
 public class PostServiceImpl implements PostService {
@@ -23,13 +22,13 @@ public class PostServiceImpl implements PostService {
 	private static PostService instance;
 	private Repository<Long, Post> postRepository;
 
-	private PostServiceImpl() {
-		postRepository = new PostRepositoryImpl();
+	private PostServiceImpl(Repository<Long, Post> postRepository) {
+		this.postRepository = postRepository;
 	}
 
-	public static PostService getInstance() {
+	public static PostService getInstance(Repository<Long, Post> postRepository) {
 		if (instance == null) {
-			instance = new PostServiceImpl();
+			instance = new PostServiceImpl(postRepository);
 		}
 		return instance;
 	}

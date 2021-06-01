@@ -8,12 +8,11 @@ import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.entity.SectionTable;
-import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
-import com.epam.forum.model.repository.impl.IdSectionSpecification;
-import com.epam.forum.model.repository.impl.SectionRepositoryImpl;
+import com.epam.forum.model.repository.spec.Operation;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
+import com.epam.forum.model.repository.spec.impl.IdSectionSpecification;
 import com.epam.forum.model.service.SectionService;
 
 public class SectionServiceImpl implements SectionService {
@@ -22,13 +21,13 @@ public class SectionServiceImpl implements SectionService {
 	private static SectionService instance;
 	private Repository<Long, Section> sectionRepository;
 
-	private SectionServiceImpl() {
-		sectionRepository = new SectionRepositoryImpl();
+	private SectionServiceImpl(Repository<Long, Section> sectionRepository) {
+		this.sectionRepository = sectionRepository;
 	}
 
-	public static SectionService getInstance() {
+	public static SectionService getInstance(Repository<Long, Section> sectionRepository) {
 		if (instance == null) {
-			instance = new SectionServiceImpl();
+			instance = new SectionServiceImpl(sectionRepository);
 		}
 		return instance;
 	}

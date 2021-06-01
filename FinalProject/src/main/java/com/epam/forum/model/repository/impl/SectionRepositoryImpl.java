@@ -12,10 +12,9 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Section;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 import com.epam.forum.pool.ConnectionPool;
-
 import static com.epam.forum.model.entity.SectionTable.*;
 
 public class SectionRepositoryImpl implements Repository<Long, Section> {
@@ -23,6 +22,18 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	private static final String SQL_SELECT_ALL_SECTIONS = "SELECT section_id, header, description FROM sections";
 	private static final String SQL_INSERT_SECTION = "INSERT INTO sections (header, description) VALUES(?,?)";
 	private static final String SQL_DELETE_SECTION = "DELETE FROM sections WHERE section_id = ?";
+
+	private static Repository<Long, Section> instance;
+
+	private SectionRepositoryImpl() {
+	}
+
+	public static Repository<Long, Section> getInstance() {
+		if (instance == null) {
+			instance = new SectionRepositoryImpl();
+		}
+		return instance;
+	}
 
 	@Override
 	public Optional<Section> findById(Long id) throws RepositoryException {

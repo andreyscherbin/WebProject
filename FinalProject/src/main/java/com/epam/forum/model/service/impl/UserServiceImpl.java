@@ -15,14 +15,13 @@ import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
-import com.epam.forum.model.repository.Operation;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
-import com.epam.forum.model.repository.impl.EmailUserSpecification;
-import com.epam.forum.model.repository.impl.IdUserSpecification;
-import com.epam.forum.model.repository.impl.UserNameSpecification;
-import com.epam.forum.model.repository.impl.UserRepositoryImpl;
+import com.epam.forum.model.repository.spec.Operation;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
+import com.epam.forum.model.repository.spec.impl.EmailUserSpecification;
+import com.epam.forum.model.repository.spec.impl.IdUserSpecification;
+import com.epam.forum.model.repository.spec.impl.UserNameSpecification;
 import com.epam.forum.model.service.UserService;
 import com.epam.forum.security.PasswordEncoder;
 import com.epam.forum.validator.UserValidator;
@@ -35,15 +34,94 @@ public class UserServiceImpl implements UserService {
 	private static UserService instance;
 	private Repository<Long, User> userRepository;
 
-	private UserServiceImpl() {
-		userRepository = new UserRepositoryImpl();
+	private UserServiceImpl(Repository<Long, User> userRepository) {
+		this.userRepository = userRepository;
 	}
 
-	public static UserService getInstance() {
+	public static UserService getInstance(Repository<Long, User> userRepository) {
 		if (instance == null) {
-			instance = new UserServiceImpl();
+			instance = new UserServiceImpl(userRepository);
 		}
 		return instance;
+	}
+
+	@Override
+	public Optional<User> authenticate(String userName, String password) throws ServiceException {
+		List<User> users = new ArrayList<>();
+		Optional<User> user = Optional.empty();
+		try {
+			Specification<User> userNameSpec = new UserNameSpecification(
+					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
+			users = (List<User>) userRepository.query(userNameSpec);
+		} catch (RepositoryException e) {
+			logger.error("query exception with username: " + userName, e);
+			throw new ServiceException("query exception with username: " + userName, e);
+		}
+		if (!users.isEmpty()) {
+			user = Optional.of(users.get(0));
+			String findUserPassword = user.get().getPassword();
+			password = PasswordEncoder.encodeString(password);
+			if (findUserPassword.equals(password)) {
+				logger.info("success authentication: {}", userName);
+			} else {
+				logger.info("failed authentication: {}", userName);
+				user = Optional.empty();
+			}
+		} else {
+			logger.info("no such user: {}", userName);
+			logger.info("failed authentication: {}", userName);
+		}
+		return user;
+	}
+
+	@Override
+	public Map<Long, List<Optional<User>>> registrate(String userName, String password, String email)
+			throws ServiceException {
+		List<User> users = new ArrayList<>();
+		Map<Long, List<Optional<User>>> result = new HashMap<>();
+		try {
+			Specification<User> userNameSpec = new UserNameSpecification(
+					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
+			Specification<User> emailSpec = new EmailUserSpecification(
+					new SearchCriterion(UserTable.EMAIL, Operation.EQUAL, email));
+			users = (List<User>) userRepository.query(userNameSpec.or(emailSpec));
+		} catch (RepositoryException e) {
+			logger.error("query exception with username: " + userName + " and email : " + email, e);
+			throw new ServiceException("query exception with username: " + userName + " and email : " + email, e);
+		}
+		if (users.isEmpty()) {
+			UserBuilder userBuilder = new UserBuilderImpl();
+			userBuilder.buildUsername(userName).buildPassword(password).buildEmail(email)
+					.buildRegisterDate(LocalDateTime.now()).buildIsEmailVerifed(false).buildIsActive(true)
+					.buildRole(Role.USER);
+			User registeredUser = userBuilder.getUser();
+			try {
+				userRepository.create(registeredUser);
+			} catch (RepositoryException e) {
+				logger.error("create user exception with user: " + registeredUser, e);
+				throw new ServiceException("create user exception with user: " + registeredUser, e);
+			}
+			Optional<User> user = Optional.of(registeredUser);
+			result.put(SUCCESS_REGISTRATION, List.of(user));
+			logger.info("success registration: {} {}", userName, email);
+		} else {
+			List<Optional<User>> userNameAlreadyInUseList = new ArrayList<>();
+			List<Optional<User>> emailAlreadyInUseList = new ArrayList<>();
+			for (User user : users) {
+				if (user.getUserName().equals(userName)) {
+					logger.info("user with such username: {} already exists", userName);
+					userNameAlreadyInUseList.add(Optional.of(user));
+				}
+				if (user.getEmail().equals(email)) {
+					logger.info("user with such email: {} already exists", email);
+					emailAlreadyInUseList.add(Optional.of(user));
+				}
+			}
+			result.put(EMAIL_ALREADY_IN_USE, emailAlreadyInUseList);
+			result.put(USERNAME_ALREADY_IN_USE, userNameAlreadyInUseList);
+			logger.info("failed registration: {}", userName);
+		}
+		return result;
 	}
 
 	@Override
@@ -94,85 +172,6 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("find user exception with username: " + userName, e);
 		}
 		return users;
-	}
-
-	@Override
-	public Optional<User> authenticate(String userName, String password) throws ServiceException {
-		List<User> users = new ArrayList<>();
-		Optional<User> user = Optional.empty();
-		try {
-			Specification<User> userNameSpec = new UserNameSpecification(
-					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
-			users = (List<User>) userRepository.query(userNameSpec);
-		} catch (RepositoryException e) {
-			logger.error("query exception with username: " + userName, e);
-			throw new ServiceException("query exception with username: " + userName, e);
-		}
-		if (!users.isEmpty()) {
-			user = Optional.of(users.get(0));
-			String findUserPassword = user.get().getPassword();
-			password = PasswordEncoder.encodeString(password);
-			if (findUserPassword.equals(password)) {
-				logger.info("success authentication: {}", userName);
-			} else {
-				logger.info("failed authentication: {}", userName);
-				user = Optional.empty();
-			}
-		} else {
-			logger.info("no such user: {}", userName);
-			logger.info("failed authentication: {}", userName);
-		}
-		return user;
-	}
-
-	@Override
-	public Map<Long, List<Optional<User>>> registrate(String userName, String password, String email)
-			throws ServiceException {
-		List<User> users = new ArrayList<>();
-		Map<Long, List<Optional<User>>> result = new HashMap<>();
-		try {
-			Specification<User> userNameSpec = new UserNameSpecification(
-					new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName));
-			Specification<User> emailSpec = new EmailUserSpecification(
-					new SearchCriterion(UserTable.EMAIL, Operation.EQUAL, email));
-			users = (List<User>) userRepository.query(userNameSpec.or(emailSpec));
-		} catch (RepositoryException e) {
-			logger.error("query exception with username: " + userName + " and email : " + email, e);
-			throw new ServiceException("query exception with username: " + userName + " and email : " + email, e);
-		}
-		if (users.isEmpty()) {
-			UserBuilder userBuilder = new UserBuilderImpl();
-			userBuilder.buildUsername(userName).buildPassword(password).buildEmail(email)
-					.buildRegisterDate(LocalDateTime.now()).buildIsEmailVerifed(false).buildIsActive(false)
-					.buildRole(Role.USER);
-			User registeredUser = userBuilder.getUser();
-			try {
-				userRepository.create(registeredUser);
-			} catch (RepositoryException e) {
-				logger.error("create user exception with user: " + registeredUser, e);
-				throw new ServiceException("create user exception with user: " + registeredUser, e);
-			}
-			Optional<User> user = Optional.of(registeredUser);
-			result.put(SUCCESS_REGISTRATION, List.of(user));
-			logger.info("success registration: {} {}", userName, email);
-		} else {
-			List<Optional<User>> userNameAlreadyInUseList = new ArrayList<>();
-			List<Optional<User>> emailAlreadyInUseList = new ArrayList<>();
-			for (User user : users) {
-				if (user.getUserName().equals(userName)) {
-					logger.info("user with such username: {} already exists", userName);
-					userNameAlreadyInUseList.add(Optional.of(user));
-				}
-				if (user.getEmail().equals(email)) {
-					logger.info("user with such email: {} already exists", email);
-					emailAlreadyInUseList.add(Optional.of(user));
-				}
-			}
-			result.put(EMAIL_ALREADY_IN_USE, emailAlreadyInUseList);
-			result.put(USERNAME_ALREADY_IN_USE, userNameAlreadyInUseList);			
-			logger.info("failed registration: {}", userName);
-		}
-		return result;
 	}
 
 	@Override

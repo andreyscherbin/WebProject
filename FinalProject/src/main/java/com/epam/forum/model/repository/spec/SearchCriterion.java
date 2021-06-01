@@ -1,4 +1,4 @@
-package com.epam.forum.model.repository;
+package com.epam.forum.model.repository.spec;
 
 /**
  * The {@code SearchCriterion} class represents search criterion on which query will be builded. For example:
@@ -161,4 +161,47 @@ public class SearchCriterion {
 		}
 		return criterion.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (isAnd ? 1231 : 1237);
+		result = prime * result + (isOr ? 1231 : 1237);
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((operation == null) ? 0 : operation.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchCriterion other = (SearchCriterion) obj;
+		if (isAnd != other.isAnd)
+			return false;
+		if (isOr != other.isOr)
+			return false;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		if (operation == null) {
+			if (other.operation != null)
+				return false;
+		} else if (!operation.equals(other.operation))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}	
 }

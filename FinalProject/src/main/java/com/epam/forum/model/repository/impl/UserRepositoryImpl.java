@@ -16,8 +16,8 @@ import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
-import com.epam.forum.model.repository.SearchCriterion;
-import com.epam.forum.model.repository.Specification;
+import com.epam.forum.model.repository.spec.SearchCriterion;
+import com.epam.forum.model.repository.spec.Specification;
 import com.epam.forum.pool.ConnectionPool;
 
 import static com.epam.forum.model.entity.UserTable.*;
@@ -29,6 +29,17 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
 			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , is_email_verifed = ? , role = ? , last_login_date = ? WHERE user_id = ?";
+
+	private static Repository<Long, User> instance;
+	
+	private UserRepositoryImpl() {}
+
+	public static Repository<Long, User> getInstance() {
+		if (instance == null) {
+			instance = new UserRepositoryImpl();
+		}
+		return instance;
+	}
 
 	@Override
 	public Optional<User> findById(Long id) throws RepositoryException {
