@@ -2,6 +2,7 @@
 *.class
 
 FinalProject/target/
+FinalProject/doc/
 FinalProject/test-output/
 FinalProject/FinalProject/
 FinalProject/testng.xml
