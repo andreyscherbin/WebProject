@@ -9,6 +9,9 @@
 		<servlet-class>com.epam.forum.controller.ControllerServlet</servlet-class>
 		<load-on-startup>20</load-on-startup>
 	</servlet>
+	<session-config>
+		<session-timeout>1</session-timeout>
+	</session-config>
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/jsp/error/error_404.jsp</location>
@@ -26,7 +29,7 @@
 		<url-pattern />
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-name>CharacterEncodCacheLangFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
 	<filter-mapping>

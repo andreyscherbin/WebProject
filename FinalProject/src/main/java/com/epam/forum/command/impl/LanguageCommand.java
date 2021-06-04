@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.validator.LanguageValidator;
 
 /**
  * The {@code LanguageCommand} class represents switch language command
@@ -19,15 +20,21 @@ import com.epam.forum.command.Router;
  *
  */
 public class LanguageCommand implements Command {
-	private static Logger logger = LogManager.getLogger();
-	private static final String LANGUAGE = "lang";	
+	private static final String LANGUAGE = "lang";
+	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		router.setPage(PagePath.HOME);		
+		router.setPage(PagePath.HOME);
 		String lang = request.getParameter(LANGUAGE);
-		request.getSession().setAttribute(LANGUAGE, lang);				
+		if (lang == null || !LanguageValidator.isLangValid(lang)) {
+			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
+			router.setPage(PagePath.HOME);
+			return router;
+		}
+		request.getSession().setAttribute(LANGUAGE, lang);
 		return router;
 	}
 }

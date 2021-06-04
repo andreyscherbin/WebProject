@@ -34,13 +34,13 @@
 
 				<form id="formCreateTopic" class="form-signin needs-validation"
 					novalidate
-					action="${pageContext.request.contextPath}/controller?command=create_topic&section_id=${param.section_id}"
+					action="${pageContext.request.contextPath}/controller?command=create_topic"
 					method="POST">
 					<div class="form-group">
 						<label class="form-label" for="title">${title_message} </label> <input
 							id="inputTitle" type="text" class="form-control" name="header"
 							required autofocus aria-describedby="inputGroupPrepend"
-							pattern="[А-Яа-яA-Za-z0-9\s]{1,100}" maxlength="100" />
+							pattern="[А-Яа-яA-Za-z0-9\s?,.!<->;:=+/()\\&quot;'#]{1,100}" maxlength="100" />
 						<div class="invalid-feedback">${title_validation_message}</div>
 					</div>
 

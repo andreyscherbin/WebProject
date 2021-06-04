@@ -22,7 +22,9 @@ import com.epam.forum.validator.SectionValidator;
  *
  */
 public class CreateSectionCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_DESCRIPTION = "content";
 	private static final String PARAM_NAME_HEADER = "header";	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
@@ -50,7 +52,8 @@ public class CreateSectionCommand implements Command {
 			section.setHeader(header);
 			section.setDescription(description);
 			sectionService.create(section);
-			router.setPage(PagePath.HOME);
+			router.setRedirect();
+			router.setPage(PagePath.HOME_REDIRECT);			
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
 			request.setAttribute(ErrorAttribute.ERROR_MESSAGE, e.getMessage());

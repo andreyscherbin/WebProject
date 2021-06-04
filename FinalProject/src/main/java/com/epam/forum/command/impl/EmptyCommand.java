@@ -18,7 +18,9 @@ import com.epam.forum.command.Router;
  *
  */
 public class EmptyCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.command";
 

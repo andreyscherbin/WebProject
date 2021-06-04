@@ -2,6 +2,7 @@ package com.epam.forum.command.builder;
 
 import java.time.LocalDateTime;
 
+import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
 
@@ -10,7 +11,7 @@ public interface UserBuilder {
 
 	UserBuilder buildUsername(String userName);
 
-	UserBuilder buildPassword(String password);
+	UserBuilder buildPassword(String password) throws ServiceException;
 
 	UserBuilder buildEmail(String email);
 

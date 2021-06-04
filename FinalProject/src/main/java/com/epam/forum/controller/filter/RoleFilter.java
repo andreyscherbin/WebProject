@@ -3,6 +3,7 @@ package com.epam.forum.controller.filter;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -26,6 +27,7 @@ public class RoleFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		logger.info("role filter");
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpSession session = httpRequest.getSession();
 		String stringRole = (String) session.getAttribute(ATTRIBUTE_NAME_ROLE);
@@ -53,4 +55,14 @@ public class RoleFilter implements Filter {
 			chain.doFilter(request, response);
 		}
 	}
+	
+	@Override
+	public void destroy() {
+		Filter.super.destroy();
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		Filter.super.init(filterConfig);
+	}	
 }

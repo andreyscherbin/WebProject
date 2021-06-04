@@ -5,11 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.MockitoSession;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.quality.Strictness;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
@@ -30,14 +35,16 @@ import static org.testng.Assert.assertEquals;
 
 public class TopicServiceTest {
 
+	@InjectMocks
 	TopicService topicService;
 
 	@Mock
 	private Repository<Long, Topic> topicRepository;
 
+	MockitoSession mockito;
+
 	private Topic mockedTopic;
 	private List<Topic> mockedTopics;
-
 	private static final Long TOPIC_ID = 1L;
 	private static final Long SECTION_ID = 1L;
 	private static final String HEADER_PATTERN = "pattern";
@@ -46,8 +53,7 @@ public class TopicServiceTest {
 	Specification<Topic> headerSpec;
 
 	@BeforeClass
-	public void setUp() throws RepositoryException {
-		MockitoAnnotations.openMocks(this);
+	public void beforeClass() throws RepositoryException {
 		idSpec = new IdTopicSpecification(new SearchCriterion(TopicTable.TOPIC_ID, Operation.EQUAL, TOPIC_ID));
 		sectionSpec = new SectionTopicSpecification(
 				new SearchCriterion(TopicTable.SECTION_ID, Operation.EQUAL, SECTION_ID));
@@ -55,12 +61,17 @@ public class TopicServiceTest {
 				Operation.ANY_SEQUENCE + HEADER_PATTERN + Operation.ANY_SEQUENCE));
 		createMockedTopic();
 		createMockedTopics();
-		setupMockedRepository();
 		topicService = TopicServiceImpl.getInstance(topicRepository);
+	}
+
+	@BeforeMethod
+	public void beforeMethod() throws RepositoryException, ServiceException {
+		mockito = Mockito.mockitoSession().initMocks(this).strictness(Strictness.STRICT_STUBS).startMocking();
 	}
 
 	@Test
 	public void findAllTopicsTest() throws RepositoryException, ServiceException {
+		when(topicRepository.findAll()).thenReturn(mockedTopics);
 		List<Topic> resultTopics = topicService.findAllTopics();
 		verify(topicRepository, VerificationModeFactory.times(1)).findAll();
 		assertEquals(resultTopics, mockedTopics);
@@ -68,6 +79,7 @@ public class TopicServiceTest {
 
 	@Test
 	public void findTopicByIdTest() throws ServiceException, RepositoryException {
+		when(topicRepository.query(idSpec)).thenReturn(List.of(mockedTopic));
 		Optional<Topic> actual = topicService.findTopicById(TOPIC_ID);
 		verify(topicRepository, VerificationModeFactory.times(1)).query(idSpec);
 		assertEquals(actual.get().getId(), mockedTopic.getId());
@@ -75,6 +87,7 @@ public class TopicServiceTest {
 
 	@Test
 	public void findTopicsByHeaderTest() throws ServiceException, RepositoryException {
+		when(topicRepository.query(headerSpec)).thenReturn(List.of(mockedTopic));
 		List<Topic> resultTopics = topicService.findTopicsByHeader(HEADER_PATTERN);
 		verify(topicRepository, VerificationModeFactory.times(1)).query(headerSpec);
 		assertEquals(resultTopics, mockedTopics);
@@ -82,6 +95,7 @@ public class TopicServiceTest {
 
 	@Test
 	public void findTopicsBySectionTest() throws RepositoryException, ServiceException {
+		when(topicRepository.query(sectionSpec)).thenReturn(List.of(mockedTopic));
 		Queue<Topic> resultTopics = topicService.findTopicsBySection(SECTION_ID);
 		verify(topicRepository, VerificationModeFactory.times(1)).query(sectionSpec);
 		Queue<Topic> expected = new LinkedList<>(mockedTopics);
@@ -99,15 +113,13 @@ public class TopicServiceTest {
 		mockedTopic.setHeader(HEADER_PATTERN);
 	}
 
-	private void setupMockedRepository() throws RepositoryException {
-		when(topicRepository.findAll()).thenReturn(mockedTopics);
-		when(topicRepository.query(idSpec)).thenReturn(List.of(mockedTopic));
-		when(topicRepository.query(headerSpec)).thenReturn(List.of(mockedTopic));
-		when(topicRepository.query(sectionSpec)).thenReturn(List.of(mockedTopic));
+	@AfterMethod
+	public void afterMethod() {
+		mockito.finishMocking();
 	}
 
 	@AfterClass
-	public void tierDown() {
+	public void afterClass() {
 		topicService = null;
 		mockedTopic = null;
 		mockedTopics = null;

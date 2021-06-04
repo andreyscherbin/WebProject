@@ -1,11 +1,11 @@
 package com.epam.forum.command.builder.impl;
 
 import java.time.LocalDateTime;
-
 import com.epam.forum.command.builder.UserBuilder;
+import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
-import com.epam.forum.security.PasswordEncoder;
+import com.epam.forum.util.encryptor.PasswordEncryptor;
 
 public class UserBuilderImpl implements UserBuilder {
 	private User user = new User();
@@ -22,8 +22,8 @@ public class UserBuilderImpl implements UserBuilder {
 	}
 
 	@Override
-	public UserBuilder buildPassword(String password) {
-		String encodedPassword = PasswordEncoder.encodeString(password);
+	public UserBuilder buildPassword(String password) throws ServiceException {
+		String encodedPassword = PasswordEncryptor.encryptPassword(password);
 		user.setPassword(encodedPassword);
 		return this;
 	}

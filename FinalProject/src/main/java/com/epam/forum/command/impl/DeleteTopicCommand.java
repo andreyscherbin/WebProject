@@ -25,7 +25,9 @@ import com.epam.forum.validator.UserValidator;
  */
 public class DeleteTopicCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
@@ -47,10 +49,10 @@ public class DeleteTopicCommand implements Command {
 			router.setPage(PagePath.SECTION);
 			return router;
 		}
-		Long topicIdLong = Long.parseLong(topicId);
+		Long id = Long.parseLong(topicId);
 		Optional<Topic> topic = Optional.empty();
 		try {
-			topic = topicService.findTopicById(topicIdLong);
+			topic = topicService.findTopicById(id);
 			if (!topic.isEmpty()) {
 				topicService.delete(topic.get());
 				router.setPage(PagePath.SECTION);

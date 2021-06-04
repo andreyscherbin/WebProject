@@ -26,12 +26,16 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class ChangeRoleCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_ID = "user_id";
 	private static final String PARAM_NAME_ROLES = "role";
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_USER_EMPTY = "message.user.empty";
+	
 	private UserService userService;
 
 	public ChangeRoleCommand(UserService userService) {

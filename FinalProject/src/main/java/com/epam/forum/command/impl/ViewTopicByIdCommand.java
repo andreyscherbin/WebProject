@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,13 +33,16 @@ import com.epam.forum.validator.DigitValidator;
 public class ViewTopicByIdCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();
+
 	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
+
+	private static final String ATTRIBUTE_NAME_CURRENT_TOPIC = "current_topic";
 	private static final String ATRIBUTE_NAME_TOPIC = "topic";
 	private static final String ATRIBUTE_NAME_POSTS = "posts";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.topic.empty";
-	
+
 	private TopicService topicService;
 	private PostService postService;
 
@@ -50,6 +54,7 @@ public class ViewTopicByIdCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
+		HttpSession session = request.getSession();
 		String topicId = request.getParameter(PARAM_NAME_TOPIC_ID);
 		if (topicId == null || !DigitValidator.isValid(topicId)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
@@ -66,9 +71,11 @@ public class ViewTopicByIdCommand implements Command {
 				if (!posts.isEmpty()) {
 					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
 					request.setAttribute(ATRIBUTE_NAME_POSTS, posts);
+					session.setAttribute(ATTRIBUTE_NAME_CURRENT_TOPIC, topicId);
 					router.setPage(PagePath.TOPIC);
 				} else {
-					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());					
+					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
+					session.setAttribute(ATTRIBUTE_NAME_CURRENT_TOPIC, topicId);
 					router.setPage(PagePath.TOPIC);
 				}
 			} else {

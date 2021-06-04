@@ -54,7 +54,7 @@
 							</div>
 						</div>
 						<div class="card-body">
-							<p>${fn:escapeXml(topic.content)}</p>
+							<p style="white-space: pre-wrap">${fn:escapeXml(topic.content)}</p>
 						</div>
 					</div>
 				</div>

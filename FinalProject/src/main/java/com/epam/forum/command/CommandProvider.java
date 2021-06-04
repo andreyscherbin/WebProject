@@ -74,6 +74,8 @@ public class CommandProvider {
 		commands.put(CommandName.GO_TO_NEW_TOPIC_PAGE, new GoToNewTopicPageCommand());
 		commands.put(CommandName.GO_TO_NEW_SECTION_PAGE, new GoToNewSectionPageCommand());
 		commands.put(CommandName.GO_TO_HOME_PAGE, new GoToHomePageCommand());
+		commands.put(CommandName.GO_TO_TOPIC_PAGE, new GoToTopicPageCommand());
+		commands.put(CommandName.GO_TO_SECTION_PAGE, new GoToSectionPageCommand());
 		commands.put(CommandName.GO_TO_ADMIN_HOME_PAGE, new GoToAdminHomePageCommand());
 		commands.put(CommandName.LANGUAGE, new LanguageCommand());
 	}

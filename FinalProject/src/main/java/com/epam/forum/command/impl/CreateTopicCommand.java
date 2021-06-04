@@ -32,11 +32,12 @@ import com.epam.forum.validator.UserValidator;
  */
 public class CreateTopicCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_SECTION_ID = "section_id";
+
 	private static final String PARAM_NAME_CONTENT = "content";
 	private static final String PARAM_NAME_HEADER = "header";
 
-	private static final String ATTRIBUTE_NAME_STATUS = "status";	
+	private static final String ATTRIBUTE_NAME_CURRENT_SECTION = "current_section";
+	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
@@ -57,25 +58,25 @@ public class CreateTopicCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		String sectionId = request.getParameter(PARAM_NAME_SECTION_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String header = request.getParameter(PARAM_NAME_HEADER);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
-		if (content == null || sectionId == null || username == null || header == null || status == null
-				|| !DigitValidator.isValid(sectionId) || !TopicValidator.isContentValid(content)
+		String currentSection = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_CURRENT_SECTION);
+		if (content == null || currentSection == null || username == null || header == null || status == null
+				|| !DigitValidator.isValid(currentSection) || !TopicValidator.isContentValid(content)
 				|| !TopicValidator.isHeaderValid(header) || !UserValidator.isUserNameValid(username)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.SECTION);
 			return router;
 		}
-		long sectionIdLong = Integer.parseInt(sectionId);
+		long sectionId = Integer.parseInt(currentSection);
 		List<User> users;
 		Optional<Section> section = Optional.empty();
 		try {
 			if (status) {
 				users = userService.findUsersByUserName(username);
-				section = sectionService.findSectionById(sectionIdLong);
+				section = sectionService.findSectionById(sectionId);
 				if (!users.isEmpty()) {
 					if (!section.isEmpty()) {
 						User user = users.get(0);
@@ -88,17 +89,20 @@ public class CreateTopicCommand implements Command {
 						topic.setUser(user);
 						topic.setSection(section.get());
 						topicService.create(topic);
+						router.setRedirect();
+						router.setPage(PagePath.SECTION_REDIRECT);
 					} else {
 						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTION_EMPTY);
+						router.setPage(PagePath.SECTION);
 					}
 				} else {
 					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USERS_EMPTY);
+					router.setPage(PagePath.SECTION);
 				}
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_BANNED);
+				router.setPage(PagePath.SECTION);
 			}
-			router.setPage(PagePath.SECTION);
-
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
 			request.setAttribute(ErrorAttribute.ERROR_MESSAGE, e.getMessage());

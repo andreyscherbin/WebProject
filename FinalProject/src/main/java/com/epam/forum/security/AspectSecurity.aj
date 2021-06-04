@@ -3,6 +3,7 @@ package com.epam.forum.security;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 public aspect AspectSecurity {
@@ -29,7 +30,10 @@ public aspect AspectSecurity {
 		String parameterValue = proceed();
 		logger.info("before sanitization: {} ", parameterValue);
 		if (parameterValue != null) {
-			parameterValue = Jsoup.clean(parameterValue, Whitelist.basicWithImages());
+			Document.OutputSettings outputSettings = new Document.OutputSettings();
+			outputSettings.prettyPrint(false);
+			parameterValue = Jsoup.clean(parameterValue, "", Whitelist.relaxed(), outputSettings);
+			parameterValue = parameterValue.strip();
 		}
 		logger.info("after sanitization: {} ", parameterValue);
 		return parameterValue;

@@ -10,6 +10,7 @@ public class AccessRules {
 	private EnumSet<CommandName> guests;
 	private EnumSet<CommandName> users;
 	private EnumSet<CommandName> moders;
+	@SuppressWarnings("unused")
 	private EnumSet<CommandName> admins;
 	private EnumSet<CommandName> allCommands;
 

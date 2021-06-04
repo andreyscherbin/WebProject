@@ -3,6 +3,8 @@ package com.epam.forum.command.impl;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
@@ -23,11 +25,16 @@ import com.epam.forum.validator.DigitValidator;
  *
  */
 public class BanUserCommand implements Command {
+
 	private static Logger logger = LogManager.getLogger();
+
 	private static final String PARAM_NAME_ID = "user_id";
+
+	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_USER_EMPTY = "message.user.empty";
+
 	private UserService userService;
 
 	public BanUserCommand(UserService userService) {
@@ -37,6 +44,7 @@ public class BanUserCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
+		HttpSession session = request.getSession();
 		String idString = request.getParameter(PARAM_NAME_ID);
 		if (idString == null || !DigitValidator.isValid(idString)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
@@ -50,9 +58,11 @@ public class BanUserCommand implements Command {
 			if (!user.isEmpty()) {
 				if (!user.get().isActive()) {
 					user.get().setActive(true);
+					session.setAttribute(ATTRIBUTE_NAME_STATUS, true);
 					userService.banUser(user.get());
 				} else {
 					user.get().setActive(false);
+					session.setAttribute(ATTRIBUTE_NAME_STATUS, false);
 					userService.unbanUser(user.get());
 				}
 				router.setPage(PagePath.ADMIN_HOME);

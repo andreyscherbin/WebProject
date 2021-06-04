@@ -26,10 +26,13 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class LogInCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String DEFAULT_ROLE = "GUEST";
 	private static final String PARAM_NAME_LOGIN = "username";
 	private static final String PARAM_NAME_PASSWORD = "password";
+	
 	private static final String ATTRIBUTE_NAME_ROLE = "role";
 	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";

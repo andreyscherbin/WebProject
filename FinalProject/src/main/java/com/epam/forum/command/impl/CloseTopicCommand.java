@@ -26,8 +26,11 @@ import com.epam.forum.validator.DigitValidator;
  *
  */
 public class CloseTopicCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY = "message.empty.topic";

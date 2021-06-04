@@ -22,6 +22,8 @@ public final class PagePath {
 	public static final String FORBIDDEN_PAGE = "/WEB-INF/jsp/error/forbidden_page.jsp";
 	
 	public static final String HOME_REDIRECT = "/controller?command=go_to_home_page";
+	public static final String TOPIC_REDIRECT = "/controller?command=go_to_topic_page";
+	public static final String SECTION_REDIRECT = "/controller?command=go_to_section_page";
 	public static final String ADMIN_HOME_REDIRECT = "/controller?command=go_to_admin_home_page";
 
 	private PagePath() {

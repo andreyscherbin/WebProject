@@ -27,9 +27,12 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class EditPostCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_POST_ID = "post_id";
 	private static final String PARAM_NAME_CONTENT = "content";
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_POST = "message.empty.post";
@@ -71,7 +74,8 @@ public class EditPostCommand implements Command {
 						if (usernamePost.equals(username)) {
 							post.get().setContent(content);
 							postService.edit(post.get());
-							router.setPage(PagePath.TOPIC);
+							router.setRedirect();
+							router.setPage(PagePath.TOPIC_REDIRECT);
 						} else {
 							router.setPage(PagePath.FORBIDDEN_PAGE);
 						}

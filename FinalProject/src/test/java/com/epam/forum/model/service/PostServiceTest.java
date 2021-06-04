@@ -3,11 +3,16 @@ package com.epam.forum.model.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.MockitoSession;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.quality.Strictness;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.exception.ServiceException;
@@ -26,10 +31,13 @@ import static org.mockito.Mockito.verify;
 
 public class PostServiceTest {
 
+	@InjectMocks
 	PostService postService;
 
 	@Mock
 	private Repository<Long, Post> postRepository;
+
+	MockitoSession mockito;
 
 	private Post mockedPost;
 	private List<Post> mockedPosts;
@@ -39,18 +47,22 @@ public class PostServiceTest {
 	Specification<Post> idSpec;
 
 	@BeforeClass
-	public void setUp() throws RepositoryException {
-		MockitoAnnotations.openMocks(this);
+	public void beforeClass() throws RepositoryException {
 		idSpec = new IdPostSpecification(new SearchCriterion(PostTable.POST_ID, Operation.EQUAL, POST_ID));
 		topicSpec = new TopicPostSpecification(new SearchCriterion(PostTable.TOPIC_ID, Operation.EQUAL, TOPIC_ID));
 		createMockedPost();
 		createMockedPosts();
-		setupMockedRepository();
 		postService = PostServiceImpl.getInstance(postRepository);
+	}
+
+	@BeforeMethod
+	public void beforeMethod() throws RepositoryException, ServiceException {
+		mockito = Mockito.mockitoSession().initMocks(this).strictness(Strictness.STRICT_STUBS).startMocking();
 	}
 
 	@Test
 	public void findAllPostsTest() throws RepositoryException, ServiceException {
+		when(postRepository.findAll()).thenReturn(mockedPosts);
 		List<Post> resultPosts = postService.findAllPosts();
 		verify(postRepository, VerificationModeFactory.times(1)).findAll();
 		assertEquals(resultPosts, mockedPosts);
@@ -58,6 +70,7 @@ public class PostServiceTest {
 
 	@Test
 	public void findPostsByTopicTest() throws RepositoryException, ServiceException {
+		when(postRepository.query(topicSpec)).thenReturn(mockedPosts);
 		List<Post> resultPosts = postService.findPostsByTopic(TOPIC_ID);
 		verify(postRepository, VerificationModeFactory.times(1)).query(topicSpec);
 		assertEquals(resultPosts, mockedPosts);
@@ -65,6 +78,7 @@ public class PostServiceTest {
 
 	@Test
 	public void findPostByIdTest() throws RepositoryException, ServiceException {
+		when(postRepository.query(idSpec)).thenReturn(List.of(mockedPost));
 		Optional<Post> actual = postService.findPostById(POST_ID);
 		verify(postRepository, VerificationModeFactory.times(1)).query(idSpec);
 		assertEquals(actual.get().getId(), mockedPost.getId());
@@ -81,17 +95,16 @@ public class PostServiceTest {
 		mockedPost.setContent("content");
 	}
 
-	private void setupMockedRepository() throws RepositoryException {
-		when(postRepository.findAll()).thenReturn(mockedPosts);
-		when(postRepository.query(topicSpec)).thenReturn(mockedPosts);
-		when(postRepository.query(idSpec)).thenReturn(List.of(mockedPost));
+	@AfterMethod
+	public void afterMethod() {
+		mockito.finishMocking();
 	}
 
 	@AfterClass
-	public void tierDown() {
+	public void afterClass() {
 		postService = null;
 		mockedPost = null;
-		mockedPosts = null;		
+		mockedPosts = null;
 		topicSpec = null;
 		idSpec = null;
 	}

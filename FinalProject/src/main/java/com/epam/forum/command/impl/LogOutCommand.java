@@ -20,17 +20,18 @@ import com.epam.forum.command.Router;
 public class LogOutCommand implements Command {
 	private static Logger logger = LogManager.getLogger();
 	private static final String ATRIBUTE_NAME_LANGUAGE = "lang";
-	private static final String ATRIBUTE_VALUE_LANGUAGE = "en_US";
+	private static final String ATRIBUTE_VALUE_DEFAULT_LANGUAGE = "en_US";
 	private static final String ATRIBUTE_NAME_ROLE = "role";
-	private static final String ATRIBUTE_VALUE_ROLE = "GUEST";
+	private static final String ATRIBUTE_VALUE_DEFAULT_ROLE = "GUEST";
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Log Out Command");
 		Router router = new Router();
 		router.setPage(PagePath.HOME);
 		request.getSession().invalidate();
-		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, ATRIBUTE_VALUE_LANGUAGE);
-		request.getSession().setAttribute(ATRIBUTE_NAME_ROLE, ATRIBUTE_VALUE_ROLE);
+		request.getSession().setAttribute(ATRIBUTE_NAME_LANGUAGE, ATRIBUTE_VALUE_DEFAULT_LANGUAGE);
+		request.getSession().setAttribute(ATRIBUTE_NAME_ROLE, ATRIBUTE_VALUE_DEFAULT_ROLE);
 		return router;
 	}
 }

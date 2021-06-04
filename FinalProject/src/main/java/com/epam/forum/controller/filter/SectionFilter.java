@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -17,17 +18,22 @@ import com.epam.forum.command.Command;
 import com.epam.forum.command.CommandProvider;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
+import com.epam.forum.controller.filter.decorator.RequestWrapperSection;
 
 @WebFilter(filterName = "SectionFilter", urlPatterns = { "/WEB-INF/jsp/section.jsp" }, dispatcherTypes = {
 		DispatcherType.REQUEST, DispatcherType.FORWARD })
 public class SectionFilter implements Filter {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final String COMMAND_VIEW_SECTION_BY_ID = "view_section_by_id";
+	private static final String COMMAND_VIEW_SECTION_BY_ID = "view_section_by_id";	
+	private static final String PARAM_NAME_SECTION_ID = "section_id";
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		logger.info("section filter");
+		logger.info("section filter");			
+		if(request.getParameter(PARAM_NAME_SECTION_ID) == null) {		
+			request = new RequestWrapperSection(request);
+		}
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_VIEW_SECTION_BY_ID);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);
@@ -39,4 +45,14 @@ public class SectionFilter implements Filter {
 			chain.doFilter(request, response);
 		}
 	}
+	
+	@Override
+	public void destroy() {
+		Filter.super.destroy();
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		Filter.super.init(filterConfig);
+	}	
 }

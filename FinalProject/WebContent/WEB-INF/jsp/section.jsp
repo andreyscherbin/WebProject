@@ -47,7 +47,7 @@
 		<c:if test="${sessionScope.status}">
 			<sec:authorize access="${f:isAuthenticated(pageContext)}">
 				<a class="btn btn-primary"
-					href="${pageContext.request.contextPath}/controller?command=go_to_new_topic_page&section_id=${section.id}">
+					href="${pageContext.request.contextPath}/controller?command=go_to_new_topic_page">
 					${new_topic_message} </a>
 			</sec:authorize>
 		</c:if>
@@ -77,30 +77,30 @@
 											access="${f:hasAnyRole(pageContext,'ADMIN','MODER')}">
 											<!-- delete topic button -->
 											<a class="btn btn-danger bi bi-trash"
-												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}&section_id=${section.id}">
+												href="${pageContext.request.contextPath}/controller?command=delete_topic&topic_id=${topic.id}">
 												${delete_topic_message} </a>
 											<!--  pin topic button -->
 											<c:if test="${!topic.pinned}">
 												<a class="btn btn-light bi bi-pin"
-													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
+													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}">
 													${pin_topic_message} </a>
 											</c:if>
 											<!--  unpin topic button -->
 											<c:if test="${topic.pinned}">
 												<a class="btn btn-light bi bi bi-x"
-													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}&section_id=${section.id}">
+													href="${pageContext.request.contextPath}/controller?command=pin_topic&topic_id=${topic.id}">
 													${unpin_topic_message} </a>
 											</c:if>
 											<!-- close topic button -->
 											<c:if test="${!topic.closed}">
 												<a class="btn btn-light bi bi-lock-fill"
-													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
+													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}">
 													${close_topic_message} </a>
 											</c:if>
 											<!-- unclose topic button -->
 											<c:if test="${topic.closed}">
 												<a class="btn btn-light bi bi-unlock-fill"
-													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}&section_id=${section.id}">
+													href="${pageContext.request.contextPath}/controller?command=close_topic&topic_id=${topic.id}">
 													${unclose_topic_message} </a>
 											</c:if>
 										</sec:authorize>
@@ -118,7 +118,7 @@
 							</div>
 						</div>
 						<div class="card-body">
-							<p>${fn:escapeXml(topic.content)}</p>
+							<p style="white-space: pre-wrap">${fn:escapeXml(topic.content)}</p>
 						</div>
 					</div>
 				</div>

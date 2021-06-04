@@ -27,9 +27,12 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class ActivationCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_USERNAME = "username";
 	private static final String PARAM_NAME_CODE = "code";
+	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_FAILED_ACTIVATION = "message.error.activation";

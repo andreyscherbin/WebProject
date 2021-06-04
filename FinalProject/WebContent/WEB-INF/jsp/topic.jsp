@@ -90,7 +90,7 @@
 						</div>
 					</div>
 					<div class="card-body">
-						<p>${fn:escapeXml(topic.content)}</p>
+						<p style="white-space: pre-wrap">${fn:escapeXml(topic.content)}</p>
 					</div>
 				</div>
 			</div>
@@ -113,7 +113,7 @@
 											<c:if test="${!topic.closed}">
 												<div class="row">
 													<a
-														href="${pageContext.request.contextPath}/controller?command=delete_post&post_id=${post.id}&topic_id=${topic.id}"
+														href="${pageContext.request.contextPath}/controller?command=delete_post&post_id=${post.id}"
 														class="btn btn-light bi bi-trash">${post_delete_button_message}
 													</a> <a class="btn btn-light bi bi-pencil"
 														href="javascript:void();" id="editLink${post.id}"
@@ -146,12 +146,12 @@
 						<div class="card-body">
 							<!-- POST CONTENT -->
 							<c:if test="${sessionScope.status}">
-								<p id="edit${post.id}">${(post.content)}</p>
+								<p style="white-space: pre-wrap" id="edit${post.id}">${post.content}</p>
 								<div id="editForm${post.id}" style="display: none">
 									<form id="formEditPost${post.id}" name="formEditPost${post.id}"
 										onsubmit="return validateEditForm(${post.id});"
 										class="needs-validation" novalidate
-										action="${pageContext.request.contextPath}/controller?command=edit_post&post_id=${post.id}&topic_id=${topic.id}"
+										action="${pageContext.request.contextPath}/controller?command=edit_post&post_id=${post.id}"
 										method="POST">
 										<div class="form-group has-validation">
 											<label for="content${post.id}">${post_edit_message}</label>
@@ -179,7 +179,7 @@
 				<c:if test="${sessionScope.status}">
 					<sec:authorize access="${f:isAuthenticated(pageContext)}">
 						<form id="formCreatePost" class="needs-validation" novalidate
-							action="${pageContext.request.contextPath}/controller?command=create_post&topic_id=${topic.id}"
+							action="${pageContext.request.contextPath}/controller?command=create_post"
 							method="POST">
 							<div class="form-group has-validation">
 								<label for="comment">${new_post_message}</label>
@@ -198,12 +198,14 @@
 						</div>
 					</div>
 				</sec:authorize>
-				<c:if test="${!sessionScope.status}">
-					<div class="row">
-						<div class="col ">
-							<h5>${banned_user_message}</h5>
+				<c:if test="${not empty sessionScope.status}">
+					<c:if test="${!sessionScope.status}">
+						<div class="row">
+							<div class="col ">
+								<h5>${banned_user_message}</h5>
+							</div>
 						</div>
-					</div>
+					</c:if>
 				</c:if>
 			</div>
 		</c:if>

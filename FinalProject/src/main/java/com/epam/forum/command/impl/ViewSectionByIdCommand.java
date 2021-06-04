@@ -6,6 +6,8 @@ import java.util.Queue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
@@ -28,8 +30,12 @@ import com.epam.forum.validator.DigitValidator;
  *
  */
 public class ViewSectionByIdCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_ID_SECTION = "section_id";
+	
+	private static final String ATTRIBUTE_NAME_CURRENT_SECTION = "current_section";
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
 	private static final String ATRIBUTE_NAME_SECTION = "section";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
@@ -47,6 +53,7 @@ public class ViewSectionByIdCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
+		HttpSession session = request.getSession();
 		String sectionId = request.getParameter(PARAM_ID_SECTION);
 		if (sectionId == null || !DigitValidator.isValid(sectionId)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
@@ -66,7 +73,8 @@ public class ViewSectionByIdCommand implements Command {
 					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_TOPICS_EMPTY);
 				}
 				request.setAttribute(ATRIBUTE_NAME_SECTION, section.get());
-				router.setPage(PagePath.SECTION);
+				session.setAttribute(ATTRIBUTE_NAME_CURRENT_SECTION, sectionId);
+				router.setPage(PagePath.SECTION);				
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_SECTIONS_EMPTY);
 				router.setPage(PagePath.HOME);

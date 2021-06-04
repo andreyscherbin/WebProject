@@ -25,7 +25,7 @@ import com.epam.forum.validator.PostValidator;
 import com.epam.forum.validator.UserValidator;
 
 /**
- * The {@code CreatePostCommand} class represents create post command 
+ * The {@code CreatePostCommand} class represents create post command
  * 
  * @author Andrey Shcherbin
  * @version 1.0
@@ -35,8 +35,10 @@ import com.epam.forum.validator.UserValidator;
 public class CreatePostCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();
-	private static final String PARAM_NAME_TOPIC_ID = "topic_id";
+
 	private static final String PARAM_NAME_CONTENT = "content";
+
+	private static final String ATTRIBUTE_NAME_CURRENT_TOPIC = "current_topic";
 	private static final String ATTRIBUTE_NAME_USERNAME = "username";
 	private static final String ATTRIBUTE_NAME_STATUS = "status";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
@@ -59,17 +61,18 @@ public class CreatePostCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
-		String id = request.getParameter(PARAM_NAME_TOPIC_ID);
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
-		if (content == null || id == null || username == null || status == null || !DigitValidator.isValid(id)
-				|| !PostValidator.isContentValid(content) || !UserValidator.isUserNameValid(username)) {
+		String currentTopic = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_CURRENT_TOPIC);
+		if (content == null || username == null || status == null || currentTopic == null
+				|| !PostValidator.isContentValid(content) || !UserValidator.isUserNameValid(username)
+				|| !DigitValidator.isValid(currentTopic)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;
 		}
-		long topicId = Integer.parseInt(id);
+		long topicId = Integer.parseInt(currentTopic);
 		List<User> users;
 		Optional<Topic> topic = Optional.empty();
 		try {
@@ -83,19 +86,24 @@ public class CreatePostCommand implements Command {
 							Post post = PostFactory.getPostFromFactoryMethod(LocalDateTime.now(), content, user,
 									topic.get());
 							postService.create(post);
+							router.setRedirect();
+							router.setPage(PagePath.TOPIC_REDIRECT);
 						} else {
 							request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_CLOSED);
+							router.setPage(PagePath.TOPIC);
 						}
 					} else {
 						request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_TOPIC_EMPTY);
+						router.setPage(PagePath.TOPIC);
 					}
 				} else {
 					request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_EMPTY);
+					router.setPage(PagePath.TOPIC);
 				}
 			} else {
 				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_USER_BANNED);
+				router.setPage(PagePath.TOPIC);
 			}
-			router.setPage(PagePath.TOPIC);
 		} catch (ServiceException | EntityException e) {
 			logger.error("exception ", e);
 			request.setAttribute(ErrorAttribute.ERROR_MESSAGE, e.getMessage());

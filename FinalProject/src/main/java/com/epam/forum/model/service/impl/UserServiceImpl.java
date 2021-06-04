@@ -23,7 +23,7 @@ import com.epam.forum.model.repository.spec.impl.EmailUserSpecification;
 import com.epam.forum.model.repository.spec.impl.IdUserSpecification;
 import com.epam.forum.model.repository.spec.impl.UserNameSpecification;
 import com.epam.forum.model.service.UserService;
-import com.epam.forum.security.PasswordEncoder;
+import com.epam.forum.util.encryptor.PasswordEncryptor;
 import com.epam.forum.validator.UserValidator;
 
 public class UserServiceImpl implements UserService {
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		if (!users.isEmpty()) {
 			user = Optional.of(users.get(0));
 			String findUserPassword = user.get().getPassword();
-			password = PasswordEncoder.encodeString(password);
+			password = PasswordEncryptor.encryptPassword(password);
 			if (findUserPassword.equals(password)) {
 				logger.info("success authentication: {}", userName);
 			} else {
