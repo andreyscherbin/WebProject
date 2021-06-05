@@ -27,12 +27,12 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class EditPostCommand implements Command {
-	
+
 	private static Logger logger = LogManager.getLogger();
-	
+
 	private static final String PARAM_NAME_POST_ID = "post_id";
 	private static final String PARAM_NAME_CONTENT = "content";
-	
+
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_EMPTY_POST = "message.empty.post";
@@ -54,8 +54,8 @@ public class EditPostCommand implements Command {
 		String content = request.getParameter(PARAM_NAME_CONTENT);
 		String username = (String) request.getSession().getAttribute(ATTRIBUTE_NAME_USERNAME);
 		Boolean status = (Boolean) request.getSession().getAttribute(ATTRIBUTE_NAME_STATUS);
-		if (username == null || id == null || content == null || status == null
-				|| !DigitValidator.isValid(id) && !PostValidator.isContentValid(content) || !UserValidator.isUserNameValid(username)) {
+		if (username == null || id == null || content == null || status == null || !DigitValidator.isValid(id)
+				|| !PostValidator.isContentValid(content) || !UserValidator.isUserNameValid(username)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_KEY_WRONG_INPUT);
 			router.setPage(PagePath.TOPIC);
 			return router;

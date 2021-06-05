@@ -13,9 +13,11 @@ import com.epam.forum.exception.ErrorAttribute;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Topic;
 import com.epam.forum.model.service.TopicService;
+import com.epam.forum.validator.TopicValidator;
 
 /**
- * The {@code ViewTopicByHeaderCommand} class represents view topic by header command
+ * The {@code ViewTopicByHeaderCommand} class represents view topic by header
+ * command
  * 
  * @author Andrey Shcherbin
  * @version 1.0
@@ -39,7 +41,7 @@ public class ViewTopicByHeaderCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router();
 		String pattern = request.getParameter(PARAM_NAME_HEADER);
-		if (pattern == null) {
+		if (pattern == null || !TopicValidator.isHeaderValid(pattern)) {
 			request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_WRONG_INPUT);
 			router.setPage(PagePath.HOME);
 			return router;

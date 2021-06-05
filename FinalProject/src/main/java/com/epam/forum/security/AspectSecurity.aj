@@ -32,8 +32,7 @@ public aspect AspectSecurity {
 		if (parameterValue != null) {
 			Document.OutputSettings outputSettings = new Document.OutputSettings();
 			outputSettings.prettyPrint(false);
-			parameterValue = Jsoup.clean(parameterValue, "", Whitelist.relaxed(), outputSettings);
-			parameterValue = parameterValue.strip();
+			parameterValue = Jsoup.clean(parameterValue, "", Whitelist.relaxed(), outputSettings);			
 		}
 		logger.info("after sanitization: {} ", parameterValue);
 		return parameterValue;

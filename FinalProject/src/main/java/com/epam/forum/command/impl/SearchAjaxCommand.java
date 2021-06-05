@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.epam.forum.command.Command;
+import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Topic;
@@ -31,6 +32,9 @@ public class SearchAjaxCommand implements Command {
 	private static final String CONTENT_TYPE = "application/json";
 	private static final String CHARACTER_ENCODING = "UTF-8";
 	private static final String HEADER = "header";
+	private static final String ATRIBUTE_NAME_TOPICS = "topics";
+	private static final String ATTRIBUTE_VALUE_TOPICS_EMPTY = "message.topics.empty";
+	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private TopicService topicService;
 
 	public SearchAjaxCommand(TopicService topicService) {
@@ -53,12 +57,15 @@ public class SearchAjaxCommand implements Command {
 					object.addProperty(HEADER, topic.getHeader());
 					list.add(object);
 				}
+				request.setAttribute(ATRIBUTE_NAME_TOPICS, topics);
 			} else {
 				JsonObject object = new JsonObject();
 				object.addProperty(HEADER, EMPTY_TOPICS);
 				list.add(object);
+				request.setAttribute(ATTRIBUTE_NAME_MESSAGE, ATTRIBUTE_VALUE_TOPICS_EMPTY);
 			}
 			response.getWriter().write(gson.toJson(list));
+			router.setPage(PagePath.SEARCH);
 		} catch (ServiceException e) {
 			logger.error("service exception ", e);
 			try {

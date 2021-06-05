@@ -1,8 +1,8 @@
 package com.epam.forum.validator;
 
 public class TopicValidator {
-	private static final String REGEX_HEADER = "[\\p{Alnum}\\s\\p{IsCyrillic}?!,.<->;:=+/()\\\\\"\'#]{1,100}";
-	private static final String REGEX_CONTENT = "[\\p{Alnum}\\s\\p{IsCyrillic}?!,.<->;:=+/()\\\\\"\'#]+";
+	private static final String REGEX_HEADER = "^(?!\\s*$)[\\p{Alnum}\\s\\p{IsCyrillic}?!,.<->;:=+/()\\\\\"\'#]{1,100}$";
+	private static final String REGEX_CONTENT = "^(?!\\s*$)[\\p{Alnum}\\s\\p{IsCyrillic}?!,.<->;:=+/()\\\\\"\'#]{1,65535}$";
 
 	public static boolean isHeaderValid(String header) {
 		return header.matches(REGEX_HEADER);

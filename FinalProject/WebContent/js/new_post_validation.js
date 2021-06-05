@@ -1,72 +1,42 @@
 $(function() {
+	$("#content").bind('keyup', function(e) {					
+		validateNewPostDescription()				
+		return true;
+	});
+});
+
+$(function() {
 	$("#btnCreatePost").on("click", function(e) {
 
 		var form = $("#formCreatePost")[0];
-		var content = document.getElementById('content');
-		content.setCustomValidity('');
+		validateNewPostDescription()
 		var isValid = form.checkValidity();
 		if (!isValid) {
 			e.preventDefault();
 			e.stopPropagation();
-		}
-		if (!validateNewPostDescription()) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
+		}		
 		form.classList.add('was-validated');
 		return true;
 	});
 });
 
-function validateNewPostDescription() {
-	var content = document.getElementById('content');
-	var contentRGEX = /^[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]+$/i;
-
-	if (trimfield(content.value) == '') {
-		content.setCustomValidity('error');
-		return false;
-	}
-
-	var contentResult = contentRGEX.test(content.value);
-	if (contentResult == false) {
-		content.setCustomValidity('error');
-		return false;
-	}
-	content.setCustomValidity('');
-	return true;
-}
-
-function trimfield(str) {
-	return str.replace(/^\s+|\s+$/g, '');
-}
-
 function validateEditForm(x) {
 
 	var form = document.getElementById("formEditPost" + x);
-	var content = document.getElementById('content' + x);
-	content.setCustomValidity('');
+	validateEditPostDescription(x)
 	var isValid = form.checkValidity();
 	if (!isValid) {
 		form.classList.add('was-validated');
 		return false;
-	}
-	if (!validateEditPostDescription(x)) {
-		form.classList.add('was-validated');
-		return false;
-	}
+	}	
 	form.classList.add('was-validated');
 	return true;
 }
 
-function validateEditPostDescription(x) {
-	var content = document.getElementById('content' + x);
-	var contentRGEX = /^[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]+$/i;
-
-	if (trimfield(content.value) == '') {
-		content.setCustomValidity('error');
-		return false;
-	}
-
+function validateNewPostDescription() {
+	var content = document.getElementById('content');
+	var contentRGEX = /^(?!\s*$)[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]{1,65535}$/i;
+	
 	var contentResult = contentRGEX.test(content.value);
 	if (contentResult == false) {
 		content.setCustomValidity('error');
@@ -76,8 +46,17 @@ function validateEditPostDescription(x) {
 	return true;
 }
 
-function trimfield(str) {
-	return str.replace(/^\s+|\s+$/g, '');
+function validateEditPostDescription(x) {
+	var content = document.getElementById('content' + x);	
+	var contentRGEX = /^(?!\s*$)[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]{1,65535}$/i;
+	
+	var contentResult = contentRGEX.test(content.value);
+	if (contentResult == false) {
+		content.setCustomValidity('error');
+		return false;
+	}
+	content.setCustomValidity('');
+	return true;
 }
 
 function showEdit(x) {

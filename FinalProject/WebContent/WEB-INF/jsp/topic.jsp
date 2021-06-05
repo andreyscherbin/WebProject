@@ -145,8 +145,8 @@
 						<!-- R -->
 						<div class="card-body">
 							<!-- POST CONTENT -->
+							<p style="white-space: pre-wrap" id="edit${post.id}">${post.content}</p>
 							<c:if test="${sessionScope.status}">
-								<p style="white-space: pre-wrap" id="edit${post.id}">${post.content}</p>
 								<div id="editForm${post.id}" style="display: none">
 									<form id="formEditPost${post.id}" name="formEditPost${post.id}"
 										onsubmit="return validateEditForm(${post.id});"
@@ -156,6 +156,7 @@
 										<div class="form-group has-validation">
 											<label for="content${post.id}">${post_edit_message}</label>
 											<textarea class="form-control" id="content${post.id}"
+												onkeyup="validateEditPostDescription(${post.id})"
 												name="content"> </textarea>
 											<div class="invalid-feedback">${description_validation_message}</div>
 										</div>
