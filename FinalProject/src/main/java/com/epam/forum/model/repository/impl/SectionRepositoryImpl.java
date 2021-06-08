@@ -35,6 +35,13 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 		return instance;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
 	public Optional<Section> findById(Long id) throws RepositoryException {
 		throw new UnsupportedOperationException();
@@ -42,14 +49,10 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 
 	@Override
 	public void create(Section section) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_INSERT_SECTION);
+
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_INSERT_SECTION)) {
 			statement.setString(1, section.getHeader());
 			statement.setString(2, section.getDescription());
 			int affectedRows = statement.executeUpdate();
@@ -58,28 +61,26 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public void update(Section entity) throws RepositoryException {
+	public void update(Section entity) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(Section section) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_DELETE_SECTION);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_DELETE_SECTION)) {
 			statement.setLong(1, section.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
@@ -87,10 +88,6 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
@@ -98,62 +95,62 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 	public Iterable<Section> query(Specification<Section> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Section> sections = new ArrayList<>();
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(specification.toSqlQuery());
-			int i = 1;
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(specification.toSqlQuery())) {
+			int parameterIndex = 1;
 			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
-				if (key.equals(HEADER)) {
-					statement.setString(i, (String) value);
-				} else if (criterion.getKey().equals(SECTION_ID)) {
-					statement.setLong(i, (Long) value);
-				} else if (criterion.getKey().equals(DESCRIPTION)) {
-					statement.setString(i, (String) value);
+				switch (key) {
+				case HEADER:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				case SECTION_ID:
+					statement.setLong(parameterIndex, (Long) value);
+					break;
+				case DESCRIPTION:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				default:
+					throw new RepositoryException("no such parameter");
 				}
-				i++;
+				parameterIndex++;
 			}
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				Section section = new Section();
-				section.setId(resultSet.getLong(SECTION_ID));
-				section.setHeader(resultSet.getString(HEADER));
-				section.setDescription(resultSet.getString(DESCRIPTION));
-				sections.add(section);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					Section section = new Section();
+					section.setId(resultSet.getLong(SECTION_ID));
+					section.setHeader(resultSet.getString(HEADER));
+					section.setDescription(resultSet.getString(DESCRIPTION));
+					sections.add(section);
+				}
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return sections;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Iterable<Section> sort(Comparator<Section> comparator) throws RepositoryException {
+	public Iterable<Section> sort(Comparator<Section> comparator) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<Section> findAll() throws RepositoryException {
 		List<Section> sections = new ArrayList<>();
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(SQL_SELECT_ALL_SECTIONS);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_SECTIONS)) {
 			while (resultSet.next()) {
 				Section section = new Section();
 				section.setId(resultSet.getLong(SECTION_ID));
@@ -163,10 +160,6 @@ public class SectionRepositoryImpl implements Repository<Long, Section> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return sections;
 	}

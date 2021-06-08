@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService {
 		if (users.isEmpty()) {
 			UserBuilder userBuilder = new UserBuilderImpl();
 			userBuilder.buildUsername(userName).buildPassword(password).buildEmail(email)
-					.buildRegisterDate(LocalDateTime.now()).buildIsEmailVerifed(false).buildIsActive(true)
-					.buildRole(Role.USER);
+					.buildRegisterDate(LocalDateTime.now()).buildLastLoginDate(LocalDateTime.now())
+					.buildIsEmailVerifed(false).buildIsActive(true).buildRole(Role.USER);
 			User registeredUser = userBuilder.getUser();
 			try {
 				userRepository.create(registeredUser);

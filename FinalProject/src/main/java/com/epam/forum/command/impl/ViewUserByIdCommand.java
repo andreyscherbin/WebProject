@@ -25,12 +25,16 @@ import com.epam.forum.validator.DigitValidator;
  *
  */
 public class ViewUserByIdCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String PARAM_NAME_ID = "id";
+	
 	private static final String ATRIBUTE_NAME_USERS = "users";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_KEY_USER_EMPTY = "message.user.empty";
+	
 	private UserService userService;
 
 	public ViewUserByIdCommand(UserService userService) {

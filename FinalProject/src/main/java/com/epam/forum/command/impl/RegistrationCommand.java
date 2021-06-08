@@ -29,11 +29,15 @@ import com.epam.forum.validator.UserValidator;
  *
  */
 public class RegistrationCommand implements Command {
+
 	private static Logger logger = LogManager.getLogger();
+
 	private static final String DEFAULT_ROLE = "GUEST";
+
 	private static final String PARAM_NAME_EMAIL = "email";
 	private static final String PARAM_NAME_LOGIN = "username";
 	private static final String PARAM_NAME_PASSWORD = "password";
+
 	private static final String ATTRIBUTE_NAME_ROLE = "role";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
@@ -41,9 +45,11 @@ public class RegistrationCommand implements Command {
 	private static final String ATTRIBUTE_VALUE_USERNAME_ALREADY_IN_USE = "message.username.already_in_use";
 	private static final String ATTRIBUTE_VALUE_ALREADY_REGISTRATED = "message.error.already_registered";
 	private static final String ATTRIBUTE_VALUE_CONFIRM_EMAIL = "message.email.confirm_email";
+
 	private static final Long SUCCESS_REGISTRATION = 1L;
 	private static final Long EMAIL_ALREADY_IN_USE = 2L;
 	private static final Long USERNAME_ALREADY_IN_USE = 3L;
+
 	private UserService userService;
 	private ActivationSenderService activationSenderService;
 

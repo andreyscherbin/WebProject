@@ -22,10 +22,13 @@ import com.epam.forum.model.service.TopicService;
  *
  */
 public class ViewTopicCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY_TOPICS_EMPTY = "message.topics.empty";
+	
 	private TopicService topicService;
 
 	public ViewTopicCommand(TopicService topicService) {

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@WebFilter(filterName = "CharacterEncodCacheLangFilter", urlPatterns = { "/*" })
+@WebFilter(filterName = "CharacterEncodLangCacheFilter", urlPatterns = { "/*" })
 public class CharacterEncodLangCacheFilter implements Filter {
 	private static Logger logger = LogManager.getLogger();
 

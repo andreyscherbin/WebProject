@@ -44,21 +44,23 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 		return instance;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Optional<Topic> findById(Long id) throws RepositoryException {
+	public Optional<Topic> findById(Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void create(Topic topic) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_INSERT_TOPIC);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_INSERT_TOPIC)) {
 			statement.setString(1, topic.getHeader());
 			statement.setString(2, topic.getContent());
 			statement.setBoolean(3, topic.isPinned());
@@ -72,23 +74,14 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
 	@Override
 	public void update(Topic topic) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_UPDATE_TOPIC);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_TOPIC)) {
 			statement.setBoolean(1, topic.isPinned());
 			statement.setBoolean(2, topic.isClosed());
 			statement.setLong(3, topic.getId());
@@ -98,23 +91,14 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
 	@Override
 	public void delete(Topic topic) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_DELETE_TOPIC);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_DELETE_TOPIC)) {
 			statement.setLong(1, topic.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
@@ -122,10 +106,6 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
@@ -133,85 +113,82 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 	public Iterable<Topic> query(Specification<Topic> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<Topic> topics = new ArrayList<>();
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(specification.toSqlQuery());
-			int i = 1;
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(specification.toSqlQuery())) {
+			int parameterIndex = 1;
 			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
-				if (key.equals(TopicTable.HEADER)) {
-					statement.setString(i, (String) value);
-				} else if (key.equals(TopicTable.TOPIC_ID)) {
-					statement.setLong(i, (Long) value);
-				} else if (key.equals(TopicTable.SECTION_ID)) {
-					statement.setLong(i, (Long) value);
+				switch (key) {
+				case TopicTable.HEADER:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				case TopicTable.TOPIC_ID:
+					statement.setLong(parameterIndex, (Long) value);
+					break;
+				case TopicTable.SECTION_ID:
+					statement.setLong(parameterIndex, (Long) value);
+					break;
+				default:
+					throw new RepositoryException("no such parameter");
 				}
-				i++;
+				parameterIndex++;
 			}
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				Topic topic = new Topic();
-				Section section = new Section();
-				User user = new User();
-				topic.setId(resultSet.getLong(TopicTable.TOPIC_ID));
-				topic.setHeader(resultSet.getString(TopicTable.HEADER));
-				topic.setContent(resultSet.getString(TopicTable.CONTENT));
-				topic.setPinned(resultSet.getBoolean(TopicTable.IS_PINNED));
-				topic.setClosed(resultSet.getBoolean(TopicTable.IS_CLOSED));
-				topic.setCreationDate(resultSet.getTimestamp(TopicTable.CREATION_DATE).toLocalDateTime());
-				section.setId(resultSet.getLong(SectionTable.SECTION_ID));
-				section.setHeader(resultSet.getString(SectionTable.HEADER));
-				section.setDescription(resultSet.getString(SectionTable.DESCRIPTION));
-				topic.setSection(section);
-				user.setId(resultSet.getLong(UserTable.USER_ID));
-				user.setUserName(resultSet.getString(UserTable.USERNAME));
-				user.setPassword(resultSet.getString(UserTable.PASSWORD));
-				user.setEmail(resultSet.getString(UserTable.EMAIL));
-				user.setRegisterDate(resultSet.getTimestamp(UserTable.REGISTER_DATE).toLocalDateTime());
-				Timestamp lastLoginDate = resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE);
-				if (lastLoginDate != null) {
-					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					Topic topic = new Topic();
+					Section section = new Section();
+					User user = new User();
+					topic.setId(resultSet.getLong(TopicTable.TOPIC_ID));
+					topic.setHeader(resultSet.getString(TopicTable.HEADER));
+					topic.setContent(resultSet.getString(TopicTable.CONTENT));
+					topic.setPinned(resultSet.getBoolean(TopicTable.IS_PINNED));
+					topic.setClosed(resultSet.getBoolean(TopicTable.IS_CLOSED));
+					topic.setCreationDate(resultSet.getTimestamp(TopicTable.CREATION_DATE).toLocalDateTime());
+					section.setId(resultSet.getLong(SectionTable.SECTION_ID));
+					section.setHeader(resultSet.getString(SectionTable.HEADER));
+					section.setDescription(resultSet.getString(SectionTable.DESCRIPTION));
+					topic.setSection(section);
+					user.setId(resultSet.getLong(UserTable.USER_ID));
+					user.setUserName(resultSet.getString(UserTable.USERNAME));
+					user.setPassword(resultSet.getString(UserTable.PASSWORD));
+					user.setEmail(resultSet.getString(UserTable.EMAIL));
+					user.setRegisterDate(resultSet.getTimestamp(UserTable.REGISTER_DATE).toLocalDateTime());
+					user.setLastLoginDate(resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE).toLocalDateTime());
+					user.setEmailVerifed(resultSet.getBoolean(UserTable.IS_EMAIL_VERIFED));
+					user.setActive(resultSet.getBoolean(UserTable.IS_ACTIVE));
+					Role role = Role.valueOf(resultSet.getString(UserTable.ROLE));
+					user.setRole(role);
+					topic.setUser(user);
+					topics.add(topic);
 				}
-				user.setEmailVerifed(resultSet.getBoolean(UserTable.IS_EMAIL_VERIFED));
-				user.setActive(resultSet.getBoolean(UserTable.IS_ACTIVE));
-				Role role = Role.valueOf(resultSet.getString(UserTable.ROLE));
-				user.setRole(role);
-				topic.setUser(user);
-				topics.add(topic);
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return topics;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Iterable<Topic> sort(Comparator<Topic> comparator) throws RepositoryException {
+	public Iterable<Topic> sort(Comparator<Topic> comparator) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<Topic> findAll() throws RepositoryException {
 		List<Topic> topics = new ArrayList<>();
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(SQL_SELECT_ALL_TOPICS);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_TOPICS)) {
 			while (resultSet.next()) {
 				Topic topic = new Topic();
 				Section section = new Section();
@@ -231,10 +208,7 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 				user.setPassword(resultSet.getString(UserTable.PASSWORD));
 				user.setEmail(resultSet.getString(UserTable.EMAIL));
 				user.setRegisterDate(resultSet.getTimestamp(UserTable.REGISTER_DATE).toLocalDateTime());
-				Timestamp lastLoginDate = resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE);
-				if (lastLoginDate != null) {
-					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
-				}
+				user.setLastLoginDate(resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE).toLocalDateTime());
 				user.setEmailVerifed(resultSet.getBoolean(UserTable.IS_EMAIL_VERIFED));
 				user.setActive(resultSet.getBoolean(UserTable.IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(UserTable.ROLE));
@@ -244,10 +218,6 @@ public class TopicRepositoryImpl implements Repository<Long, Topic> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return topics;
 	}

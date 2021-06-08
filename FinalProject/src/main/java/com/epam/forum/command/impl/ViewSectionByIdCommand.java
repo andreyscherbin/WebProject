@@ -42,6 +42,7 @@ public class ViewSectionByIdCommand implements Command {
 	private static final String ATTRIBUTE_VALUE_TOPICS_EMPTY = "message.topics.empty";
 	private static final String ATTRIBUTE_VALUE_SECTIONS_EMPTY = "message.sections.empty";
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
+	
 	private TopicService topicService;
 	private SectionService sectionService;
 

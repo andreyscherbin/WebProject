@@ -37,21 +37,23 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 		return instance;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Optional<ActivationCode> findById(String id) throws RepositoryException {
+	public Optional<ActivationCode> findById(String id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void create(ActivationCode activationCode) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_INSERT_ACTIVATION_CODE);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_INSERT_ACTIVATION_CODE)) {
 			statement.setString(1, activationCode.getId());
 			statement.setLong(2, activationCode.getUser().getId());
 			statement.setTimestamp(3, Timestamp.valueOf(activationCode.getCreationDate()));
@@ -61,28 +63,26 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public void update(ActivationCode entity) throws RepositoryException {
+	public void update(ActivationCode entity) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(ActivationCode activationCode) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_DELETE_ACTIVATION_CODE);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_DELETE_ACTIVATION_CODE);) {
 			statement.setString(1, activationCode.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
@@ -90,10 +90,6 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
@@ -101,62 +97,70 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 	public Iterable<ActivationCode> query(Specification<ActivationCode> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<ActivationCode> codes = new ArrayList<>();
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(specification.toSqlQuery());
-			int i = 1;
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(specification.toSqlQuery())) {
+			int parameterIndex = 1;
 			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
-				if (key.equals(ActivationCodeTable.ACTIVATION_CODE_ID)) {
-					statement.setString(i, (String) value);
+				switch (key) {
+				case ActivationCodeTable.ACTIVATION_CODE_ID:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				default:
+					throw new RepositoryException("no such parameter");
 				}
+				parameterIndex++;
 			}
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				ActivationCode activationCode = new ActivationCode();
-				activationCode.setId(resultSet.getString(ActivationCodeTable.ACTIVATION_CODE_ID));
-				activationCode
-						.setCreationDate(resultSet.getTimestamp(ActivationCodeTable.CREATION_DATE).toLocalDateTime());
-				User user = new User();
-				user.setId(resultSet.getLong(UserTable.USER_ID));
-				user.setUserName(resultSet.getString(UserTable.USERNAME));
-				user.setPassword(resultSet.getString(UserTable.PASSWORD));
-				user.setEmail(resultSet.getString(UserTable.EMAIL));
-				user.setRegisterDate(resultSet.getTimestamp(UserTable.REGISTER_DATE).toLocalDateTime());
-				Timestamp lastLoginDate = resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE);
-				if (lastLoginDate != null) {
-					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					ActivationCode activationCode = new ActivationCode();
+					activationCode.setId(resultSet.getString(ActivationCodeTable.ACTIVATION_CODE_ID));
+					activationCode.setCreationDate(
+							resultSet.getTimestamp(ActivationCodeTable.CREATION_DATE).toLocalDateTime());
+					User user = new User();
+					user.setId(resultSet.getLong(UserTable.USER_ID));
+					user.setUserName(resultSet.getString(UserTable.USERNAME));
+					user.setPassword(resultSet.getString(UserTable.PASSWORD));
+					user.setEmail(resultSet.getString(UserTable.EMAIL));
+					user.setRegisterDate(resultSet.getTimestamp(UserTable.REGISTER_DATE).toLocalDateTime());
+					user.setLastLoginDate(resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE).toLocalDateTime());
+					user.setEmailVerifed(resultSet.getBoolean(UserTable.IS_EMAIL_VERIFED));
+					user.setActive(resultSet.getBoolean(UserTable.IS_ACTIVE));
+					Role role = Role.valueOf(resultSet.getString(UserTable.ROLE));
+					user.setRole(role);
+					activationCode.setUser(user);
+					codes.add(activationCode);
 				}
-				user.setEmailVerifed(resultSet.getBoolean(UserTable.IS_EMAIL_VERIFED));
-				user.setActive(resultSet.getBoolean(UserTable.IS_ACTIVE));
-				Role role = Role.valueOf(resultSet.getString(UserTable.ROLE));
-				user.setRole(role);
-				activationCode.setUser(user);
-				codes.add(activationCode);
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return codes;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Iterable<ActivationCode> sort(Comparator<ActivationCode> comparator) throws RepositoryException {
+	public Iterable<ActivationCode> sort(Comparator<ActivationCode> comparator) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Iterable<ActivationCode> findAll() throws RepositoryException {
+	public Iterable<ActivationCode> findAll() {
 		throw new UnsupportedOperationException();
 	}
 }

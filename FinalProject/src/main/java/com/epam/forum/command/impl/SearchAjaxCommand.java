@@ -28,13 +28,16 @@ import com.google.gson.JsonObject;
 public class SearchAjaxCommand implements Command {
 
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String EMPTY_TOPICS = "message.empty.topics";
 	private static final String CONTENT_TYPE = "application/json";
 	private static final String CHARACTER_ENCODING = "UTF-8";
 	private static final String HEADER = "header";
+	
 	private static final String ATRIBUTE_NAME_TOPICS = "topics";
 	private static final String ATTRIBUTE_VALUE_TOPICS_EMPTY = "message.topics.empty";
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
+	
 	private TopicService topicService;
 
 	public SearchAjaxCommand(TopicService topicService) {

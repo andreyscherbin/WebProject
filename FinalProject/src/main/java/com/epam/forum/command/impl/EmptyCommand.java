@@ -2,9 +2,6 @@ package com.epam.forum.command.impl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import com.epam.forum.command.Command;
 import com.epam.forum.command.PagePath;
 import com.epam.forum.command.Router;
@@ -17,9 +14,7 @@ import com.epam.forum.command.Router;
  * @since 2021-05-30
  *
  */
-public class EmptyCommand implements Command {
-	
-	private static Logger logger = LogManager.getLogger();
+public class EmptyCommand implements Command {	
 	
 	private static final String ATTRIBUTE_NAME_MESSAGE = "message";
 	private static final String ATTRIBUTE_VALUE_KEY = "message.empty.command";

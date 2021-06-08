@@ -29,7 +29,7 @@
 		<url-pattern />
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>CharacterEncodCacheLangFilter</filter-name>
+		<filter-name>CharacterEncodLangCacheFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
 	<filter-mapping>

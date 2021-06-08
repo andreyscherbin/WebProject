@@ -23,7 +23,7 @@
 <body>
 
 	<%@ include file="fragments/navbar.jspf"%>
-	
+
 	<div class="container-fluid mt-100 ">
 		<h3>${welcome_message}${username}${lang_message}${lang}
 			${role_message} ${role}</h3>
@@ -58,9 +58,6 @@
 											<a
 												href="${pageContext.request.contextPath}/controller?command=view_section_by_id&section_id=${section.id}">${fn:escapeXml(section.header)}
 											</a>
-										</div>
-										<div>
-											<p>${fn:escapeXml(section.description)}</p>
 										</div>
 									</li>
 								</c:forEach>

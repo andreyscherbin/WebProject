@@ -40,6 +40,7 @@ public class LogInCommand implements Command {
 	private static final String ATTRIBUTE_VALUE_WRONG_INPUT = "message.wrong.input";
 	private static final String ATTRIBUTE_VALUE_ERROR_AUTHENTICATION = "message.error.authentication";
 	private static final String ATTRIBUTE_VALUE_ERROR_ALREADY_AUTHENTICATED = "message.error.already_authenticated";
+	
 	private UserService userService;
 
 	public LogInCommand(UserService userService) {

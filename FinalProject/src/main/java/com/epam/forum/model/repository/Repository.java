@@ -1,9 +1,5 @@
 package com.epam.forum.model.repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Comparator;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +13,7 @@ import com.epam.forum.model.repository.spec.Specification;
  * 
  * @author Andrey Shcherbin
  * @version 1.0
- * @since 2021-05-30 
+ * @since 2021-05-30
  *
  * @param <K> the type of the id of the entity the repository manages
  * @param <T> the domain type the repository manages
@@ -29,8 +25,9 @@ public interface Repository<K, T extends Entity> {
 	 * Retrieves an entity by its id
 	 * 
 	 * @param id id of the entity.
-	 * @return the entity with the given id or {@link Optional#empty()} if none found
-	 * @throws RepositoryException  
+	 * @return the entity with the given id or {@link Optional#empty()} if none
+	 *         found
+	 * @throws RepositoryException
 	 */
 	Optional<T> findById(K id) throws RepositoryException;
 
@@ -51,7 +48,7 @@ public interface Repository<K, T extends Entity> {
 	void update(T entity) throws RepositoryException;
 
 	/**
-	 * Deletes a given entity 
+	 * Deletes a given entity
 	 * 
 	 * @param entity deleted entity
 	 * @throws RepositoryException
@@ -61,15 +58,15 @@ public interface Repository<K, T extends Entity> {
 	/**
 	 * Return all instances of the type which matches specification
 	 * 
-	 * @param specification {@link Specification} object    
-	 * @return return all instances of the type which matches specification 
+	 * @param specification {@link Specification} object
+	 * @return return all instances of the type which matches specification
 	 * @throws RepositoryException
 	 */
 	Iterable<T> query(Specification<T> specification) throws RepositoryException;
 
 	/**
-	 *  Returns all entities sorted by the given comparator
-	 *  
+	 * Returns all entities sorted by the given comparator
+	 * 
 	 * @param comparator
 	 * @return all entities sorted by the given comparator
 	 * @throws RepositoryException
@@ -83,49 +80,4 @@ public interface Repository<K, T extends Entity> {
 	 * @throws RepositoryException
 	 */
 	Iterable<T> findAll() throws RepositoryException;
-
-	/**
-	 * Close statement
-	 * 
-	 * @param statement
-	 */
-	default void close(Statement statement) {
-		try {
-			if (statement != null) {
-				statement.close();
-			}
-		} catch (SQLException e) {
-			logger.error("statement close error {}", e);
-		}
-	}
-
-	/**
-	 * Close resultSet
-	 * 
-	 * @param resultSet
-	 */
-	default void close(ResultSet resultSet) {
-		try {
-			if (resultSet != null) {
-				resultSet.close();
-			}
-		} catch (SQLException e) {
-			logger.error("resultSet close error {}", e);
-		}
-	}
-
-	/**
-	 * Close connection
-	 * 	
-	 * @param connection
-	 */
-	default void close(Connection connection) {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-		} catch (SQLException e) {
-			logger.error("connection close error {}", e);
-		}
-	}
 }

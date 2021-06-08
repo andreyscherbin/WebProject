@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,13 +25,14 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 
 	private static final String SQL_SELECT_ALL_USERS = "SELECT user_id, username, password, email, register_date, last_login_date, "
 			+ "is_email_verifed, is_active, role FROM users";
-	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, "
-			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?)";
+	private static final String SQL_INSERT_USER = "INSERT INTO users (username, password, email, register_date, last_login_date, "
+			+ "is_email_verifed, is_active, role) VALUES(?,?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_USER = "UPDATE users SET is_active = ? , is_email_verifed = ? , role = ? , last_login_date = ? WHERE user_id = ?";
 
 	private static Repository<Long, User> instance;
-	
-	private UserRepositoryImpl() {}
+
+	private UserRepositoryImpl() {
+	}
 
 	public static Repository<Long, User> getInstance() {
 		if (instance == null) {
@@ -41,28 +41,32 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 		return instance;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Optional<User> findById(Long id) throws RepositoryException {
+	public Optional<User> findById(Long id) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void create(User user) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_INSERT_USER, Statement.RETURN_GENERATED_KEYS);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_INSERT_USER,
+						Statement.RETURN_GENERATED_KEYS)) {
 			statement.setString(1, user.getUserName());
 			statement.setString(2, user.getPassword());
 			statement.setString(3, user.getEmail());
 			statement.setTimestamp(4, Timestamp.valueOf(user.getRegisterDate()));
-			statement.setBoolean(5, user.isEmailVerifed());
-			statement.setBoolean(6, user.isActive());
-			statement.setString(7, user.getRole().name());
+			statement.setTimestamp(5, Timestamp.valueOf(user.getLastLoginDate()));
+			statement.setBoolean(6, user.isEmailVerifed());
+			statement.setBoolean(7, user.isActive());
+			statement.setString(8, user.getRole().name());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				throw new RepositoryException("Creating user failed, no rows affected.");
@@ -76,32 +80,18 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
 	@Override
 	public void update(User user) throws RepositoryException {
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(SQL_UPDATE_USER);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER)) {
 			statement.setBoolean(1, user.isActive());
 			statement.setBoolean(2, user.isEmailVerifed());
 			statement.setString(3, user.getRole().name());
-			LocalDateTime lastLoginDate = user.getLastLoginDate();
-			if (lastLoginDate == null) {
-				statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-			} else {
-				statement.setTimestamp(4, Timestamp.valueOf(user.getLastLoginDate()));
-			}
+			statement.setTimestamp(4, Timestamp.valueOf(user.getLastLoginDate()));
 			statement.setLong(5, user.getId());
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
@@ -109,15 +99,18 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public void delete(User entity) throws RepositoryException {
+	public void delete(User entity) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,72 +118,69 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 	public Iterable<User> query(Specification<User> specification) throws RepositoryException {
 		List<SearchCriterion> criterions = specification.getSearchCriterions();
 		List<User> users = new ArrayList<>();
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.prepareStatement(specification.toSqlQuery());
-			int i = 1;
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(specification.toSqlQuery())) {
+			int parameterIndex = 1;
 			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();
-				if (key.equals(USERNAME)) {
-					statement.setString(i, (String) value);
-				} else if (criterion.getKey().equals(USER_ID)) {
-					statement.setLong(i, (Long) value);
-				} else if (criterion.getKey().equals(EMAIL)) {
-					statement.setString(i, (String) value);
+				switch (key) {
+				case USERNAME:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				case USER_ID:
+					statement.setLong(parameterIndex, (Long) value);
+					break;
+				case EMAIL:
+					statement.setString(parameterIndex, (String) value);
+					break;
+				default:
+					throw new RepositoryException("no such parameter");
 				}
-				i++;
+				parameterIndex++;
 			}
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				User user = new User();
-				user.setId(resultSet.getLong(USER_ID));
-				user.setUserName(resultSet.getString(USERNAME));
-				user.setPassword(resultSet.getString(PASSWORD));
-				user.setEmail(resultSet.getString(EMAIL));
-				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
-				Timestamp lastLoginDate = resultSet.getTimestamp(UserTable.LAST_LOGIN_DATE);
-				if (lastLoginDate != null) {
-					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					User user = new User();
+					user.setId(resultSet.getLong(USER_ID));
+					user.setUserName(resultSet.getString(USERNAME));
+					user.setPassword(resultSet.getString(PASSWORD));
+					user.setEmail(resultSet.getString(EMAIL));
+					user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
+					user.setLastLoginDate(resultSet.getTimestamp(LAST_LOGIN_DATE).toLocalDateTime());
+					user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
+					user.setActive(resultSet.getBoolean(IS_ACTIVE));
+					Role role = Role.valueOf(resultSet.getString(ROLE));
+					user.setRole(role);
+					users.add(user);
 				}
-				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
-				user.setActive(resultSet.getBoolean(IS_ACTIVE));
-				Role role = Role.valueOf(resultSet.getString(ROLE));
-				user.setRole(role);
-				users.add(user);
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return users;
 	}
 
+	/**
+	 * Not implemented operation.
+	 *
+	 * @throws UnsupportedOperationException always
+	 * @deprecated Unsupported operation.
+	 */
+	@Deprecated
 	@Override
-	public Iterable<User> sort(Comparator<User> comparator) throws RepositoryException {
+	public Iterable<User> sort(Comparator<User> comparator) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<User> findAll() throws RepositoryException {
 		List<User> users = new ArrayList<>();
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		ConnectionPool pool = null;
-		try {
-			pool = ConnectionPool.getInstance();
-			connection = pool.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);
+		ConnectionPool pool = ConnectionPool.getInstance();
+		try (Connection connection = pool.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS)) {
 			while (resultSet.next()) {
 				User user = new User();
 				user.setId(resultSet.getLong(USER_ID));
@@ -198,10 +188,7 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 				user.setPassword(resultSet.getString(PASSWORD));
 				user.setEmail(resultSet.getString(EMAIL));
 				user.setRegisterDate(resultSet.getTimestamp(REGISTER_DATE).toLocalDateTime());
-				Timestamp lastLoginDate = resultSet.getTimestamp(LAST_LOGIN_DATE);
-				if (lastLoginDate != null) {
-					user.setLastLoginDate(lastLoginDate.toLocalDateTime());
-				}
+				user.setLastLoginDate(resultSet.getTimestamp(LAST_LOGIN_DATE).toLocalDateTime());
 				user.setEmailVerifed(resultSet.getBoolean(IS_EMAIL_VERIFED));
 				user.setActive(resultSet.getBoolean(IS_ACTIVE));
 				Role role = Role.valueOf(resultSet.getString(ROLE));
@@ -210,10 +197,6 @@ public class UserRepositoryImpl implements Repository<Long, User> {
 			}
 		} catch (SQLException e) {
 			throw new RepositoryException(e);
-		} finally {
-			close(resultSet);
-			close(statement);
-			close(connection);
 		}
 		return users;
 	}

@@ -36,8 +36,7 @@
 		<%@ include file="fragments/messages.jspf"%>
 
 
-		<h3>${topics_message}${fn:escapeXml(section.header)}</h3>
-		<p>${fn:escapeXml(section.description)}</p>
+		<h3>${topics_message}${fn:escapeXml(section.header)}</h3>		
 
 		<sec:authorize access="${f:hasRole('ADMIN',pageContext)}">
 			<a class="btn btn-danger"

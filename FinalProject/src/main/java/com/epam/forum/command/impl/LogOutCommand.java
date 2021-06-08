@@ -18,7 +18,9 @@ import com.epam.forum.command.Router;
  *
  */
 public class LogOutCommand implements Command {
+	
 	private static Logger logger = LogManager.getLogger();
+	
 	private static final String ATRIBUTE_NAME_LANGUAGE = "lang";
 	private static final String ATRIBUTE_VALUE_DEFAULT_LANGUAGE = "en_US";
 	private static final String ATRIBUTE_NAME_ROLE = "role";
