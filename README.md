@@ -1,16 +1,13 @@
-# Веб-форум
+# Web-forum
 
-## Обзор-проекта
+## Project-overview
 
-Веб-форум это система где люди могут вести обсуждение какой-либо темы в форме сообщений. Пользователи создают свои темы, с их последующим обсуждением, путём размещения сообщений внутри этих тем. Пользователи могут комментировать заявленную тему, задавать вопросы по ней и получать ответы, а также сами отвечать на вопросы других пользователей форума и давать им советы. Вопросы и ответы сохраняются в базе данных форума, и в дальнейшем могут быть полезны как участникам форума, так и любым пользователям сети Интернет, которые могут зайти на форум, зная адрес сайта, или получив его от поисковых систем при поиске информации. Темы одной тематики объединяются, для удобства в соответствующие Разделы. Иерархия веб-форума: Разделы → Темы → сообщения (посты). За соблюдением правил следят модераторы и администраторы — участники, наделённые возможностью редактировать, перемещать и удалять чужие сообщения в определённом разделе или теме, а также контролировать к ним доступ отдельных участников и посетителей. Форум имеет систему личных сообщений, позволяющую зарегистрированным пользователям общаться индивидуально. Форум имеет возможность поиска по своей базе сообщений, тем, пользователей. Список сообщений темы представлен иерархически в виде дерева.
+A web forum is a system where people can discuss a topic in the form of messages. Users create their own topics, with their subsequent discussion, by posting messages inside these topics. Users can comment on the declared topic, ask questions about it and get answers, as well as answer questions from other forum users and give them advice. Questions and answers are saved in the forum database, and in the future can be useful both to forum participants and to any Internet users who can enter the forum knowing the site address, or having received it from search engines when searching for information. Topics of the same subject are combined, for convenience, in the appropriate Sections. The hierarchy of the web forum: Sections -> Topics -> posts (posts). Compliance with the rules is monitored by moderators and administrators - participants endowed with the ability to edit, move and delete other people's messages in a specific section or topic, as well as control access to them for individual participants and visitors. The forum has the ability to search through its database of topics.
 
-## Модель базы данных
+## Database model
 
-![Модель базы данных](https://github.com/andreyscherbin/WebProject/blob/master/images/model_version1.PNG)
+![Database model](https://github.com/andreyscherbin/WebProject/blob/master/images/model_version1.PNG)
 
-## Диаграмма вариантов использования
+## Use Case
 
-![Диаграмма вариантов использования](https://github.com/andreyscherbin/WebProject/blob/master/images/UseCase.PNG)
-
-Ключевые понятия, используемые в диаграмме вариантов использования, отражены в [глоссарии](https://github.com/andreyscherbin/WebProject/blob/main/images/Glossarium.md). 
-
+![Use Case](https://github.com/andreyscherbin/WebProject/blob/master/images/UseCase.PNG)
