@@ -10,4 +10,40 @@ A web forum is a system where people can discuss a topic in the form of messages
 
 ## Use Case
 
-![Use Case](https://github.com/andreyscherbin/WebProject/blob/master/images/UseCase.PNG)
+## Admin
+
+ Admin can do everything that the moderator, user, guest and also
+   * Ban user
+   * Unban user
+   * Change user role
+   * View all users
+   * Delete section
+   * Create section
+
+## Moder
+
+ Moder can do everything that the user, guest and also
+   * Close topic
+   * Pin topic
+   * Delete topic
+
+## User
+
+ User can do everything that the guest and also
+   * Create topic
+   * Edit post
+   * Delete post
+   * Create post
+   * Logout
+
+## Guest
+
+ Guest can do
+   * Activation
+   * Search topic
+   * View topics
+   * View posts
+   * View sections
+   * Change language  
+   * Login
+   * Registration
