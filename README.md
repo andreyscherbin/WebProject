@@ -40,7 +40,7 @@ A web forum is a system where people can discuss a topic in the form of messages
 
  Guest can do
    * Activation
-   * Search topic
+   * Search topics
    * View topics
    * View posts
    * View sections
