@@ -18,27 +18,27 @@ public class ConnectionPool {
 	private static ConnectionPool instance;
 	private static ReentrantLock lock = new ReentrantLock();
 	private static AtomicBoolean isPoolCreated = new AtomicBoolean(false);
-	private BlockingQueue<ProxyConnection> freeConnections;
+	private BlockingQueue<ProxyConnection> idleConnections;
 	private BlockingQueue<ProxyConnection> usedConnections;
 
 	private ConnectionPool() {
 		usedConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
-		freeConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
+		idleConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
 		for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
 			try {
 				Connection connection = ConnectionFactory.createConnection();
 				ProxyConnection proxyConnection = new ProxyConnection(connection);
-				freeConnections.offer(proxyConnection);
+				idleConnections.offer(proxyConnection);
 			} catch (SQLException e) {
 				logger.error("can't create connection with exception: {}", e);
 			}
 		}
-		if (freeConnections.isEmpty()) {
+		if (idleConnections.isEmpty()) {
 			logger.fatal("can't create connections, empty pool");
 			throw new RuntimeException("can't create connections, empty pool");
-		} else if (freeConnections.size() == DEFAULT_POOL_SIZE) {
+		} else if (idleConnections.size() == DEFAULT_POOL_SIZE) {
 			logger.info("pool successfully created");
-		} else if (freeConnections.size() > 0 && freeConnections.size() < DEFAULT_POOL_SIZE) {
+		} else if (idleConnections.size() > 0 && idleConnections.size() < DEFAULT_POOL_SIZE) {
 			logger.info("not full pool, need create others connections");
 		}
 	}
@@ -58,7 +58,7 @@ public class ConnectionPool {
 	public Connection getConnection() {
 		ProxyConnection proxyConnection = null;
 		try {
-			proxyConnection = freeConnections.take();
+			proxyConnection = idleConnections.take();
 			usedConnections.put(proxyConnection);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -73,21 +73,21 @@ public class ConnectionPool {
 		}
 		usedConnections.remove(connection);
 		try {
-			freeConnections.put((ProxyConnection) connection);
+			idleConnections.put((ProxyConnection) connection);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
 	public boolean isLeakConnections() {
-		return freeConnections.size() + usedConnections.size() != DEFAULT_POOL_SIZE;
+		return idleConnections.size() + usedConnections.size() != DEFAULT_POOL_SIZE;
 	}
 
 	public void shutdown() {
 		ProxyConnection proxyConnection = null;
 		for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
 			try {
-				proxyConnection = freeConnections.take();
+				proxyConnection = idleConnections.take();
 				proxyConnection.reallyClose();
 			} catch (SQLException e) {
 				logger.fatal("can't close connection {} with exception {}", proxyConnection, e);

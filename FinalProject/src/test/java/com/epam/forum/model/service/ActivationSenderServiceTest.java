@@ -41,6 +41,8 @@ public class ActivationSenderServiceTest {
 
 	private ActivationCode mockedActivationCode;
 	private static final String ID = "262cdd615c1b5cfd606f27f6755efde4eb07e4ebd48ead00ea086678dc4e9ee3";
+	private static final String USERNAME = "andrei";
+	private static final String EMAIL = "andrey123scherbin@gmail.com";
 	Specification<ActivationCode> idSpec;
 
 	@BeforeMethod
@@ -60,8 +62,8 @@ public class ActivationSenderServiceTest {
 	public void sendActivationCodeTest() {
 		User user = new User();
 		user.setId(5L);
-		user.setUserName("andrei");
-		user.setEmail("andrey123scherbin@gmail.com");
+		user.setUserName(USERNAME);
+		user.setEmail(EMAIL);
 		try {
 			activationSenderService.sendActivationCode(user);
 		} catch (ServiceException e) {

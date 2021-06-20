@@ -19,7 +19,7 @@ import com.epam.forum.model.repository.spec.impl.IdActivationCodeSpecification;
 import com.epam.forum.model.service.ActivationSenderService;
 import com.epam.forum.util.email.EmailMessageFactory;
 import com.epam.forum.util.email.MailSender;
-import com.epam.forum.util.encryptor.ActivationCodeEncryptor;
+import com.epam.forum.util.encryptor.DataEncryptor;
 
 public class ActivationSenderServiceImpl implements ActivationSenderService {
 
@@ -47,7 +47,7 @@ public class ActivationSenderServiceImpl implements ActivationSenderService {
 	}
 
 	private void createActivationCode(User user) throws ServiceException {
-		String generatedCode = ActivationCodeEncryptor.encryptActivationCode("" + Math.random());
+		String generatedCode = DataEncryptor.encryptData("" + Math.random());
 		activationCode = new ActivationCode(generatedCode, user);
 	}
 

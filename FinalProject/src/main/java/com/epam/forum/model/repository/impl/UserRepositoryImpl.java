@@ -13,7 +13,6 @@ import java.util.Optional;
 import com.epam.forum.exception.RepositoryException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
-import com.epam.forum.model.entity.UserTable;
 import com.epam.forum.model.repository.Repository;
 import com.epam.forum.model.repository.spec.SearchCriterion;
 import com.epam.forum.model.repository.spec.Specification;

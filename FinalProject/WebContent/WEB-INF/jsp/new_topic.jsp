@@ -40,7 +40,7 @@
 						<label class="form-label" for="title">${title_message} </label> <input
 							id="inputTitle" type="text" class="form-control" name="header"
 							required autofocus aria-describedby="inputGroupPrepend"
-							pattern="^(?!\s*$)[А-Яа-яA-Za-z0-9\s?,.!<->;:=+/()\\&quot;'#]{1,100}$" maxlength="100" />
+							pattern="^(?!\s*$)[А-Яа-яA-Za-z0-9\s?,.!-&lt;&gt;;:=+/()\\&quot;'#%&&laquo;&raquo;]{1,100}$" maxlength="100" />
 						<div class="invalid-feedback">${title_validation_message}</div>
 					</div>
 

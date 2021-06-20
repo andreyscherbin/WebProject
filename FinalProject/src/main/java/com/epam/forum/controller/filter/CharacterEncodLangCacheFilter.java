@@ -3,7 +3,6 @@ package com.epam.forum.controller.filter;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -11,7 +10,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,15 +38,5 @@ public class CharacterEncodLangCacheFilter implements Filter {
 		((HttpServletResponse) response).setHeader(HEADER_NAME_PRAGMA, HEADER_VALUE_PRAGMA);
 		((HttpServletResponse) response).setDateHeader(HEADER_NAME_EXPIRES, 0);
 		chain.doFilter(request, response);
-	}
-
-	@Override
-	public void destroy() {
-		Filter.super.destroy();
-	}
-
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		Filter.super.init(filterConfig);
-	}
+	}	
 }

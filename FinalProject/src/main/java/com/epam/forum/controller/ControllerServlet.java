@@ -27,19 +27,8 @@ public class ControllerServlet extends HttpServlet {
 		ConnectionPool.getInstance();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		logger.info("doGet");
-		processRequest(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		logger.info("doPost");
-		processRequest(request, response);
-	}
-
-	private void processRequest(HttpServletRequest request, HttpServletResponse response)
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		logger.info("session id: {}", request.getSession().getId());
 		CommandProvider commandProvider = CommandProvider.getInstance();

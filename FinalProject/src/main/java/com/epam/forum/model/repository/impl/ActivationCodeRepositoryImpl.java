@@ -100,7 +100,7 @@ public class ActivationCodeRepositoryImpl implements Repository<String, Activati
 		ConnectionPool pool = ConnectionPool.getInstance();
 		try (Connection connection = pool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(specification.toSqlQuery())) {
-			int parameterIndex = 1;
+			int parameterIndex = 1;			
 			for (SearchCriterion criterion : criterions) {
 				String key = criterion.getKey();
 				Object value = criterion.getValue();

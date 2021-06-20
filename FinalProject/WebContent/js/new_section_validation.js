@@ -24,7 +24,7 @@ $(function() {
 
 function validateDescription() {
 	var content = document.getElementById('inputDescription');
-	var contentRGEX = /^(?!\s*$)[a-zA-Z0-9а-яА-я\s?,.!<->;:=+/()\\"'#]{1,100}$/i;	
+	var contentRGEX = /^(?!\s*$)[a-zA-Z0-9а-яА-я\s?,.!-<>;:=+/()\\"'#%&«»]{1,100}$/i;	
 
 	var contentResult = contentRGEX.test(content.value);
 	if (contentResult == false) {

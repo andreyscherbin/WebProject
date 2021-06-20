@@ -5,7 +5,7 @@ import com.epam.forum.command.builder.UserBuilder;
 import com.epam.forum.exception.ServiceException;
 import com.epam.forum.model.entity.Role;
 import com.epam.forum.model.entity.User;
-import com.epam.forum.util.encryptor.PasswordEncryptor;
+import com.epam.forum.util.encryptor.DataEncryptor;
 
 public class UserBuilderImpl implements UserBuilder {
 	private User user = new User();
@@ -23,7 +23,7 @@ public class UserBuilderImpl implements UserBuilder {
 
 	@Override
 	public UserBuilder buildPassword(String password) throws ServiceException {
-		String encodedPassword = PasswordEncryptor.encryptPassword(password);
+		String encodedPassword = DataEncryptor.encryptData(password);
 		user.setPassword(encodedPassword);
 		return this;
 	}

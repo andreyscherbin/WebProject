@@ -20,21 +20,21 @@ public aspect AspectSecurity {
 	pointcut getParameter(): call(String
 			javax.servlet.http.HttpServletRequest.getParameter(String));
 
-	Object around(String query): dbWrite(query){
-		logger.info("query before execute: {} ", query);
+	Object around(String query): dbWrite(query) {
+		logger.info("SQL query before execute: {} ", query);
 		Object ret = (proceed(query));
 		return ret;
 	}
 
-	String around(): getParameter(){
+	String around(): getParameter() {
 		String parameterValue = proceed();
-		logger.info("before sanitization: {} ", parameterValue);
+		logger.info("request parameter before sanitization: {} ", parameterValue);
 		if (parameterValue != null) {
 			Document.OutputSettings outputSettings = new Document.OutputSettings();
 			outputSettings.prettyPrint(false);
-			parameterValue = Jsoup.clean(parameterValue, "", Whitelist.relaxed(), outputSettings);			
+			parameterValue = Jsoup.clean(parameterValue, "", Whitelist.relaxed(), outputSettings);
 		}
-		logger.info("after sanitization: {} ", parameterValue);
+		logger.info("request parameter after sanitization: {} ", parameterValue);
 		return parameterValue;
 	}
 }

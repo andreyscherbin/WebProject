@@ -4,7 +4,7 @@ import java.util.List;
 import com.epam.forum.model.entity.Entity;
 
 /**
- * Specification
+ * Specification interface, which represents Specification pattern
  * 
  * @author Andrey Shcherbin
  * @version 1.0
@@ -15,9 +15,9 @@ import com.epam.forum.model.entity.Entity;
 public interface Specification<T extends Entity> {
 
 	/**
-	 * Returns a string represents query
+	 * Returns the part of the string representing the WHERE clause
 	 * 
-	 * @return string represents query
+	 * @return part of the string representing the WHERE clause
 	 */
 	String toSqlQuery();
 

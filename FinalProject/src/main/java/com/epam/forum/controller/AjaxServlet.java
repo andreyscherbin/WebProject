@@ -17,17 +17,13 @@ public class AjaxServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger = LogManager.getLogger();
 	private static final String COMMAND_SEARCH = "search";
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		logger.info("ajax servlet");
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_SEARCH);
 		command.execute((HttpServletRequest) request, (HttpServletResponse) response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
 	}
 }
