@@ -6,7 +6,7 @@ A web forum is a system where people can discuss a topic in the form of messages
 
 ## Database model
 
-![Database model](https://github.com/andreyscherbin/WebProject/blob/master/images/Database&nbsp;Model.PNG)
+![Database model](https://github.com/andreyscherbin/WebProject/blob/master/images/DatabaseModel.PNG)
 
 ## Use Case
 
