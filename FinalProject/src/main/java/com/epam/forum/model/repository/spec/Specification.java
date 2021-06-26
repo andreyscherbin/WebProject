@@ -15,9 +15,9 @@ import com.epam.forum.model.entity.Entity;
 public interface Specification<T extends Entity> {
 
 	/**
-	 * Returns the part of the string representing the WHERE clause
+	 * Returns a string representing the SQL-query
 	 * 
-	 * @return part of the string representing the WHERE clause
+	 * @return a string representing the SQL-query
 	 */
 	String toSqlQuery();
 

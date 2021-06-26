@@ -1,7 +1,7 @@
 package com.epam.forum.model.repository.spec;
 
 /**
- * The {@code SearchCriterion} class represents search criterion on which query will be builded. For example:
+ * The {@code SearchCriterion} class represents search criterion on which WHERE clause will be builded. For example:
  * <blockquote><pre>
  * StringBuilder query = new StringBuilder("SELECT * FROM users WHERE ");
  * SearchCriterion usernameEqualCriterion = new SearchCriterion(UserTable.USERNAME, Operation.EQUAL, userName);
