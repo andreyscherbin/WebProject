@@ -39,7 +39,7 @@ public class ControllerServlet extends HttpServlet {
 		String page = router.getPage();
 		if (!isRedirect) {
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-			dispatcher.forward(request, response);
+			dispatcher.forward(request, response);			
 		} else {
 			response.sendRedirect(request.getContextPath() + page);
 		}

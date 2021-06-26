@@ -3,6 +3,7 @@ package com.epam.forum.controller.filter;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
@@ -27,7 +28,7 @@ public class HomeFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		logger.info("home filter");		
+		logger.info("home filter");
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_VIEW_SECTION);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);
@@ -38,5 +39,13 @@ public class HomeFilter implements Filter {
 		} else {
 			chain.doFilter(request, response);
 		}
-	}	
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
+	}
 }

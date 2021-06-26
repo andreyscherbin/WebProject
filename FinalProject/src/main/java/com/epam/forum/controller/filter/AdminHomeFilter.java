@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -27,7 +28,7 @@ public class AdminHomeFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		logger.info("admin_home filter");		
+		logger.info("admin_home filter");
 		CommandProvider commandProvider = CommandProvider.getInstance();
 		Command command = commandProvider.getCommand(COMMAND_VIEW_USER);
 		Router router = command.execute((HttpServletRequest) request, (HttpServletResponse) response);
@@ -38,5 +39,13 @@ public class AdminHomeFilter implements Filter {
 		} else {
 			chain.doFilter(request, response);
 		}
-	}	
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
+	}
 }

@@ -46,7 +46,7 @@ public class ConnectionPool {
 	public static ConnectionPool getInstance() {
 		if (!isPoolCreated.get()) {
 			lock.lock();
-			if (instance == null) {
+			if (!isPoolCreated.get()) {
 				instance = new ConnectionPool();
 				isPoolCreated.getAndSet(true);
 			}
