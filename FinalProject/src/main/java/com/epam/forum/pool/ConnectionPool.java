@@ -3,7 +3,7 @@ package com.epam.forum.pool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,8 +18,8 @@ public class ConnectionPool {
 	private static ConnectionPool instance;
 	private static ReentrantLock lock = new ReentrantLock();
 	private static AtomicBoolean isPoolCreated = new AtomicBoolean(false);
-	private BlockingQueue<ProxyConnection> idleConnections;
-	private BlockingQueue<ProxyConnection> usedConnections;
+	private BlockingDeque<ProxyConnection> idleConnections;
+	private BlockingDeque<ProxyConnection> usedConnections;
 
 	private ConnectionPool() {
 		usedConnections = new LinkedBlockingDeque<>(DEFAULT_POOL_SIZE);
