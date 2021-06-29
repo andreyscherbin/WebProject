@@ -2,7 +2,7 @@ package com.epam.forum.model.entity;
 
 import java.time.LocalDateTime;
 
-public class Post extends Entity {
+public class Post extends Entity implements Comparable<Post> {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
@@ -11,7 +11,7 @@ public class Post extends Entity {
 	private Topic topic;
 	private User user;
 
-	public Post(String content, LocalDateTime creationDate, Topic topic, User user) {		
+	public Post(String content, LocalDateTime creationDate, Topic topic, User user) {
 		this.content = content;
 		this.creationDate = creationDate;
 		this.topic = topic;
@@ -125,5 +125,10 @@ public class Post extends Entity {
 		builder.append(user);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	@Override
+	public int compareTo(Post o) {
+		return creationDate.compareTo(o.creationDate);
 	}
 }

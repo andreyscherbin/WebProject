@@ -1,6 +1,7 @@
 package com.epam.forum.command.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class ViewTopicByIdCommand implements Command {
 			topic = topicService.findTopicById(id);
 			posts = postService.findPostsByTopic(id);
 			if (!topic.isEmpty()) {
-				if (!posts.isEmpty()) {
+				if (!posts.isEmpty()) {					
 					request.setAttribute(ATRIBUTE_NAME_TOPIC, topic.get());
 					request.setAttribute(ATRIBUTE_NAME_POSTS, posts);
 					session.setAttribute(ATTRIBUTE_NAME_CURRENT_TOPIC, topicId);

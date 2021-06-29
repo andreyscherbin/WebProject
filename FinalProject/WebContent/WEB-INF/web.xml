@@ -10,7 +10,7 @@
 		<load-on-startup>20</load-on-startup>
 	</servlet>
 	<session-config>
-		<session-timeout>1</session-timeout>
+		<session-timeout>10</session-timeout>
 	</session-config>
 	<error-page>
 		<error-code>404</error-code>

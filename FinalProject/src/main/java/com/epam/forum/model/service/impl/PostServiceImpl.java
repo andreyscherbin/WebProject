@@ -1,6 +1,7 @@
 package com.epam.forum.model.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,7 @@ public class PostServiceImpl implements PostService {
 			Specification<Post> topicSpecification = new TopicPostSpecification(
 					new SearchCriterion(PostTable.TOPIC_ID, Operation.EQUAL, topicId));
 			posts = (List<Post>) postRepository.query(topicSpecification);
+			Collections.sort(posts);
 		} catch (RepositoryException e) {
 			logger.error("find posts exception with topic: " + topicId, e);
 			throw new ServiceException("find posts exception with topic: " + topicId, e);
